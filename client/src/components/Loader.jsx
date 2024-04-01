@@ -6,7 +6,7 @@ function Loader() {
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center">
       <img src={logo} alt="logo" className="w-28 md:w-36 mb-12" />
-      <div class="loader w-16 md:w-20"></div>
+      <div className="loader w-16 md:w-20"></div>
     </div>
   );
 }
