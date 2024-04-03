@@ -17,8 +17,6 @@ const UserSchema = new Schema({
 
   notes: [{ type: Schema.Types.ObjectId, ref: "Note" }],
 
-  markdownNotes: [{ type: Schema.Types.ObjectId, ref: "MarkdownNote" }],
-
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 });
 
