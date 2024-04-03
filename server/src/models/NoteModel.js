@@ -6,7 +6,7 @@ const noteSchema = new Schema({
 
   subject: { type: String, required: true },
 
-  fileReference: { type: URL, required: true },
+  fileReference: { type: String, required: true },
 });
 
 const NoteModel = new mongoose.model("Note", noteSchema);

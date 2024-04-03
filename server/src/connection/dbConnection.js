@@ -4,6 +4,11 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
+    if (!process.env.DB_URI || !process.env.DB_URI.trim()) {
+      throw new Error(
+        "DB_URI is not provided or empty. Unable to connect to MongoDB."
+      );
+    }
     await mongoose.connect(process.env.DB_URI, {});
     console.log("📦 connected to mongoDB");
   } catch (error) {
