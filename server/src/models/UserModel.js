@@ -22,6 +22,8 @@ const UserSchema = new Schema({
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 });
 
+UserSchema.index({ username: 1, email: 1 });
+
 const UserModel = new mongoose.model("User", UserSchema);
 
 module.exports = { UserModel };
