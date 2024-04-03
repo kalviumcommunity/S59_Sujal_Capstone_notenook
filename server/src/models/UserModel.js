@@ -22,6 +22,6 @@ const UserSchema = new Schema({
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 });
 
-const UserModel = new mongoose.Model("User", UserSchema);
+const UserModel = new mongoose.model("User", UserSchema);
 
 module.exports = { UserModel };
