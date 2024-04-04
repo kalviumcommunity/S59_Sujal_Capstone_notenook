@@ -32,7 +32,7 @@ UserSchema.methods.setPassword = function (password) {
 };
 
 UserSchema.methods.validatePassword = function (password) {
-  const hash = crypto.createHash("sha512").update(password).digest("hex");
+  const hash = crypto.createHash("bcrypt").update(password).digest("hex");
   return this.password === hash;
 };
 
