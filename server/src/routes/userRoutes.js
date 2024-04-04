@@ -23,8 +23,8 @@ router.post("/register", async (req, res) => {
       email: email,
     });
 
-    newUser.setPassword(password);
-
+    await newUser.setPassword(password);
+    console.log(newUser);
     const savedUser = await newUser.save();
 
     res.status(201).json(savedUser);
