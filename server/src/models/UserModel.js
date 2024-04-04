@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const crypto = require("crypto");
+const argon2 = require("argon2");
 
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
@@ -27,13 +27,20 @@ const UserSchema = new Schema({
 
 UserSchema.index({ username: 1, email: 1 });
 
-UserSchema.methods.setPassword = function (password) {
-  this.password = crypto.createHash("sha512").update(password).digest("hex");
+UserSchema.methods.setPassword = async function (password) {
+  try {
+    this.password = await argon2.hash(password);
+  } catch (error) {
+    throw new Error("Error hashing password");
+  }
 };
 
-UserSchema.methods.validatePassword = function (password) {
-  const hash = crypto.createHash("bcrypt").update(password).digest("hex");
-  return this.password === hash;
+UserSchema.methods.validatePassword = async function (password) {
+  try {
+    return await argon2.verify(this.password, password);
+  } catch (error) {
+    return false;
+  }
 };
 
 const UserModel = new mongoose.model("User", UserSchema);
