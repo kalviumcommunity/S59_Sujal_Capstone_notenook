@@ -1,7 +1,10 @@
+require("dotenv").config();
+
 const express = require("express");
 const router = express.Router();
 const { UserModel } = require("../models/UserModel");
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 
 router.post("/register", async (req, res) => {
   try {
@@ -34,20 +37,16 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.get("/login-failure", (req, res) => {
-  res.status(401).send("Login failed. Please try again.");
-});
-
-router.get("/login-success", (req, res) => {
-  res.status(200).send("Login success.");
-});
-
 router.post(
   "/login",
-  passport.authenticate("local", {
-    failureRedirect: "/user/login-failure",
-    successRedirect: "/user/login-success",
-  })
+  passport.authenticate("local", { session: false }),
+  (req, res) => {
+    const token = jwt.sign({ userId: req.user._id }, process.env.SECRET_KEY, {
+      expiresIn: "1h",
+    });
+
+    res.json({ token });
+  }
 );
 
 module.exports = router;
