@@ -25,16 +25,3 @@ passport.use(
     }
   })
 );
-
-passport.serializeUser(async (user, done) => {
-  done(null, user._id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await UserModel.findById({ _id: id });
-    done(null, user);
-  } catch (error) {
-    done(error, false);
-  }
-});
