@@ -5,6 +5,7 @@ const router = express.Router();
 const { UserModel } = require("../models/UserModel");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const Joi = require("joi");
 
 router.post("/register", async (req, res) => {
   try {
@@ -49,6 +50,13 @@ router.post(
   }
 );
 
+const updateSchema = Joi.object({
+  username: Joi.string().min(3).optional(),
+  fullname: Joi.string().required(),
+  password: Joi.string().required(),
+  newPassword: Joi.string().min(6).optional(),
+});
+
 router.put(
   "/update",
   passport.authenticate("jwt", { session: false }),
@@ -60,6 +68,15 @@ router.put(
         return res.status(404).json({ message: "User not found" });
       }
 
+      const { error, value } = updateSchema.validate(req.body, {
+        abortEarly: false,
+      });
+      if (error) {
+        return res
+          .status(400)
+          .json({ message: error.details.map((detail) => detail.message) });
+      }
+      console.log(req.body.password);
       const isPasswordValid = await user.validatePassword(req.body.password);
       if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid password" });
@@ -72,7 +89,7 @@ router.put(
         user.fullname = req.body.fullname;
       }
       if (req.body.newPassword) {
-        user.setPassword(req.body.newPassword);
+        await user.setPassword(req.body.newPassword);
       }
 
       await user.save();
