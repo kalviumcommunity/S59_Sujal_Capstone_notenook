@@ -1,9 +1,15 @@
 import "./App.css";
 import Loader from "./components/Loader";
+import Forms from "./pages/Forms";
+import HomePage from "./pages/HomePage";
+import { Route, Routes } from "react-router-dom";
 function App() {
   return (
     <>
-      <Loader />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/forms" element={<Forms />} />
+      </Routes>
     </>
   );
 }
