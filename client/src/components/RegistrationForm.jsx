@@ -1,7 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import "../css/Forms.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 function RegistrationForm() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -9,8 +14,19 @@ function RegistrationForm() {
     watch,
   } = useForm();
 
-  const handleFormSubmit = (data) => {
-    console.log(data);
+  const handleFormSubmit = async (data) => {
+    try {
+      const res = await axios.post(
+        import.meta.env.VITE_REACT_APP_USER_REGISTRATION_URL,
+        data
+      );
+      console.log(res);
+
+      alert("Registration successful!");
+      navigate("/");
+    } catch (error) {
+      alert("Registration failed. Please try again later.");
+    }
   };
 
   return (
