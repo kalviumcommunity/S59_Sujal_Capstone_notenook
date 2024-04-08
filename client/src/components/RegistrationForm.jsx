@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import "../css/Forms.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 function RegistrationForm() {
   const navigate = useNavigate();
 
@@ -15,7 +16,10 @@ function RegistrationForm() {
 
   const handleFormSubmit = async (data) => {
     try {
-      const res = await axios.post("http://localhost:8080/user/register", data);
+      const res = await axios.post(
+        import.meta.env.VITE_REACT_APP_USER_REGISTRATION_URL,
+        data
+      );
       console.log(res);
 
       alert("Registration successful!");
