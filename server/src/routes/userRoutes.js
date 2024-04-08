@@ -5,30 +5,40 @@ const router = express.Router();
 const { UserModel } = require("../models/UserModel");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const Joi = require("joi");
+const { updateSchema, userJoiSchema } = require("../validation/userJoiSchemas");
+const { validateData } = require("../validation/validator");
 
 router.post("/register", async (req, res) => {
   try {
     const { username, fullname, email, password } = req.body;
 
-    const existingEmail = await UserModel.findOne({ email: email });
+    const { error } = validateData(
+      { username, fullname, email, password },
+      userJoiSchema
+    );
+    if (error) {
+      console.log(error);
+      return res.status(400).json({ message: error.details });
+    }
+
+    const existingEmail = await UserModel.exists({ email });
     if (existingEmail) {
       return res.status(400).json({ message: "Email is already registered" });
     }
 
-    const existingUsername = await UserModel.findOne({ username });
+    const existingUsername = await UserModel.exists({ username });
     if (existingUsername) {
       return res.status(400).json({ message: "Username is already taken" });
     }
 
     const newUser = new UserModel({
-      username: username,
-      fullname: fullname,
-      email: email,
+      username,
+      fullname,
+      email,
     });
 
     await newUser.setPassword(password);
-    console.log(newUser);
+
     const savedUser = await newUser.save();
 
     res.status(201).json(savedUser);
@@ -50,13 +60,6 @@ router.post(
   }
 );
 
-const updateSchema = Joi.object({
-  username: Joi.string().min(3).optional(),
-  fullname: Joi.string().required(),
-  password: Joi.string().required(),
-  newPassword: Joi.string().min(6).optional(),
-});
-
 router.put(
   "/update",
   passport.authenticate("jwt", { session: false }),
@@ -68,9 +71,7 @@ router.put(
         return res.status(404).json({ message: "User not found" });
       }
 
-      const { error, value } = updateSchema.validate(req.body, {
-        abortEarly: false,
-      });
+      const { error, value } = validateData(req.body, updateSchema);
       if (error) {
         return res
           .status(400)
