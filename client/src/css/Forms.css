@@ -54,7 +54,7 @@ form {
   margin-bottom: 1rem;
 }
 
-@media (width < 650px) {
+@media only screen and (max-width: 650px) {
   form {
     grid-template-columns: 1fr;
   }
