@@ -11,9 +11,12 @@ function HomePage() {
         </Link>
 
         <div className="flex w-52 justify-between items-center">
-          <button class="button" role="button">
-            Register
-          </button>
+          <Link to={"/forms/registration"}>
+            <button class="button" role="button">
+              Register
+            </button>
+          </Link>
+
           <button class="button" role="button">
             Login
           </button>

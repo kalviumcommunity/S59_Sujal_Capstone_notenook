@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../assets/logo.jpeg";
-import "./Loader.css";
+import "../css/Loader.css";
 
 function Loader() {
   return (
