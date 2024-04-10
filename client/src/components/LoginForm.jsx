@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import "../css/Forms.css";
 import axios from "axios";
@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 
 function LoginForm() {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
 
   const {
     register,
@@ -20,11 +21,18 @@ function LoginForm() {
         import.meta.env.VITE_REACT_APP_USER_LOGIN_URL,
         data
       );
+
+      document.cookie = `token=${res.data.token}; path=/`;
+
       console.log(res);
 
       navigate("/");
     } catch (error) {
-      alert("Login failed. Please check your credentials and try again.");
+      if (error.response) {
+        setErrorMessage("Invalid username or password. Please try again.");
+      } else {
+        setErrorMessage("Network error. Please check your connection.");
+      }
     }
   };
 
@@ -62,6 +70,9 @@ function LoginForm() {
           />
           <p className="error">{errors.password?.message}</p>
         </div>
+
+        {/* Error message display */}
+        {errorMessage && <p className="error span2">{errorMessage}</p>}
 
         <button type="submit" className="span2 button">
           Login
