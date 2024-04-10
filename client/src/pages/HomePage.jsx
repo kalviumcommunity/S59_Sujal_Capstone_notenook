@@ -1,5 +1,4 @@
 import React from "react";
-import reading from "../assets/reading.jpeg";
 import logo from "../assets/logo.jpeg";
 import { Link } from "react-router-dom";
 function HomePage() {
@@ -17,9 +16,11 @@ function HomePage() {
             </button>
           </Link>
 
-          <button class="button" role="button">
-            Login
-          </button>
+          <Link to={"/forms/login"}>
+            <button class="button" role="button">
+              Login
+            </button>
+          </Link>
         </div>
       </div>
 
