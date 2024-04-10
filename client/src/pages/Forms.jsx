@@ -2,6 +2,8 @@ import React from "react";
 import logo from "../assets/logo.jpeg";
 import { Link, Route, Routes } from "react-router-dom";
 import RegistrationForm from "../components/RegistrationForm";
+import LoginForm from "../components/LoginForm";
+
 function Forms() {
   return (
     <div className="overflow-x-hidden">
@@ -35,6 +37,7 @@ function Forms() {
         <div>
           <Routes>
             <Route path="/registration" element={<RegistrationForm />} />
+            <Route path="/login" element={<LoginForm />} />
           </Routes>
         </div>
       </div>

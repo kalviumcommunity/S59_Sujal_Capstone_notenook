@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import "../css/Forms.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function RegistrationForm() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ function RegistrationForm() {
   };
 
   return (
-    <div className="formDiv">
+    <div className="formDiv mb-24 xl:mb-0">
       <h1>Register Now!</h1>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
@@ -132,6 +133,16 @@ function RegistrationForm() {
           Register
         </button>
       </form>
+
+      <p className="text-center mt-0 xl:mt-4">
+        Already have an account?{" "}
+        {
+          <Link to={"/forms/login"}>
+            {" "}
+            <span className="text-blue-900">Login</span>{" "}
+          </Link>
+        }
+      </p>
     </div>
   );
 }
