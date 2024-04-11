@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/authContext";
 import "./App.css";
 import Forms from "./pages/Forms";
 import HomePage from "./pages/HomePage";
+import DashBoard from "./pages/DashBoard";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/forms/*" element={<Forms />} />
+        <Route path="/dashboard/*" element={<DashBoard />} />
       </Routes>
     </AuthProvider>
   );
