@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from "../assets/logo.jpeg";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
+
 function HomePage() {
   return (
     <div>
@@ -10,17 +12,7 @@ function HomePage() {
         </Link>
 
         <div className="flex w-52 justify-between items-center">
-          <Link to={"/forms/registration"}>
-            <button class="button" role="button">
-              Register
-            </button>
-          </Link>
-
-          <Link to={"/forms/login"}>
-            <button class="button" role="button">
-              Login
-            </button>
-          </Link>
+          <HomePageButtons />
         </div>
       </div>
 
@@ -37,6 +29,43 @@ function HomePage() {
         <button className="button md:ml-0">Get Started</button>
       </div>
     </div>
+  );
+}
+
+function HomePageButtons() {
+  const { user } = useContext(AuthContext);
+
+  return (
+    <>
+      {user.username ? (
+        <>
+          <Link to="/dashboard">
+            <button className="button" role="button">
+              Dashboard
+            </button>
+          </Link>
+          <Link to="/profile">
+            <button className="button" role="button">
+              Profile
+            </button>
+          </Link>
+        </>
+      ) : (
+        <>
+          <Link to={"/forms/registration"}>
+            <button className="button" role="button">
+              Register
+            </button>
+          </Link>
+
+          <Link to={"/forms/login"}>
+            <button className="button" role="button">
+              Login
+            </button>
+          </Link>
+        </>
+      )}
+    </>
   );
 }
 
