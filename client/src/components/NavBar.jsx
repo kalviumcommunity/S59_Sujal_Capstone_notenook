@@ -16,7 +16,7 @@ function NavBar() {
       <div className="flex flex-col gap-10">
         <NavLink
           className="dashBoardIcon navButton"
-          to="/dashboard"
+          to="/dashboard/stats"
           activeClassName="active"
         >
           <DashboardIcon style={style} fontSize="small" />
