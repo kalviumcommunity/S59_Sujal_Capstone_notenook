@@ -5,11 +5,10 @@ import { AuthContext } from "../context/authContext";
 import { Link } from "react-router-dom";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import "../css/Header.css";
 
 function Header() {
   return (
-    <div className="flex justify-between items-center py-4 pl-2 pr-8">
+    <div className="flex justify-between items-center py-4 pl-4 pr-8 h-28">
       <Link to="/">
         <img src={logo} alt="" className="logo h-16 md:h-20 " />
       </Link>

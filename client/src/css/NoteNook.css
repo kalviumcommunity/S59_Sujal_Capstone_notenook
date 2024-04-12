@@ -1,0 +1,43 @@
+.noteNook {
+  margin-left: 112px;
+  background-color: aliceblue;
+  border-top-left-radius: 20px;
+  height: calc(100vh - 112px);
+  overflow-y: scroll;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.dashBoardComponent{
+    background-color: #D9EDEC;
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.statDiv {
+  margin-bottom: 20px;
+  background-color: hsl(0, 0%, 100%);
+  padding: 10px;
+  border-radius: 5px;
+  width: 45%;
+}
+
+.statDiv p {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.statDiv div {
+  display: flex;
+  align-items: center;
+}
+
+.statDiv div span {
+  font-size: 24px;
+  margin-left: 5px;
+}

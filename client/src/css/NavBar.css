@@ -1,7 +1,7 @@
 .navBar {
   position: fixed;
   top: 100px;
-  width: 100px;
+  width: 112px;
   display: flex;
   flex-direction: column;
   padding-top: 100px;
