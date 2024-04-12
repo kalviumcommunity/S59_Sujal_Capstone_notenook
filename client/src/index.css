@@ -11,6 +11,15 @@
   font-family: poppins;
 }
 
+.logo{
+  transition: transform 0.3s ease-in-out;
+}
+
+.logo:hover{
+  transform: translate(-0.5px,-0.5px) scale(1.02);
+
+}
+
 body {
   background-color: #d9edec;
 }
@@ -30,11 +39,9 @@ body {
   border-radius: 100px;
   color: #ffffff;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
   justify-content: center;
-  line-height: 20px;
-  min-height: 40px;
   overflow: hidden;
   padding: 8px 15px;
   text-align: center;
@@ -58,8 +65,3 @@ body {
   color: rgb(255, 255, 255, 0.7);
 }
 
-@media (max-width: 500px) {
-  .button {
-    font-size: 14px;
-  }
-}

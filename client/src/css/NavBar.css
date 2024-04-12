@@ -1,19 +1,25 @@
 .navBar {
   position: fixed;
   top: 100px;
-  left: 0;
-  width: 125px;
+  width: 100px;
   display: flex;
-  padding-top: 125px;
+  flex-direction: column;
+  padding-top: 100px;
   justify-content: center;
   align-items: center;
+}
+
+.navButtons {
+  flex-direction: column;
+  display: flex;
+  gap: 50px;
 }
 
 .navButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 0.6rem;
   width: fit-content;
   border-radius: 50%;
   transition: transform 0.3s ease-in-out, border-radius 0.3s ease-in-out;
@@ -28,7 +34,6 @@
   transform: scale(1.1);
   border-radius: 25%;
 }
-
 
 .dashBoardIcon {
   background-color: #3498db;
@@ -48,4 +53,26 @@
 
 .chatIcon {
   background-color: #e67e22;
+}
+
+@media (max-width: 500px) {
+  .navBar {
+    top: auto;
+    bottom: 0;
+    flex-direction: row;
+    width: 100vw;
+    padding-top: 0;
+  }
+
+  .navButtons {
+    flex-direction: row;
+    width: 100%;
+    padding: 1rem;
+    gap: 0px;
+    justify-content: space-around;
+  }
+
+  .navButton{
+    padding: 0.5rem;
+  }
 }

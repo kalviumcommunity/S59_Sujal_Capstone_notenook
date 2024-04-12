@@ -5,15 +5,14 @@ import { AuthProvider } from "./context/authContext";
 import "./App.css";
 import Forms from "./pages/Forms";
 import HomePage from "./pages/HomePage";
-import DashBoard from "./pages/DashBoard";
-
+import NoteNook from "./pages/NoteNook";
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/forms/*" element={<Forms />} />
-        <Route path="/dashboard/*" element={<DashBoard />} />
+        <Route path="/notenook/*" element={<NoteNook />} />
       </Routes>
     </AuthProvider>
   );

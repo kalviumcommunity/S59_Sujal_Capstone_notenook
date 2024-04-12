@@ -6,9 +6,9 @@ import { AuthContext } from "../context/authContext";
 function HomePage() {
   return (
     <div>
-      <div className="flex w-screen justify-between items-center py-4 px-4">
+      <div className="flex w-screen justify-between items-center py-4 pl-2 pr-8">
         <Link to="/">
-          <img src={logo} alt="" className="h-20 md:h-24 w-auto" />
+          <img src={logo} alt="" className="logo h-16 md:h-20 " />
         </Link>
 
         <div className="flex w-52 justify-between items-center">
@@ -39,12 +39,12 @@ function HomePageButtons() {
     <>
       {user.username ? (
         <>
-          <Link to="/dashboard">
+          <Link to="/notenook/dashboard">
             <button className="button" role="button">
               Dashboard
             </button>
           </Link>
-          <Link to="/profile">
+          <Link to="notenook/profile">
             <button className="button" role="button">
               Profile
             </button>
