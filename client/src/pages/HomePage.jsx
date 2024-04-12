@@ -6,7 +6,7 @@ import { AuthContext } from "../context/authContext";
 function HomePage() {
   return (
     <div>
-      <div className="flex w-screen justify-between items-center py-4 pl-2 pr-8">
+      <div className="flex w-screen justify-between items-center py-4 pl-4 pr-8">
         <Link to="/">
           <img src={logo} alt="" className="logo h-16 md:h-20 " />
         </Link>
