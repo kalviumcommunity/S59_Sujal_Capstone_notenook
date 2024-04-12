@@ -1,26 +1,11 @@
-import React, { useEffect } from "react";
-import NavBar from "../components/NavBar";
-import Header from "../components/Header";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/authContext";
-function Dashboard() {
-  const { user } = useContext(AuthContext);
+import React from 'react'
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user.isLoggedIn) {
-      navigate("/forms/login");
-    }
-  });
-
+function DashBoard() {
   return (
-    <div>
-      <Header />
-      <NavBar />
+    <div className=''>
+      
     </div>
-  );
+  )
 }
 
-export default Dashboard;
+export default DashBoard;

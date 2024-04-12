@@ -11,47 +11,28 @@ function NavBar() {
   const style = {
     color: "white",
   };
+
   return (
     <div className="navBar">
-      <div className="flex flex-col gap-10">
-        <NavLink
-          className="dashBoardIcon navButton"
-          to="/dashboard/stats"
-          activeClassName="active"
-        >
+      <div className="navButtons">
+        <NavLink className="dashBoardIcon navButton" to="/notenook/dashboard">
           <DashboardIcon style={style} fontSize="small" />
         </NavLink>
 
-        <NavLink
-          className="noteIcon navButton"
-          to="/dashboard/notes"
-          activeClassName="active"
-        >
-          <EventNoteIcon style={style} />
+        <NavLink className="noteIcon navButton" to="/notenook/notes">
+          <EventNoteIcon style={style} fontSize="small"/>
         </NavLink>
 
-        <NavLink
-          className="addIcon navButton"
-          to="/dashboard/add"
-          activeClassName="active"
-        >
-          <AddCircleIcon style={style} />
+        <NavLink className="addIcon navButton" to="/notenook/add">
+          <AddCircleIcon style={style} fontSize="small"/>
         </NavLink>
 
-        <NavLink
-          className="friendsIcon navButton"
-          to="/dashboard/friends"
-          activeClassName="active"
-        >
-          <PeopleAltIcon style={style} />
+        <NavLink className="friendsIcon navButton" to="/notenook/friends">
+          <PeopleAltIcon style={style} fontSize="small"/>
         </NavLink>
 
-        <NavLink
-          className="chatIcon navButton"
-          to="/dashboard/chat"
-          activeClassName="active"
-        >
-          <ChatBubbleIcon style={style} />
+        <NavLink className="chatIcon navButton" to="/notenook/chat">
+          <ChatBubbleIcon style={style} fontSize="small"/>
         </NavLink>
       </div>
     </div>
