@@ -16,9 +16,8 @@ function Stats() {
         <div className="statDiv">
           <p>No. of Notes Posted</p>
           <div>
-            <EventNoteIcon>
-              <span>00</span>
-            </EventNoteIcon>
+            <EventNoteIcon />
+            <span>00</span>
           </div>
         </div>
       </div>
