@@ -67,19 +67,23 @@
 @media (max-width: 780px) {
   .dashboard {
     grid-template-columns: 1fr;
-    grid-template-rows: auto;
   }
 
   .myNotes,
   .reviewList {
     min-height: 350px;
   }
+
+  .reviewList {
+    margin-bottom: 1rem;
+  }
 }
 
-@media (max-width: 350px) {
+@media (max-width: 385px) {
   .statDiv p {
     font-size: 10px;
   }
+  
   .statDiv {
     min-width: 0;
   }

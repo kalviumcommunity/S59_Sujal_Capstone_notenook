@@ -12,21 +12,20 @@ function Stats() {
   return (
     <div className="stats dashBoardComponent">
       <h1 className="heading">Stats</h1>
+
       <div className="flex gap-10">
         <div className="statDiv">
           <p>No. of Connections</p>
-
           <div>
             <div className="iconDiv connectionsStat">
               <PeopleIcon style={{ color: "white" }} fontSize="small" />
             </div>
-
             <span className="statNumber">{noOfNotes}</span>
           </div>
         </div>
+
         <div className="statDiv">
           <p>No. of Notes Posted</p>
-
           <div>
             <div className="iconDiv notesStat">
               <EventNoteIcon style={{ color: "white" }} fontSize="small" />
