@@ -1,43 +1,41 @@
 .noteNook {
+  margin-top: 7rem;
   margin-left: 112px;
   background-color: aliceblue;
   border-top-left-radius: 20px;
   height: calc(100vh - 112px);
-  overflow-y: scroll;
-}
-
-.dashboard {
+  padding: 2rem;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  overflow-y: scroll;
+  grid-template-columns: 1fr 325px;
   gap: 20px;
 }
 
-.dashBoardComponent{
-    background-color: #D9EDEC;
+.header {
+  background-color: #d9edec;
+}
+
+.placeHolder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: gray;
+}
+
+@media (max-width: 1200px) {
+  .noteNook {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .noteNook {
+    margin-top: 5rem;
+    margin-left: 0px;
+    border-radius: 0px;
+    height: calc(100vh - 9rem);
     padding: 1rem;
-    border-radius: 5px;
-    margin: 10px;
-}
-
-.statDiv {
-  margin-bottom: 20px;
-  background-color: hsl(0, 0%, 100%);
-  padding: 10px;
-  border-radius: 5px;
-  width: 45%;
-}
-
-.statDiv p {
-  font-size: 18px;
-  margin-bottom: 5px;
-}
-
-.statDiv div {
-  display: flex;
-  align-items: center;
-}
-
-.statDiv div span {
-  font-size: 24px;
-  margin-left: 5px;
+  }
 }

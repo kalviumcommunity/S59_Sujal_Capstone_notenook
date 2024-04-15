@@ -11,6 +11,10 @@
   font-family: poppins;
 }
 
+html {
+  height: -webkit-fill-available;
+}
+
 .logo {
   transition: transform 0.3s ease-in-out;
 }
@@ -21,6 +25,7 @@
 
 body {
   background-color: #d9edec;
+  /* height: -webkit-fill-available; */
 }
 
 .min-height-50 {
@@ -82,7 +87,17 @@ body {
 }
 
 .heading {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .heading {
+    font-size: 1rem;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
 }
