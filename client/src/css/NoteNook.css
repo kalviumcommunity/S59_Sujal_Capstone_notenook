@@ -1,4 +1,5 @@
 .noteNook {
+  position: relative;
   margin-top: 7rem;
   margin-left: 112px;
   background-color: aliceblue;
