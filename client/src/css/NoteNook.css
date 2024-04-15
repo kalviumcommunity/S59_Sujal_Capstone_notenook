@@ -1,19 +1,21 @@
 .noteNook {
-  position: relative;
-  margin-top: 7rem;
-  margin-left: 112px;
-  background-color: aliceblue;
-  border-top-left-radius: 20px;
-  height: calc(100vh - 112px);
-  padding: 2rem;
+  position: fixed;
   display: grid;
-  overflow-y: scroll;
+  top: 7rem;
+  left: 112px;
   grid-template-columns: 1fr 325px;
   gap: 20px;
+  border-top-left-radius: 20px;
+  height: calc(100vh - 112px);
+  width: calc(100vw - 112px);
+  padding: 2rem;
+  background-color: aliceblue;
+  overflow-y: scroll;
 }
 
 .header {
   background-color: #d9edec;
+  z-index: 10;
 }
 
 .placeHolder {
@@ -33,10 +35,12 @@
 
 @media (max-width: 640px) {
   .noteNook {
-    margin-top: 5rem;
-    margin-left: 0px;
+    top: 5rem;
+    left: 0px;
     border-radius: 0px;
     height: calc(100vh - 9rem);
+    width: 100vw;
     padding: 1rem;
+    padding-bottom: 4rem;
   }
 }

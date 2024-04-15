@@ -15,16 +15,17 @@ html {
   height: -webkit-fill-available;
 }
 
+body {
+  background-color: #d9edec;
+  height: -webkit-fill-available;
+}
+
 .logo {
   transition: transform 0.3s ease-in-out;
 }
 
 .logo:hover {
   transform: translate(-0.5px, -0.5px) scale(1.02);
-}
-
-body {
-  background-color: #d9edec;
 }
 
 .min-height-50 {

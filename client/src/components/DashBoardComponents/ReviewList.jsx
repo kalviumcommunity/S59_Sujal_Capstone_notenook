@@ -5,7 +5,6 @@ function ReviewList() {
     <div className="dashBoardComponent reviewList relative">
       <p className="placeHolder">Your Review List Appears here</p>
       <h1 className="heading">My review List</h1>
-      <div></div>
     </div>
   );
 }

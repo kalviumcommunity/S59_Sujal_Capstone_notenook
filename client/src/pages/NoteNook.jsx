@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 import DashBoard from "./DashBoard";
 import { Routes, Route } from "react-router-dom";
 import Connections from "../components/Connections";
+
 function NoteNook() {
   return (
     <div>
