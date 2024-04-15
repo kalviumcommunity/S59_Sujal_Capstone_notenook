@@ -1,33 +1,16 @@
-import React, { useEffect } from "react";
-import NavBar from "../components/NavBar";
-import Header from "../components/Header";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/authContext";
 import "../css/NoteNook.css";
-import DashBoard from "./DashBoard";
+import MyNotes from "../components/DashBoardComponents/MyNotes";
+import Stats from "../components/DashBoardComponents/Stats";
+import ReviewList from "../components/DashBoardComponents/ReviewList";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
 import { Routes, Route } from "react-router-dom";
-
 function NoteNook() {
-  const { user } = useContext(AuthContext);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user.isLoggedIn) {
-      navigate("/forms/login");
-    }
-  });
-
   return (
-    <div>
-      <Header />
+    <div className="notenook">
       <NavBar />
-      <div className="noteNook p-10">
-        <Routes>
-          <Route path="/dashboard" element={<DashBoard />} />
-        </Routes>
-      </div>
+      <Header />
+      <Routes></Routes>
     </div>
   );
 }

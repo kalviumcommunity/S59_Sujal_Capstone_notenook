@@ -7,9 +7,9 @@ import LoginForm from "../components/LoginForm";
 function Forms() {
   return (
     <div className="overflow-x-hidden">
-      <div className="flex w-screen justify-between items-center py-4 px-8">
+      <div className="flex w-screen justify-between items-center py-4 pl-4 pr-8">
         <Link to="/">
-          <img src={logo} alt="" className="h-20 md:h-24 w-auto" />
+          <img src={logo} alt="" className="logo h-16 md:h-20 " />
         </Link>
 
         <div className="flex justify-between items-center">

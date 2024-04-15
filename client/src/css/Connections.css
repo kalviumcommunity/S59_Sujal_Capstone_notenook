@@ -1,0 +1,42 @@
+.connectionsDiv {
+  width: 325px;
+  height: 100%;
+  border-radius: 10px;
+  background-color: #d9edec;
+  overflow-y: scroll;
+}
+
+.connectionsDiv:hover {
+  overflow-y: scroll;
+}
+
+.connectionList {
+  width: 100%;
+}
+
+.connection {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  align-items: center;
+  background-color: #c6fffc;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+}
+
+.connectionInfo {
+  width: 80%;
+  display: flex;
+  align-items: center;
+}
+.connectionPic {
+  height: 2.5rem;
+  margin-right: 10px;
+}
+
+@media (max-width: 1200px) {
+  .connectionsDiv {
+    display: none;
+  }
+}

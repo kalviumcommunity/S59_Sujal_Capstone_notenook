@@ -3,7 +3,20 @@ import React, { useState, createContext } from "react";
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState({ isLoggedIn: true, username: "Placeholder" });
+  const [user, setUser] = useState({
+    isLoggedIn: true,
+    user: {
+      username: "john_doe",
+      fullname: "John Doe",
+      email: "john.doe@example.com",
+      password: "testPassword123",
+      oauthProvider: "Google",
+      oauthId: "google123",
+      friends: [],
+      notes: [],
+      chats: [],
+    },
+  });
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
