@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/authContext";
 function Stats() {
   const { user } = useContext(AuthContext);
 
-  const noOfNotes = user.user.notes.length
+  const noOfNotes = user.user.notes.length;
   const noOfFriends = user.user.friends.length;
   return (
     <div className="stats dashBoardComponent">

@@ -6,6 +6,7 @@ import "./App.css";
 import Forms from "./pages/Forms";
 import HomePage from "./pages/HomePage";
 import NoteNook from "./pages/NoteNook";
+
 function App() {
   return (
     <AuthProvider>
