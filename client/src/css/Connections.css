@@ -3,7 +3,9 @@
   height: 100%;
   border-radius: 10px;
   background-color: #d9edec;
-  overflow-y: scroll;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .connectionsDiv:hover {
@@ -16,7 +18,7 @@
 
 .connection {
   display: flex;
-  width: 100%;
+  width: 290px;
   justify-content: space-between;
   padding: 0.75rem 1rem;
   align-items: center;

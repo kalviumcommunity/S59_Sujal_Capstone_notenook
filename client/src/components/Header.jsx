@@ -19,9 +19,11 @@ function Header() {
 
 function UserInfo() {
   const { user } = useContext(AuthContext);
+  
   const style = {
     color: "#0099ff",
   };
+
   return (
     <div className="flex header gap-3 justify-between items-center">
       <Link to="/notenook/add">

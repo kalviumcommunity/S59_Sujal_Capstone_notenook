@@ -1,0 +1,15 @@
+.searchNote, .searchUser {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.searchNotesResultContainer, .searchUsersResultContainer {
+  background-color: #E1FFE2;
+  max-width: 1000px;
+  width: 100%;
+  flex: 1;
+  border-radius: 5px;
+}

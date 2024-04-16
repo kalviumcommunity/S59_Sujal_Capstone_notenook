@@ -70,20 +70,52 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #ffffff00;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+  background: #3498db27;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #21a2ff81;
+}
+
+.searchBarContainer {
+  display: flex;
+  background-color: #c6fffc;
+  max-width: 500px;
+  width: 80vw;
+  padding: 0.25rem;
+  border-radius: 34px;
+}
+
+.searchBar {
+  width: 90%;
+  background-color: #c6fffc;
+  outline: none;
+  border-radius: 34px;
+  padding: 0 1rem;
+}
+
+.searchIconContainer {
+  width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #c6fffc;
+  border-radius: 34px;
+  transition: transform 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.searchIconContainer:hover {
+  transform: scale(1.1);
 }
 
 .heading {
