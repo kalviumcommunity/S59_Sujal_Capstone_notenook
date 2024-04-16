@@ -78,12 +78,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3498dbc8;
-  border-radius: 4px;
+  background: #3498db27;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #21a3ff;
+  background: #21a2ff81;
 }
 
 .searchBarContainer {
