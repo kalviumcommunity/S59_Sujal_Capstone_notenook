@@ -28,6 +28,21 @@ function AuthProvider({ children }) {
         {
           username: "Friend 1",
         },
+        {
+          username: "Friend 1",
+        },
+        {
+          username: "Friend 1",
+        },
+        {
+          username: "Friend 1",
+        },
+        {
+          username: "Friend 1",
+        },
+        {
+          username: "Friend 1",
+        },
       ],
       notes: [1, 2, 3, 4],
       chats: [],

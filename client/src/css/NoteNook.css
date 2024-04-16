@@ -44,3 +44,9 @@
     padding-bottom: 4rem;
   }
 }
+
+
+.noteNook::-webkit-scrollbar-thumb {
+  background: #3498db5c;
+  border-radius: 4px;
+}
