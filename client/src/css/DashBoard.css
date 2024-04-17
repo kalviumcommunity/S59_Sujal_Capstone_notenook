@@ -1,3 +1,9 @@
+.dashBoardPage {
+  display: grid;
+  grid-template-columns: 1fr 325px;
+  gap: 20px;
+}
+
 .dashboard {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -83,8 +89,14 @@
   .statDiv p {
     font-size: 10px;
   }
-  
+
   .statDiv {
     min-width: 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .dashBoardPage {
+    grid-template-columns: 1fr;
   }
 }

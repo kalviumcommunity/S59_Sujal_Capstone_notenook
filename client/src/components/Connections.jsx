@@ -5,6 +5,7 @@ import SmsIcon from "@mui/icons-material/Sms";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
 function Connections() {
+  console.log("Connetion rerenederd");
   const { user } = useContext(AuthContext);
   const friends = user.user.friends;
   return (
