@@ -1,15 +1,40 @@
-.searchNote, .searchUser {
+.searchNote,
+.searchUser {
   display: flex;
   flex-direction: column;
-  height: 100%;
   align-items: center;
   gap: 1.5rem;
 }
 
-.searchNotesResultContainer, .searchUsersResultContainer {
-  background-color: #E1FFE2;
+.searchUsersPage,
+.searchNotesPage {
+  display: grid;
+  grid-template-columns: 1fr 325px;
+  gap: 20px;
+  height: 100%;
+}
+
+.searchNotesResultContainer,
+.searchUsersResultContainer {
+  padding: 1rem;
   max-width: 1000px;
   width: 100%;
-  flex: 1;
+  min-height: 600px;
+  max-height: 72.5vh;
   border-radius: 5px;
+  overflow-y: scroll;
+}
+
+.searchNotesPage .myNotes {
+  grid-row: inherit;
+}
+
+@media (max-width: 1200px) {
+  .searchUsersPage,
+  .searchNotesPage {
+    grid-template-columns: 1fr;
+  }
+  .searchNotesPage .myNotes {
+    display: none;
+  }
 }

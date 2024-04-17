@@ -6,8 +6,10 @@ import { Routes, Route } from "react-router-dom";
 import Connections from "../components/Connections";
 import SearchNotes from "./SearchNotes";
 import SearchUsers from "./SearchUsers";
+import TextEditor from "../components/TextEditor";
 
 function NoteNook() {
+  console.log("App rerendered");
   return (
     <div>
       <NavBar />
@@ -18,8 +20,8 @@ function NoteNook() {
           <Route path="/dashboard" element={<DashBoard />}></Route>
           <Route path="/notes" element={<SearchNotes />}></Route>
           <Route path="/friends" element={<SearchUsers />}></Route>
+          <Route path="/add" element={<TextEditor />} />
         </Routes>
-        <Connections />
       </div>
     </div>
   );
