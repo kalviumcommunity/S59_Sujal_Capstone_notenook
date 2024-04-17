@@ -7,7 +7,7 @@ import Connections from "../components/Connections";
 import SearchNotes from "./SearchNotes";
 import SearchUsers from "./SearchUsers";
 import TextEditor from "../components/TextEditor";
-
+import AddNotes from "./AddNotes";
 function NoteNook() {
   console.log("App rerendered");
   return (
@@ -20,7 +20,7 @@ function NoteNook() {
           <Route path="/dashboard" element={<DashBoard />}></Route>
           <Route path="/notes" element={<SearchNotes />}></Route>
           <Route path="/friends" element={<SearchUsers />}></Route>
-          <Route path="/add" element={<TextEditor />} />
+          <Route path="/add" element={<AddNotes />} />
         </Routes>
       </div>
     </div>
