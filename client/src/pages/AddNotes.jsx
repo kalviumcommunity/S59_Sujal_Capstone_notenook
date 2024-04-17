@@ -30,7 +30,6 @@ function AddNotes() {
 
             <p className="error">{errors.noteTitle?.message}</p>
           </div>
-
           <div className="field">
             <label htmlFor="subject">Subject:</label>
             <input
@@ -42,7 +41,6 @@ function AddNotes() {
 
             <p className="error">{errors.subject?.message}</p>
           </div>
-
           <div className="field">
             <label htmlFor="chapter">Chapter:</label>
             <input
@@ -54,14 +52,23 @@ function AddNotes() {
 
             <p className="error">{errors.chapter?.message}</p>
           </div>
-
+          // JSX code in AddNotes component
           <div className="file-input-container">
-            <input type="file" id="fileInput" className="file-input" />
-            <label htmlFor="fileInput" className="file-input-label">
-              Upload files
+            <input
+              type="file"
+              id="fileInput"
+              className="file-input"
+              aria-describedby="fileInputLabel"
+            />
+            <label
+              htmlFor="fileInput"
+              className="file-input-label"
+              role="button"
+              id="fileInputLabel"
+            >
+              Choose a file
             </label>
           </div>
-
           <button type="submit" className="button">
             Submit
           </button>
