@@ -1,6 +1,5 @@
 .noteNook {
   position: fixed;
-  display: grid;
   top: 7rem;
   left: 112px;
   border-top-left-radius: 20px;

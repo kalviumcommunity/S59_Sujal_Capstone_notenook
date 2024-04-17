@@ -2,15 +2,16 @@
 .searchUser {
   display: flex;
   flex-direction: column;
-  height: 100%;
   align-items: center;
   gap: 1.5rem;
 }
 
-.searchUsersPage, .searchNotesPage {
+.searchUsersPage,
+.searchNotesPage {
   display: grid;
   grid-template-columns: 1fr 325px;
   gap: 20px;
+  height: 100%;
 }
 
 .searchNotesResultContainer,
@@ -23,16 +24,17 @@
   border-radius: 5px;
   overflow-y: scroll;
 }
- 
-.searchNotesPage .myNotes{
+
+.searchNotesPage .myNotes {
   grid-row: inherit;
 }
 
 @media (max-width: 1200px) {
-  .searchUsersPage, .searchNotesPage {
+  .searchUsersPage,
+  .searchNotesPage {
     grid-template-columns: 1fr;
   }
-  .searchNotesPage .myNotes{
+  .searchNotesPage .myNotes {
     display: none;
   }
 }
