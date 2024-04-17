@@ -52,7 +52,6 @@ function AddNotes() {
 
             <p className="error">{errors.chapter?.message}</p>
           </div>
-          // JSX code in AddNotes component
           <div className="file-input-container">
             <input
               type="file"
