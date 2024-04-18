@@ -1,0 +1,53 @@
+.textEditor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: scroll;
+  align-items: center;
+}
+
+.toolBarContainer {
+  top: 0;
+  min-height: 5%;
+}
+
+#toolbar {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+#toolbar * {
+  z-index: 10;
+}
+
+#textEditorContainer {
+  height: 90%;
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.ql-editor {
+  position: relative;
+  height: 100%;
+  overflow-y: scroll;
+  z-index: 5;
+}
+
+.ql-container {
+  border-radius: 30px;
+}
+
+.ql-container.ql-snow,
+.ql-toolbar.ql-snow {
+  border: none;
+}
+
+#toolbar .ql-header.ql-picker {
+  width: 40px;
+}
