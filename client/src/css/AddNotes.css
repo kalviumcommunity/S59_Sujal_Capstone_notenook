@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: 1fr 325px;
   padding: 2rem;
+  align-items: center;
   gap: 10px;
   height: 100%;
 }
@@ -33,16 +34,25 @@
   background-color: #0056b3;
 }
 
-.noteDetails{
-    max-height: 100%;
-    overflow-y: scroll;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.noteDetails {
+  max-height: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .noteDetails .field {
-    background-color: #1abc9c2f;
+  background-color: #1abc9c2f;
   margin-bottom: 10px;
   width: 90%;
+}
+
+@media (max-width: 1024px) {
+  .addNotesPage {
+    grid-template-columns: 1fr;
+  }
+  .postNoteForm {
+    display: none;
+  }
 }
