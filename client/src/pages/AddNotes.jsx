@@ -54,7 +54,7 @@ function AddNotes() {
             <div className="button" onClick={showForm}>
               Note details
             </div>
-            <button type="submit" className="button">
+            <button type="submit" className="button" disabled={!formVisibility}>
               Post
             </button>
           </div>
