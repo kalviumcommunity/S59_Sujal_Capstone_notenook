@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/authContext";
-
 import "./App.css";
 import Forms from "./pages/Forms";
 import HomePage from "./pages/HomePage";
