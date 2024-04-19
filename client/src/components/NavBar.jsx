@@ -23,7 +23,7 @@ function NavBar() {
           <EventNoteIcon style={style} fontSize="small"/>
         </NavLink>
 
-        <NavLink className="addIcon navButton" to="/notenook/add">
+        <NavLink className="addIcon navButton" to="/notenook/postNotes">
           <AddCircleIcon style={style} fontSize="small"/>
         </NavLink>
 
