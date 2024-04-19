@@ -7,21 +7,15 @@
   align-items: center;
 }
 
-.toolBarContainer {
-  top: 0;
-  min-height: 5%;
-}
-
 #toolbar {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  z-index: 10;
-}
-
-#toolbar * {
-  z-index: 10;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: fit-content;
+  gap: 2px;
 }
 
 #textEditorContainer {
@@ -48,6 +42,21 @@
   border: none;
 }
 
-#toolbar .ql-header.ql-picker {
-  width: 40px;
+#toolbar .ql-size.ql-picker {
+  z-index: 10;
+}
+
+@media (max-width: 640px) {
+  .textEditor {
+    height: 100%;
+  }
+  #toolbar {
+    height: 20%;
+  }
+  .ql-editor::-webkit-scrollbar {
+    width: 5px;
+  }
+  #textEditorContainer {
+    height: 85%;
+  }
 }
