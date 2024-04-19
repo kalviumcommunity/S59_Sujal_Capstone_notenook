@@ -37,12 +37,6 @@
   margin-right: 10px;
 }
 
-.addNoteButtons{
-  display: flex;
-  width: 300px;
-  justify-content: space-around;
-}
-
 @media (max-width: 1200px) {
   .connectionsDiv {
     display: none;
