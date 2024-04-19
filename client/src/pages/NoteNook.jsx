@@ -19,7 +19,7 @@ function NoteNook() {
             <Route path="/dashboard" element={<DashBoard />}></Route>
             <Route path="/notes" element={<SearchNotes />}></Route>
             <Route path="/friends" element={<SearchUsers />}></Route>
-            <Route path="/add" element={<AddNotes />} />
+            <Route path="/postNotes/*" element={<AddNotes />} />
           </Routes>
         </div>
       </DeviceWidthProvider>
