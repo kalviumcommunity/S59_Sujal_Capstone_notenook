@@ -19,7 +19,7 @@ function MyNote({ note }) {
           </p>
         </div>
       </Link>
-      <p className="postedBy">{note.user.username}</p>
+      <p className="postedBy">{note.user?.username}</p>
       <p className="uploadDate">Updated At: {formatDate(note.updatedAt)}</p>
       <div className="noteButtons">
         <button className="update button">Update</button>

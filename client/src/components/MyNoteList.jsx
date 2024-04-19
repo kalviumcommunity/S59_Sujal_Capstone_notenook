@@ -58,8 +58,8 @@ function MyNoteList() {
         </Link>
       </div>
       <div className="notes">
-        {placeHolderData.map((note) => {
-          return <MyNote note={note} />;
+        {placeHolderData.map((note, i) => {
+          return <MyNote note={note} key={i} />;
         })}
       </div>
     </div>
