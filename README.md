@@ -27,6 +27,7 @@ Notenook is a platform designed to facilitate note sharing, discussions, and net
   - Passport.js
   - Redux
 
+## Frontend Deployed Link
 ## Weekly Plans
 
 ### Week 1: Setup and Backend Development
