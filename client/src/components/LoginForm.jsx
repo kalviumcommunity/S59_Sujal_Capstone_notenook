@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import "../css/Forms.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
 
 function LoginForm() {
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState(""); // State for error message
+  const [errorMessage, setErrorMessage] = useState("");
+  const { user, setUser } = useContext(AuthContext);
 
   const {
     register,
@@ -23,7 +25,7 @@ function LoginForm() {
       );
 
       document.cookie = `token=${res.data.token}; path=/`;
-
+      setUser(res.data.user);
       console.log(res);
 
       navigate("/");
