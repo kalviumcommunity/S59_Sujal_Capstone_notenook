@@ -53,7 +53,7 @@ router.post(
   passport.authenticate("local", { session: false }),
   async (req, res) => {
     const token = jwt.sign({ userId: req.user._id }, process.env.SECRET_KEY, {
-      expiresIn: "1min",
+      expiresIn: "1hr",
     });
 
     const user = await UserModel.findById(req.user._id);
@@ -117,22 +117,19 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
-      const user = await UserModel.findById(req.user.id);
+      const user = await UserModel.findById(req.user.id).select("-password");
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      const userData = user._doc;
-
-      delete userData.password;
-
-      res.status(200).json({ user: userData });
+      res.status(200).json({ user });
     } catch (error) {
       console.log(error);
       res.status(500).json({ error });
     }
   }
 );
+
 
 module.exports = router;
