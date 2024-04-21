@@ -4,24 +4,24 @@ const argon2 = require("argon2");
 
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
-
-  fullname: {
-    type: String,
-    required: true,
-  },
-
+  fullname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-
   password: { type: String },
-
   oauthProvider: { type: String },
-
   oauthId: { type: String },
-
-  friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
-
-  notes: [{ type: Schema.Types.ObjectId, ref: "Note" }],
-
+  friends: [
+    {
+      userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+      friendName: { type: String, required: true },
+    },
+  ],
+  notes: [
+    {
+      noteId: { type: Schema.Types.ObjectId, ref: "Note", required: true },
+      title: { type: String, required: true },
+      subject: { type: String, required: true },
+    },
+  ],
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 });
 
@@ -44,6 +44,6 @@ UserSchema.methods.validatePassword = async function (password) {
   }
 };
 
-const UserModel = new mongoose.model("User", UserSchema);
+const UserModel = mongoose.model("User", UserSchema);
 
 module.exports = { UserModel };

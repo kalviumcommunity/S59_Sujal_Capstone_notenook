@@ -51,12 +51,22 @@ router.post("/register", async (req, res) => {
 router.post(
   "/login",
   passport.authenticate("local", { session: false }),
-  (req, res) => {
+  async (req, res) => {
     const token = jwt.sign({ userId: req.user._id }, process.env.SECRET_KEY, {
-      expiresIn: "1h",
+      expiresIn: "1hr",
     });
 
-    res.json({ token });
+    const user = await UserModel.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userData = user._doc;
+
+    delete userData.password;
+
+    res.status(200).json({ user: userData, token });
   }
 );
 
@@ -101,5 +111,25 @@ router.put(
     }
   }
 );
+
+router.post(
+  "/verifySession",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const user = await UserModel.findById(req.user.id).select("-password");
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.status(200).json({ user });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error });
+    }
+  }
+);
+
 
 module.exports = router;

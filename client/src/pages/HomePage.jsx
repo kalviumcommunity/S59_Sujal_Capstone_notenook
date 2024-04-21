@@ -37,7 +37,7 @@ function HomePageButtons() {
 
   return (
     <>
-      {user.isLoggedIn ? (
+      {user ? (
         <>
           <Link to="/notenook/dashboard">
             <button className="button" role="button">
