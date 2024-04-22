@@ -1,64 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import MyNote from "./MyNote";
 import { Link } from "react-router-dom";
 import "../css/MyNoteList.css";
+import { AuthContext } from "../context/authContext";
 
-const placeHolderData = [
-  {
-    _id: "123456789",
-    user: {
-      username: "john_doe",
-    },
-    title: "The Hack CPU",
-    subject: "BOCS",
-    fileReference: null,
-    document: {
-      text: "This is the test Note Data",
-    },
-    createdAt: "2024-03-19T18:50:41.312+00:00",
-    updatedAt: "2024-03-19T18:50:41.312+00:00",
-  },
-  {
-    _id: "123456789",
-    user: {
-      username: "john_doe",
-    },
-    title: "The Hack CPU",
-    subject: "BOCS",
-    fileReference: null,
-    document: {
-      text: "This is the test Note Data",
-    },
-    createdAt: "2024-03-19T18:50:41.312+00:00",
-    updatedAt: "2024-03-19T18:50:41.312+00:00",
-  },
-  {
-    _id: "123456789",
-    user: {
-      username: "john_doe",
-    },
-    title: "The Hack CPU",
-    subject: "BOCS",
-    fileReference: null,
-    document: {
-      text: "This is the test Note Data",
-    },
-    createdAt: "2024-03-19T18:50:41.312+00:00",
-    updatedAt: "2024-03-19T18:50:41.312+00:00",
-  },
-];
+function MyNoteList({ handleClick }) {
+  const { user } = useContext(AuthContext);
 
-function MyNoteList() {
   return (
     <div className="myNoteList">
-      <div className="flex  w-full justify-between">
+      <div className="flex w-full justify-between p-4">
         <h1 className="heading">My Notes</h1>
-        <Link to={"newNote"}>
-          <button className="button">New Note</button>
-        </Link>
+        <button onClick={handleClick} className="button">
+          New Note
+        </button>
       </div>
       <div className="notes">
-        {placeHolderData.map((note, i) => {
+        {user.notes.map((note, i) => {
           return <MyNote note={note} key={i} />;
         })}
       </div>

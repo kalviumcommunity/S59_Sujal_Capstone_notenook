@@ -2,13 +2,22 @@ import "../css/NoteNook.css";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 import DashBoard from "./DashBoard";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import SearchNotes from "./SearchNotes";
 import SearchUsers from "./SearchUsers";
 import { DeviceWidthProvider } from "../context/deviceWidthContext";
+import { AuthContext } from "../context/authContext";
 import AddNotes from "./AddNotes";
+import { useContext, useEffect } from "react";
 function NoteNook() {
-  console.log("App rerendered");
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user == null) {
+      navigate("/");
+    }
+  }, []);
+
   return (
     <div>
       <NavBar />
