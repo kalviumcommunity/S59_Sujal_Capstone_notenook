@@ -12,19 +12,26 @@ router.post(
   "/postNewNote",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    const user = await UserModel.findById(req.user.id);
-
-    const { title, subject } = req.body;
-
-    const validationResult = validateData({ title, subject }, newNoteJoiSchema);
-
-    if (validationResult.error) {
-      return res
-        .status(400)
-        .json({ message: validationResult.error.details[0].message });
-    }
-
     try {
+      const user = await UserModel.findById(req.user.id);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const { title, subject } = req.body;
+
+      const validationResult = validateData(
+        { title, subject },
+        newNoteJoiSchema
+      );
+
+      if (validationResult.error) {
+        return res
+          .status(400)
+          .json({ message: validationResult.error.details[0].message });
+      }
+
       const newNote = new NoteModel({
         postedBy: user._id,
         title,
@@ -33,16 +40,13 @@ router.post(
 
       const savedNote = await newNote.save();
 
-      console.log(savedNote);
-
       user.notes.push({
         noteId: savedNote._id,
-        title: title,
-        subject: subject,
+        title,
+        subject,
         updatedOn: savedNote.updatedAt,
       });
 
-      console.log(user);
       await user.save();
       return res
         .status(201)
@@ -53,5 +57,7 @@ router.post(
     }
   }
 );
+
+module.exports = router;
 
 module.exports = router;
