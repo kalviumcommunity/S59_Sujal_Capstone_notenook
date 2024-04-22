@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const updateSchema = Joi.object({
+const userUpdateJoiSchema = Joi.object({
   username: Joi.string().min(3).optional(),
   fullname: Joi.string().required(),
   password: Joi.string().required(),
@@ -15,6 +15,6 @@ const userJoiSchema = Joi.object({
 });
 
 module.exports = {
-  updateSchema,
+  userUpdateJoiSchema,
   userJoiSchema,
 };

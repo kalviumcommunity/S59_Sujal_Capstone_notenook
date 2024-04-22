@@ -1,27 +1,40 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const argon2 = require("argon2");
+const { required, date, string } = require("joi");
 
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
-  fullname: { type: String, required: true },
+
+  fullname: {
+    type: String,
+    required: true,
+  },
+
   email: { type: String, required: true, unique: true },
+
   password: { type: String },
+
   oauthProvider: { type: String },
+
   oauthId: { type: String },
+
   friends: [
     {
-      userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-      friendName: { type: String, required: true },
+      userId: { type: Schema.Types.ObjectId, ref: "User" },
+      friendName: String,
     },
   ],
+
   notes: [
     {
-      noteId: { type: Schema.Types.ObjectId, ref: "Note", required: true },
+      noteId: { type: Schema.Types.ObjectId, ref: "Note" },
       title: { type: String, required: true },
       subject: { type: String, required: true },
+      updatedOn: { type: Date, required: true },
     },
   ],
+
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 });
 
