@@ -1,12 +1,16 @@
 .myNoteList {
   height: 100%;
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   grid-column: span 2;
 }
 
 .notes {
-  padding-top: 2rem;
   display: grid;
+  height: 90%;
+  overflow-y: scroll;
   grid-template-columns: repeat(auto-fill, minmax(300px, 500px));
   gap: 16px;
   justify-content: center;

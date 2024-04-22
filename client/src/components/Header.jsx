@@ -42,7 +42,7 @@ function UserInfo() {
       >
         <div className="w-0.5 h-5 bg-gray-400"></div>
         <img src={pic} alt="" className="h-8 md:h-10 w-auto" />
-        <p className="text-sm md:text-base">{user.username}</p>
+        <p className="text-sm md:text-base">{user?.username}</p>
       </Link>
     </div>
   );
