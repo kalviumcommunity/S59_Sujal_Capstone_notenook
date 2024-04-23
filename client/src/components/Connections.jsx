@@ -7,7 +7,7 @@ import { AuthContext } from "../context/authContext";
 function Connections() {
   console.log("Connetion rerenederd");
   const { user } = useContext(AuthContext);
-  const friends = user.friends;
+  const friends = user?.friends;
   return (
     <div className="p-4 connectionsDiv relative">
       {!friends && (

@@ -9,7 +9,7 @@ const { newNoteJoiSchema } = require("../validation/noteJoiSchemas");
 const { validateData } = require("../validation/validator");
 
 router.post(
-  "/postNewNote",
+  "/createNewNote",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
@@ -57,7 +57,5 @@ router.post(
     }
   }
 );
-
-module.exports = router;
 
 module.exports = router;

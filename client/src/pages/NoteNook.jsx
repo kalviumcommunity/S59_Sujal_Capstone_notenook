@@ -6,14 +6,22 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import SearchNotes from "./SearchNotes";
 import SearchUsers from "./SearchUsers";
 import { DeviceWidthProvider } from "../context/deviceWidthContext";
-import { AuthContext } from "../context/authContext";
 import AddNotes from "./AddNotes";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 function NoteNook() {
-  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   useEffect(() => {
-    if (user == null) {
+    const cookies = document.cookie;
+    console.log(cookies)
+    if (cookies) {
+      const tokenCookie = document.cookie
+        .split(";")
+        .find((cookie) => cookie.trim().startsWith("token="))
+        .split("=")[1];
+      if (!tokenCookie) {
+        navigate("/");
+      }
+    } else {
       navigate("/");
     }
   }, []);

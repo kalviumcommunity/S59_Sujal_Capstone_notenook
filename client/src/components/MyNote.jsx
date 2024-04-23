@@ -8,7 +8,7 @@ function MyNote({ note }) {
 
   return (
     <div className="note">
-      <Link to={`/${note._id}`}>
+      <Link to={`writeNote/${note._id}`}>
         <div className="noteInfo">
           <p className="subject">
             <span className="subjectLable">Subject: </span> {note.subject}
@@ -19,8 +19,7 @@ function MyNote({ note }) {
           </p>
         </div>
       </Link>
-      {/* <p className="postedBy">{note.user?.username}</p> */}
-      {/* <p className="uploadDate">Updated At: {formatDate(note.updatedAt)}</p> */}
+      <p className="uploadDate">Updated At: {formatDate(note.updatedOn)}</p>
       <div className="noteButtons">
         <button className="update button">Update</button>
         <button className="delete button">Delete</button>
