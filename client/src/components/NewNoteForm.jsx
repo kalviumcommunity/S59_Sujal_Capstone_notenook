@@ -13,23 +13,29 @@ function NewNoteForm({ handleClick }) {
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      const token = document.cookie
+      const tokenCookie = document.cookie
         .split(";")
-        .find((cookie) => cookie.trim().startsWith("token="))
-        .split("=")[1];
-      const response = await axios.post(
-        import.meta.env.VITE_REACT_APP_NEW_NOTE_URL,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        .find((cookie) => cookie.trim().startsWith("token="));
 
-      console.log(response);
-      navigate(`/notenook/postNotes/writeNote/${response.data.noteId}`);
+      if (tokenCookie) {
+        const token = tokenCookie.split("=")[1];
+
+        const response = await axios.post(
+          import.meta.env.VITE_REACT_APP_NEW_NOTE_URL,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log(response);
+        navigate(`/notenook/postNotes/writeNote/${response.data.note._id}`);
+      } else {
+        console.log("Token cookie not found.");
+      }
     } catch (err) {
       console.log(err);
     }

@@ -50,7 +50,7 @@ router.post(
       await user.save();
       return res
         .status(201)
-        .json({ message: "Note created successfully", noteId: newNote._id });
+        .json({ message: "Note created successfully", note: newNote });
     } catch (error) {
       console.error("Error creating note:", error);
       return res.status(500).json({ message: "Internal server error" });
