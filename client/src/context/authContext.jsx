@@ -1,10 +1,11 @@
 import { useState, createContext, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async (token) => {
       try {
@@ -29,6 +30,7 @@ function AuthProvider({ children }) {
           alert("Session expired, please login again!!");
           document.cookie =
             "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          navigate("/");
         }
       }
     };

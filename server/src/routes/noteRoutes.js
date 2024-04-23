@@ -9,7 +9,7 @@ const { newNoteJoiSchema } = require("../validation/noteJoiSchemas");
 const { validateData } = require("../validation/validator");
 
 router.post(
-  "/postNewNote",
+  "/createNewNote",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
@@ -50,14 +50,12 @@ router.post(
       await user.save();
       return res
         .status(201)
-        .json({ message: "Note created successfully", note: newNote });
+        .json({ message: "Note created successfully", noteId: newNote._id });
     } catch (error) {
       console.error("Error creating note:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
 );
-
-module.exports = router;
 
 module.exports = router;
