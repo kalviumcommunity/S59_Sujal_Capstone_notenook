@@ -1,7 +1,6 @@
 require("dotenv").config();
 require("./src/auth/localStrategy");
 require("./src/auth/JwtStrategy");
-require("dotenv").config();
 
 const express = require("express");
 const http = require("http");

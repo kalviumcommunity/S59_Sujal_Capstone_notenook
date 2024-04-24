@@ -10,6 +10,8 @@ function TextEditor() {
   const { documentId } = useParams();
   const [socket, setSocket] = useState();
   const [quill, setQuill] = useState();
+  const [loadingError, setLoadingError] = useState(null);
+  const [savingError, setSavingError] = useState(null);
 
   useEffect(() => {
     const socketConnection = io(
@@ -52,6 +54,14 @@ function TextEditor() {
       quill.enable();
     });
 
+    socket.on("document-fetch-error", (errorMessage) => {
+      setLoadingError(errorMessage);
+    });
+
+    socket.on("document-save-error", (errorMessage) => {
+      setSavingError(errorMessage);
+    });
+
     const interval = setInterval(() => {
       socket.emit("save-document", quill.getContents());
     }, 2000);
@@ -62,7 +72,6 @@ function TextEditor() {
   }, [socket, quill, documentId]);
 
   const wrapperRef = useCallback((wrapper) => {
-    console.log(wrapper);
     if (wrapper == null) return;
     wrapper.innerHTML = "";
     const editor = document.createElement("div");
@@ -81,6 +90,8 @@ function TextEditor() {
 
   return (
     <div className="relative textEditor">
+      {loadingError && <div>Error loading document: {loadingError}</div>}
+      {savingError && <div>Error saving document: {savingError}</div>}
       <ToolBar />
       <div id="textEditorContainer" ref={wrapperRef}>
         <div id="editor"></div>
