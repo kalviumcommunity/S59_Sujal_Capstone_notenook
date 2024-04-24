@@ -8,7 +8,7 @@ function MyNote({ note }) {
 
   return (
     <div className="note">
-      <Link to={`writeNote/${note._id}`}>
+      <Link to={`writeNote/${note.noteId}`}>
         <div className="noteInfo">
           <p className="subject">
             <span className="subjectLable">Subject: </span> {note.subject}

@@ -58,17 +58,17 @@ function NoteDetailsForm() {
               Post
             </button>
           </div>
-          <div class="file-input-container">
+          <div className="file-input-container">
             <input
               type="file"
               id="fileInput"
-              class="file-input"
+              className="file-input"
               aria-describedby="fileInputLabel"
               accept=".pdf"
             />
             <label
-              for="fileInput"
-              class="file-input-label"
+              htmlFor="fileInput"
+              className="file-input-label"
               role="button"
               id="fileInputLabel"
             >
