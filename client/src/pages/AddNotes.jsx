@@ -3,6 +3,7 @@ import "../css/AddNotes.css";
 import { Routes, Route } from "react-router-dom";
 import WriteNote from "../components/WriteNote";
 import MyNotes from "../components/MyNotes";
+
 function AddNotes() {
   return (
     <div className="addNotesPage relative">
