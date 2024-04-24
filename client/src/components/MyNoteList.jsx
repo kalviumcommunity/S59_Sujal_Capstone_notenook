@@ -16,7 +16,7 @@ function MyNoteList({ handleClick }) {
         </button>
       </div>
       <div className="notes">
-        {user.notes.map((note, i) => {
+        {user?.notes.map((note, i) => {
           return <MyNote note={note} key={i} />;
         })}
       </div>
