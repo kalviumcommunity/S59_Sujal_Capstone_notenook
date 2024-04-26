@@ -1,11 +1,3 @@
-.searchNote,
-.searchUser {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
 .searchUsersPage,
 .searchNotesPage {
   display: grid;
@@ -14,15 +6,89 @@
   height: 100%;
 }
 
+.searchNote,
+.searchUser {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .searchNotesResultContainer,
 .searchUsersResultContainer {
   padding: 1rem;
-  max-width: 1000px;
   width: 100%;
+  max-width: 90vw;
   min-height: 600px;
-  max-height: 72.5vh;
+  max-height: 75vh;
   border-radius: 5px;
   overflow-y: scroll;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 500px));
+  grid-template-rows: auto;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.resultInfo {
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 10px;
+  background-color: #e6f2ff;
+}
+
+.resultInfo p {
+  margin-bottom: 0.25rem;
+}
+
+.resultInfo p .lable {
+  color: #575757;
+}
+
+.resultInfo .title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resultInfo .subject {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.resultInfo .postedBy {
+  font-size: 1rem;
+  color: #444444;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.resultInfo .postedBy img {
+  height: 35px;
+}
+.resultInfo .updatedAt {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.noteButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.resultInfo button.view {
+  background-color: #00cd30;
+  color: #fff;
+  display: block;
+  margin-left: auto;
+}
+
+.resultInfo button:hover {
+  opacity: 0.9;
 }
 
 .searchNotesPage .myNotes {
@@ -36,5 +102,12 @@
   }
   .searchNotesPage .myNotes {
     display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .searchNotesResultContainer,
+  .searchUsersResultContainer {
+    padding-bottom: 4rem;
   }
 }
