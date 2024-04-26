@@ -1,18 +1,54 @@
 import React, { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import "../css/Search.css";
-import MyNotes from "../components/DashBoardComponents/MyNotes";
+import NoteList from "../components/DashBoardComponents/NoteList";
 import SearchResult from "../components/SearchResult";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 function SearchNotes() {
   const [searchResults, setSearchResults] = useState(null);
 
+  const handleSearch = async (event) => {
+    event.preventDefault();
+
+    try {
+      const searchInput = event.target.elements.searchInput.value;
+      const tokenCookie = document.cookie
+        .split(";")
+        .find((cookie) => cookie.trim().startsWith("token="));
+
+      if (tokenCookie) {
+        const token = tokenCookie.split("=")[1];
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_REACT_APP_SEARCH_NOTE_ENDPOINT
+          }?searchInput=${searchInput}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        setSearchResults(response.data.notes);
+      }
+    } catch (error) {
+      console.error("Error searching notes:", error);
+    }
+  };
   return (
     <div className="searchNotesPage">
       <div className="searchNote">
-        <div className="searchBarContainer">
-          <input className="searchBar" type="search" name="" id="" />
-          <div className="searchIconContainer">
+        <form className="searchBarContainer" onSubmit={handleSearch}>
+          <input
+            className="searchBar"
+            type="search"
+            name="searchInput"
+            id="searchInput"
+          />
+          <button type="submit" className="searchIconContainer">
             <SearchIcon
               className="searchIcon"
               fontSize="large"
@@ -20,18 +56,21 @@ function SearchNotes() {
                 color: "#0099ff",
               }}
             />
-          </div>
-        </div>
+          </button>
+        </form>
 
         <div className="searchNotesResultContainer">
+          {searchResults && searchResults.length == 0 && (
+            <p className="placeHolder">No results found</p>
+          )}
           {searchResults &&
             searchResults.map((result) => {
-              return <SearchResult result={result} />;
+              return <SearchResult key={uuidv4()} result={result} />;
             })}
         </div>
       </div>
 
-      <MyNotes />
+      <NoteList />
     </div>
   );
 }

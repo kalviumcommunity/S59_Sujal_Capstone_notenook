@@ -1,6 +1,6 @@
 import React from "react";
 
-function MyNotes() {
+function NoteList() {
   return (
     <div className="dashBoardComponent myNotes relative">
       <p className="placeHolder">Your Notes Appear here</p>
@@ -9,4 +9,4 @@ function MyNotes() {
   );
 }
 
-export default MyNotes;
+export default NoteList;

@@ -1,7 +1,7 @@
 import React from "react";
 import Stats from "../components/DashBoardComponents/Stats";
 import ReviewList from "../components/DashBoardComponents/ReviewList";
-import MyNotes from "../components/DashBoardComponents/MyNotes";
+import NoteList from "../components/DashBoardComponents/NoteList";
 import "../css/DashBoard.css";
 import Connections from "../components/Connections";
 
@@ -10,7 +10,7 @@ function DashBoard() {
     <div className="dashBoardPage">
       <div className="dashboard">
         <Stats />
-        <MyNotes />
+        <NoteList />
         <ReviewList />
       </div>
       <Connections />
