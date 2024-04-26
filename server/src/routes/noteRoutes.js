@@ -33,7 +33,7 @@ router.post(
       }
 
       const newNote = new NoteModel({
-        postedBy: user._id,
+        postedBy: { userId: user._id, username: user.username },
         title,
         subject,
       });

@@ -101,11 +101,14 @@
   .addNotes {
     grid-template-columns: 1fr;
     padding: 0;
-    grid-template-rows: 90% auto;
     padding-bottom: 4rem;
+    grid-template-rows: 90% auto;
   }
   .addNoteButtons {
     width: 80vw;
     max-width: 400px;
+  }
+  .postNoteForm {
+    padding-bottom: 4rem;
   }
 }
