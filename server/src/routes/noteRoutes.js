@@ -58,4 +58,35 @@ router.post(
   }
 );
 
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // Escapes special characters
+}
+
+router.get(
+  "/searchNotes",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const { searchInput } = req.query;
+      console.log(searchInput);
+
+      const escapedSearchInput = escapeRegExp(searchInput);
+
+      const query = {
+        $or: [
+          { title: { $regex: escapedSearchInput, $options: "i" } },
+          { subject: { $regex: escapedSearchInput, $options: "i" } },
+        ],
+      };
+
+      const notes = await NoteModel.find(query);
+
+      return res.status(200).json({ notes });
+    } catch (error) {
+      console.error("Error searching notes:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
 module.exports = router;

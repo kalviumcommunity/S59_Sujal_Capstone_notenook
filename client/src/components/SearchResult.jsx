@@ -27,7 +27,10 @@ function SearchResult({ result }) {
     <div className="searchNoteResult">
       <div className="resultInfo">
         <p className="postedBy">
-          <img src={pic} alt="" cla />
+          <img
+            src={pic}
+            alt={`${result.postedBy.username}'s profile picture`}
+          />
           <span>{result.postedBy.username}</span>
         </p>
         <p className="title">
