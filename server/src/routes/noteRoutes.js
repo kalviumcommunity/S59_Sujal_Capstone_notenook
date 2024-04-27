@@ -58,6 +58,10 @@ router.post(
   }
 );
 
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // Escapes special characters
+}
+
 router.get(
   "/searchNotes",
   passport.authenticate("jwt", { session: false }),
@@ -65,10 +69,13 @@ router.get(
     try {
       const { searchInput } = req.query;
       console.log(searchInput);
+
+      const escapedSearchInput = escapeRegExp(searchInput);
+
       const query = {
         $or: [
-          { title: { $regex: searchInput, $options: "i" } },
-          { subject: { $regex: searchInput, $options: "i" } },
+          { title: { $regex: escapedSearchInput, $options: "i" } },
+          { subject: { $regex: escapedSearchInput, $options: "i" } },
         ],
       };
 

@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 
 function SearchNotes() {
   const [searchResults, setSearchResults] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -33,11 +34,14 @@ function SearchNotes() {
         );
 
         setSearchResults(response.data.notes);
+        setError(null);
       }
     } catch (error) {
       console.error("Error searching notes:", error);
+      setError("An error occurred while searching notes. Please try again.");
     }
   };
+
   return (
     <div className="searchNotesPage">
       <div className="searchNote">
@@ -60,7 +64,8 @@ function SearchNotes() {
         </form>
 
         <div className="searchNotesResultContainer">
-          {searchResults && searchResults.length == 0 && (
+          {error && <p className="error">{error}</p>}{" "}
+          {searchResults && searchResults.length === 0 && (
             <p className="placeHolder">No results found</p>
           )}
           {searchResults &&
