@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import "../css/Search.css";
-import NoteList from "../components/DashBoardComponents/NoteList";
+import NoteList from "../components/NoteList";
 import SearchResult from "../components/SearchResult";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-
+import { useContext } from "react";
+import { DeviceWidthContext } from "../context/deviceWidthContext";
 function SearchNotes() {
   const [searchResults, setSearchResults] = useState(null);
   const [error, setError] = useState(null);
+  const width = useContext(DeviceWidthContext);
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -74,8 +76,7 @@ function SearchNotes() {
             })}
         </div>
       </div>
-
-      <NoteList />
+      {width > 1024 && <NoteList />}
     </div>
   );
 }

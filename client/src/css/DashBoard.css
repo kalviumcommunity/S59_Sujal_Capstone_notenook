@@ -10,13 +10,14 @@
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: auto 1fr 1fr 1fr;
   gap: 20px;
+  height: calc(100vh - 112px - 2rem);
 }
 
 .stats {
   background-color: #d9edec;
 }
 
-.myNotes {
+.dashboard .noteList {
   grid-row: span 4;
   background-color: #e1ffe2;
 }
@@ -70,18 +71,17 @@
   font-weight: 600;
 }
 
-@media (max-width: 780px) {
+@media (max-width: 850px) {
   .dashboard {
+    height: auto;
     grid-template-columns: 1fr;
+    padding-bottom: 2rem;
   }
 
-  .myNotes,
-  .reviewList {
-    min-height: 350px;
-  }
-
-  .reviewList {
-    margin-bottom: 1rem;
+  .dashboard .noteList,
+  .dashboard .reviewList {
+    min-height: 450px;
+    height: 40vh;
   }
 }
 
@@ -93,6 +93,10 @@
   .statDiv {
     min-width: 0;
   }
+  .dashboard .noteList,
+  .dashboard .reviewList {
+    width: 90vw;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -103,7 +107,6 @@
 
 @media (max-width: 640px) {
   .dashboard {
-    grid-template-columns: 1fr;
     padding-bottom: 4rem;
   }
 }
