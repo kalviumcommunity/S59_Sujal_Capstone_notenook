@@ -7,7 +7,6 @@ function NoteList() {
 
   useEffect(() => {
     const fetchNotes = async (token) => {
-      console.log("es");
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_REACT_APP_GET_NOTE_ENDPOINT}`,
