@@ -38,7 +38,7 @@ const UserSchema = new Schema({
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 });
 
-UserSchema.index({ username: 1, email: 1 });
+UserSchema.index({ username: 1, email: 1, "notes.updatedOn": -1 });
 
 UserSchema.methods.setPassword = async function (password) {
   try {

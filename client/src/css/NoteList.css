@@ -1,0 +1,118 @@
+.myNoteList {
+  height: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  grid-column: span 2;
+}
+
+.myNotes {
+  display: grid;
+  height: 90%;
+  overflow-y: scroll;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 500px));
+  gap: 16px;
+  justify-content: center;
+}
+
+.noteList {
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: #e1ffe2;
+}
+
+.myNote .lable,
+.note .lable {
+  color: #575757;
+}
+
+.note,
+.myNote {
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 10px;
+  background-color: #f2f8fe;
+}
+
+.updatedDate {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.notesDisplay {
+  height: 95%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding-bottom: 0.5rem;
+}
+
+.notesDisplay:hover {
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.myNote p,
+.note p {
+  margin-bottom: 0.25rem;
+}
+
+.myNote .title,
+.note .title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.myNote .subject,
+.note .subject {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.noteButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.noteButtons button.update {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.noteButtons button.delete {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.noteButtons button.view {
+  background-color: #00cd30;
+  color: #fff;
+}
+
+.resultInfo button:hover {
+  opacity: 0.9;
+}
+.noteButtons button:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 780px) {
+  .notesDisplay {
+    overflow-x: scroll;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  .note {
+    width: inherit;
+  }
+  .noteList .notesDisplay:hover {
+    overflow-y: hidden;
+  }
+}

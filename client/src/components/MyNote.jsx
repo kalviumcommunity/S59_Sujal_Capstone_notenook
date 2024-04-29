@@ -1,25 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import formatDate from "../Functions/FormatDate";
 function MyNote({ note }) {
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
-  };
-
   return (
-    <div className="note">
+    <div className="myNote">
       <Link to={`writeNote/${note.noteId}`}>
         <div className="noteInfo">
-          <p className="subject">
-            <span className="subjectLable">Subject: </span> {note.subject}
-          </p>
           <p className="title">
-            <span className="titleLable">Title: </span>
+            <span className="lable">Title: </span>
             {note.title}
+          </p>
+          <p className="subject">
+            <span className="lable">Subject: </span> {note.subject}
           </p>
         </div>
       </Link>
-      <p className="uploadDate">Updated At: {formatDate(note.updatedOn)}</p>
+      <p className="updatedDate">Updated {formatDate(note.updatedOn)}</p>
       <div className="noteButtons">
         <button className="update button">Update</button>
         <button className="delete button">Delete</button>

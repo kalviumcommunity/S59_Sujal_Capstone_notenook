@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import MyNote from "./MyNote";
 import { Link } from "react-router-dom";
-import "../css/MyNoteList.css";
+import "../css/NoteList.css";
 import { AuthContext } from "../context/authContext";
 
 function MyNoteList({ handleClick }) {
@@ -15,7 +15,7 @@ function MyNoteList({ handleClick }) {
           New Note
         </button>
       </div>
-      <div className="notes">
+      <div className="myNotes">
         {user?.notes.map((note, i) => {
           return <MyNote note={note} key={i} />;
         })}

@@ -3,6 +3,11 @@
   display: grid;
   grid-template-columns: 1fr 325px;
   gap: 20px;
+  height: calc(100vh - 112px - 2rem);
+  grid-template-rows: calc(100vh - 112px - 2rem);
+}
+
+.searchNotesPage .noteList {
   height: 100%;
 }
 
