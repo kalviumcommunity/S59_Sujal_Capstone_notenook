@@ -3,7 +3,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const { UserModel } = require("../models/UserModel");
 
 passport.use(
-  new LocalStrategy(async function (usernameOrEmail, password, done) {
+  new LocalStrategy(async (usernameOrEmail, password, done) => {
     try {
       const isEmail = usernameOrEmail.includes("@");
 

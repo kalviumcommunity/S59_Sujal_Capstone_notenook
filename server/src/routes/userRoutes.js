@@ -48,27 +48,32 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post(
-  "/login",
-  passport.authenticate("local", { session: false }),
-  async (req, res) => {
-    const token = jwt.sign({ userId: req.user._id }, process.env.SECRET_KEY, {
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+    
+    if (!user) {
+      return res.status(401).json({ message: info.message });
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
       expiresIn: "1hr",
     });
 
-    const user = await UserModel.findById(req.user._id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const userData = user._doc;
-
-    delete userData.password;
+    const userData = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      numberOfNotes: user.notes.length,
+      numberOfConnections: user.friends.length,
+    };
 
     res.status(200).json({ user: userData, token });
-  }
-);
+  })(req, res, next);
+});
 
 router.put(
   "/update",
@@ -130,6 +135,5 @@ router.post(
     }
   }
 );
-
 
 module.exports = router;
