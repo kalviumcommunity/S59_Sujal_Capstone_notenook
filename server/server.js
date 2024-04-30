@@ -6,12 +6,10 @@ const express = require("express");
 const http = require("http");
 const socketIO = require("socket.io");
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
 const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
-app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({

@@ -30,22 +30,20 @@ function LoginForm() {
 
       navigate("/");
     } catch (error) {
-      if (error.response) {
-        if (error.response.status === 404) {
-          setErrorMessage("User not found. Please check your credentials.");
-        } else if (error.response.status === 500) {
-          setErrorMessage("Server error. Please try again later.");
-        } else if (error.response.status === 401) {
-          setErrorMessage("Invalid Credentials, please try again.");
-        } else {
-          setErrorMessage("An unexpected error occurred. Please try again.");
-        }
-      } else {
-        setErrorMessage("Network error. Please check your connection.");
-      }
+      const errorMessages = {
+        404: "User not found. Please check your credentials.",
+        500: "Server error. Please try again later.",
+        401: "Invalid credentials. Please try again.",
+        default: "An unexpected error occurred. Please try again.",
+      };
+
+      setErrorMessage(
+        error.response
+          ? errorMessages[error.response.status] || errorMessages.default
+          : "Network error. Please check your connection."
+      );
     }
   };
-
 
   return (
     <div className="formDiv mb-24 xl:mb-0">

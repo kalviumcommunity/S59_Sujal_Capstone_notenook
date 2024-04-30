@@ -51,12 +51,20 @@ router.post("/register", async (req, res) => {
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
-      console.log(err);
+      console.error("Error during authentication:", err);
       return res.status(500).json({ message: "Internal server error" });
     }
-    
+
     if (!user) {
-      return res.status(401).json({ message: info.message });
+      if (info && info.message === "Incorrect password") {
+        return res
+          .status(401)
+          .json({ message: "Incorrect username or password" });
+      } else if (info && info.message === "User not found") {
+        return res.status(404).json({ message: "User not Found" });
+      } else {
+        return res.status(401).json({ message: "Authentication failed" });
+      }
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
@@ -64,14 +72,13 @@ router.post("/login", (req, res, next) => {
     });
 
     const userData = {
-      _id: user._id,
       username: user.username,
       email: user.email,
       numberOfNotes: user.notes.length,
       numberOfConnections: user.friends.length,
     };
 
-    res.status(200).json({ user: userData, token });
+    return res.status(200).json({ user: userData, token });
   })(req, res, next);
 });
 
