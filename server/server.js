@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("./src/auth/LocalStrategy");
+require("./src/auth/PassportLocalStrategy");
 require("./src/auth/JwtStrategy");
 
 const express = require("express");
