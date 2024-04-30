@@ -4,9 +4,9 @@ import axios from "axios";
 
 import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 
-const AuthContext = createContext();
+const UserContext = createContext();
 
-function AuthProvider({ children }) {
+function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -46,10 +46,10 @@ function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 }
 
-export { AuthContext, AuthProvider };
+export { UserContext, UserProvider };

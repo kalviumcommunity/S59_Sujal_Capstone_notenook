@@ -4,12 +4,12 @@ import "../../css/Forms.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../context/authContext";
+import { UserContext } from "../../context/userContext";
 
 function LoginForm() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const { setUser } = useContext(AuthContext);
+  const { setUser } = useContext(UserContext);
 
   const {
     register,

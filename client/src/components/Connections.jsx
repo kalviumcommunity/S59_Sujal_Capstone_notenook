@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "../context/authContext";
+import { UserContext } from "../context/userContext";
 
 import SmsIcon from "@mui/icons-material/Sms";
 
@@ -8,7 +8,7 @@ import pic from "../assets/pic.png";
 
 function Connections() {
   console.log("Connetion rerenederd");
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
   const friends = user?.friends;
   return (
     <div className="p-4 connectionsDiv relative">

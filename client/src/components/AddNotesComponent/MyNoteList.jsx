@@ -1,13 +1,13 @@
 import { useContext } from "react";
 
-import { AuthContext } from "../../context/authContext";
+import { UserContext } from "../../context/userContext";
 
 import MyNote from "./MyNote";
 
 import "../../css/NoteList.css";
 
 function MyNoteList({ handleClick }) {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
 
   return (
     <div className="myNoteList">

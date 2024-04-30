@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import logo from "../assets/logo.jpeg";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../context/authContext";
+import { UserContext } from "../context/userContext";
 
 function HomePage() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
 
   return (
     <div>
@@ -47,7 +47,7 @@ function HomePage() {
 }
 
 function HomePageButtons() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
 
   return (
     <>

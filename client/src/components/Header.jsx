@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import { AuthContext } from "../context/authContext";
+import { UserContext } from "../context/userContext";
 
 import logo from "../assets/logo.jpeg";
 import pic from "../assets/pic.png";
@@ -20,7 +20,7 @@ function Header() {
 }
 
 function UserInfo() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
 
   const style = {
     color: "#0099ff",

@@ -2,10 +2,10 @@ import React from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useContext } from "react";
-import { AuthContext } from "../../context/authContext";
+import { UserContext } from "../../context/userContext";
 
 function Stats() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
 
   return (
     <div className="stats dashBoardComponent">
