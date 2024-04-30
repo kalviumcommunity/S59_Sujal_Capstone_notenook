@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import logo from "../assets/logo.jpeg";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../context/authContext";
+import { UserContext } from "../context/userContext";
 
 function HomePage() {
+  const { user } = useContext(UserContext);
+
   return (
     <div>
       <div className="flex w-screen justify-between items-center py-4 pl-4 pr-8">
@@ -26,14 +28,26 @@ function HomePage() {
         <h2 className="text-lg md:text-xl my-4">
           Take notes. Connect. Share. Grow.
         </h2>
-        <button className="button md:ml-0">Get Started</button>
+        {user ? (
+          <Link to="/notenook/dashboard">
+            <button className="button" role="button">
+              Dashboard
+            </button>
+          </Link>
+        ) : (
+          <Link to={"/forms/registration"}>
+            <button className="button" role="button">
+              Get Started
+            </button>
+          </Link>
+        )}
       </div>
     </div>
   );
 }
 
 function HomePageButtons() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
 
   return (
     <>

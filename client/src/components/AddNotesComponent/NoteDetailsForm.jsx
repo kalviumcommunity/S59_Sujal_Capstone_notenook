@@ -1,6 +1,9 @@
-import React, { useContext, useState } from "react";
-import { DeviceWidthContext } from "../context/deviceWidthContext";
+import { useContext, useState } from "react";
+
 import { useForm } from "react-hook-form";
+
+import { DeviceWidthContext } from "../../context/deviceWidthContext";
+
 function NoteDetailsForm() {
   const width = useContext(DeviceWidthContext);
   const {

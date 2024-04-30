@@ -1,4 +1,3 @@
-import React from "react";
 import TextEditor from "./TextEditor";
 import NoteDetailsForm from "./NoteDetailsForm";
 

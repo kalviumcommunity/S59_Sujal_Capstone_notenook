@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+
 import Note from "./Note";
+import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
+
 import "../css/NoteList.css";
 function NoteList() {
   const [notes, setNotes] = useState([]);
@@ -26,12 +29,8 @@ function NoteList() {
       }
     };
 
-    const tokenCookie = document.cookie
-      .split(";")
-      .find((cookie) => cookie.trim().startsWith("token="));
-
-    if (tokenCookie) {
-      const token = tokenCookie.split("=")[1];
+    const token = extractTokenFromCookie();
+    if (token) {
       fetchNotes(token);
     }
   }, []);

@@ -1,6 +1,6 @@
 import React from "react";
-import pic from "../assets/pic.png";
-import formatDate from "../Functions/FormatDate";
+import pic from "../../assets/pic.png";
+import formatDate from "../../Functions/FormatDate";
 function SearchResult({ result }) {
   return (
     <div className="searchNoteResult">

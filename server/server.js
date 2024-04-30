@@ -1,14 +1,25 @@
+// initializing dotenv and passport strategies
 require("dotenv").config();
-require("./src/auth/PassportLocalStrategy");
+require("./src/auth/LocalStrategy");
 require("./src/auth/JwtStrategy");
 
+// importing packages
 const express = require("express");
 const http = require("http");
 const socketIO = require("socket.io");
 const cors = require("cors");
 const app = express();
+
+const port = process.env.PORT || 3000;
+
+// connecting to db
+const { connectDB } = require("./src/connection/dbConnection");
+connectDB();
+
+// creating a server
 const server = http.createServer(app);
 
+// setting up middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
@@ -18,6 +29,7 @@ app.use(
   })
 );
 
+// creating a socket instance
 const io = socketIO(server, {
   cors: {
     origin: process.env.CLIENT_URI,
@@ -25,21 +37,21 @@ const io = socketIO(server, {
   },
 });
 
+// sockets with different namespaces
 const textEditorNamespace = io.of("/text-editor");
 const { textEditorSocket } = require("./src/socketHandlers/textEditorSocket");
 textEditorSocket(textEditorNamespace);
 
-const port = process.env.PORT || 3000;
+//  setting up routes
 const userRouter = require("./src/routes/userRoutes");
 const noteRouter = require("./src/routes/noteRoutes");
-
-const mongoose = require("mongoose");
-const { connectDB } = require("./src/connection/dbConnection");
-connectDB();
+const verificationRouter = require("./src/routes/verificationRoutes");
 
 app.use("/user", userRouter);
 app.use("/note", noteRouter);
+app.use("/verification", verificationRouter);
 
+// setting up the server to listen
 app.get("/", (req, res) => {
   res.send("This is the root endpoint.......");
 });

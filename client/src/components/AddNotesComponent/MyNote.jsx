@@ -1,6 +1,7 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import formatDate from "../Functions/FormatDate";
+
+import formatDate from "../../Functions/FormatDate";
+
 function MyNote({ note }) {
   return (
     <div className="myNote">

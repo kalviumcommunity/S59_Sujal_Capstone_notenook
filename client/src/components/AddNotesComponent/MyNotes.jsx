@@ -1,7 +1,10 @@
-import { useContext,useState } from "react";
-import MyNoteList from "./MyNoteList";import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+
+import { DeviceWidthContext } from "../../context/deviceWidthContext";
+
 import NewNoteForm from "./NewNoteForm";
-import { DeviceWidthContext } from "../context/deviceWidthContext";
+import MyNoteList from "./MyNoteList";
 
 function MyNotes() {
   const [postNewNote, setPostNewNote] = useState(false);
@@ -26,4 +29,4 @@ function MyNotes() {
   );
 }
 
-export default MyNotes
+export default MyNotes;
