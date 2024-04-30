@@ -3,7 +3,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const { UserModel } = require("../models/UserModel");
 
 passport.use(
-  new LocalStrategy(async function (usernameOrEmail, password, done) {
+  new LocalStrategy(async (usernameOrEmail, password, done) => {
     try {
       const isEmail = usernameOrEmail.includes("@");
 
@@ -13,14 +13,16 @@ passport.use(
 
       const user = await UserModel.findOne(query);
       if (!user || !(await user.validatePassword(password))) {
-        return done(null, false, {
-          message: "Incorrect username/email or password.",
-        });
+        if (!user) {
+          return done(null, false, { message: "User not found" });
+        } else {
+          return done(null, false, { message: "Incorrect password" });
+        }
       }
 
       return done(null, user);
     } catch (error) {
-      console.log(error);
+      console.error("Error during authentication:", error);
       return done(error);
     }
   })

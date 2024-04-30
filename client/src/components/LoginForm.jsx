@@ -9,7 +9,7 @@ import { AuthContext } from "../context/authContext";
 function LoginForm() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const { user, setUser } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
 
   const {
     register,
@@ -30,11 +30,18 @@ function LoginForm() {
 
       navigate("/");
     } catch (error) {
-      if (error.response) {
-        setErrorMessage("Invalid username or password. Please try again.");
-      } else {
-        setErrorMessage("Network error. Please check your connection.");
-      }
+      const errorMessages = {
+        404: "User not found. Please check your credentials.",
+        500: "Server error. Please try again later.",
+        401: "Invalid credentials. Please try again.",
+        default: "An unexpected error occurred. Please try again.",
+      };
+
+      setErrorMessage(
+        error.response
+          ? errorMessages[error.response.status] || errorMessages.default
+          : "Network error. Please check your connection."
+      );
     }
   };
 

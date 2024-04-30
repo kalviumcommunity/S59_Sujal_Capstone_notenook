@@ -8,6 +8,40 @@ const jwt = require("jsonwebtoken");
 const { updateSchema, userJoiSchema } = require("../validation/userJoiSchemas");
 const { validateData } = require("../validation/validator");
 
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error("Error during authentication:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+
+    if (!user) {
+      if (info && info.message === "Incorrect password") {
+        return res
+          .status(401)
+          .json({ message: "Incorrect username or password" });
+      } else if (info && info.message === "User not found") {
+        return res.status(404).json({ message: "User not Found" });
+      } else {
+        return res.status(401).json({ message: "Authentication failed" });
+      }
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "1hr",
+    });
+
+    const userData = {
+      username: user.username,
+      email: user.email,
+      numberOfNotes: user.notes.length,
+      numberOfConnections: user.friends.length,
+    };
+
+    return res.status(200).json({ user: userData, token });
+  })(req, res, next);
+});
+
 router.post("/register", async (req, res) => {
   try {
     const { username, fullname, email, password } = req.body;
@@ -47,28 +81,6 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
-router.post(
-  "/login",
-  passport.authenticate("local", { session: false }),
-  async (req, res) => {
-    const token = jwt.sign({ userId: req.user._id }, process.env.SECRET_KEY, {
-      expiresIn: "1hr",
-    });
-
-    const user = await UserModel.findById(req.user._id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const userData = user._doc;
-
-    delete userData.password;
-
-    res.status(200).json({ user: userData, token });
-  }
-);
 
 router.put(
   "/update",
@@ -130,6 +142,5 @@ router.post(
     }
   }
 );
-
 
 module.exports = router;
