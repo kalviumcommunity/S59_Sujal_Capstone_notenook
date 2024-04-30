@@ -1,12 +1,12 @@
 import "../css/NoteNook.css";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
-import DashBoard from "./DashBoard";
+import DashBoard from "./NoteNookPages/DashBoard";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import SearchNotes from "./SearchNotes";
-import SearchUsers from "./SearchUsers";
+import SearchNotes from "./NoteNookPages/SearchNotes";
+import SearchUsers from "./NoteNookPages/SearchUsers";
 import { DeviceWidthProvider } from "../context/deviceWidthContext";
-import AddNotes from "./AddNotes";
+import AddNotes from "./NoteNookPages/AddNotes";
 import { useEffect } from "react";
 function NoteNook() {
   const navigate = useNavigate();

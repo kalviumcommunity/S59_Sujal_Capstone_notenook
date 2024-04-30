@@ -7,8 +7,6 @@ import { AuthContext } from "../../context/authContext";
 function Stats() {
   const { user } = useContext(AuthContext);
 
-  const noOfNotes = user?.numberOfNotes || 0;
-  const noOfFriends = user?.numberOfConnections || 0;
   return (
     <div className="stats dashBoardComponent">
       <h1 className="heading">Stats</h1>
@@ -20,7 +18,7 @@ function Stats() {
             <div className="iconDiv connectionsStat">
               <PeopleIcon style={{ color: "white" }} fontSize="small" />
             </div>
-            <span className="statNumber">{noOfFriends}</span>
+            <span className="statNumber">{user?.numberOfConnections || 0}</span>
           </div>
         </div>
 
@@ -30,7 +28,7 @@ function Stats() {
             <div className="iconDiv notesStat">
               <EventNoteIcon style={{ color: "white" }} fontSize="small" />
             </div>
-            <span className="statNumber">{noOfNotes}</span>
+            <span className="statNumber">{user?.numberOfNotes || 0}</span>
           </div>
         </div>
       </div>

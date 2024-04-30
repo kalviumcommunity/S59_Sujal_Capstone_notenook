@@ -1,8 +1,10 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
+
+import { AuthContext } from "../../context/authContext";
+
 import MyNote from "./MyNote";
-import { Link } from "react-router-dom";
-import "../css/NoteList.css";
-import { AuthContext } from "../context/authContext";
+
+import "../../css/NoteList.css";
 
 function MyNoteList({ handleClick }) {
   const { user } = useContext(AuthContext);

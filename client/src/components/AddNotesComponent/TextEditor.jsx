@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { io } from "socket.io-client";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
+
 import ToolBar from "./ToolBar";
-import "../css/TextEditor.css";
-import { io } from "socket.io-client";
-import { useParams } from "react-router-dom";
+
+import "../../css/TextEditor.css";
 
 function TextEditor() {
   const { documentId } = useParams();

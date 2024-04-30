@@ -1,9 +1,11 @@
-import React from "react";
-import "../css/Connections.css";
-import pic from "../assets/pic.png";
-import SmsIcon from "@mui/icons-material/Sms";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
+
+import SmsIcon from "@mui/icons-material/Sms";
+
+import "../css/Connections.css";
+import pic from "../assets/pic.png";
+
 function Connections() {
   console.log("Connetion rerenederd");
   const { user } = useContext(AuthContext);

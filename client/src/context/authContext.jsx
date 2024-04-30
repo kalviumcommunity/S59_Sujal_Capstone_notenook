@@ -1,11 +1,15 @@
 import { useState, createContext, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
+
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async (token) => {
       try {
@@ -35,16 +39,9 @@ function AuthProvider({ children }) {
       }
     };
 
-    const cookies = document.cookie;
-    if (cookies) {
-      const tokenCookie = document.cookie
-        .split(";")
-        .find((cookie) => cookie.trim().startsWith("token="))
-        .split("=")[1];
-
-      if (tokenCookie) {
-        fetchData(tokenCookie);
-      }
+    const token = extractTokenFromCookie();
+    if (token) {
+      fetchData(token);
     }
   }, []);
 

@@ -1,12 +1,16 @@
-import React, { useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import "../css/Search.css";
-import NoteList from "../components/NoteList";
-import SearchResult from "../components/SearchResult";
-import axios from "axios";
+import { useState, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useContext } from "react";
-import { DeviceWidthContext } from "../context/deviceWidthContext";
+import axios from "axios";
+import SearchIcon from "@mui/icons-material/Search";
+
+import { DeviceWidthContext } from "../../context/deviceWidthContext";
+
+import NoteList from "../../components/NoteList";
+import SearchResult from "../../components/SearchNotesComponents/SearchResult";
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+
+import "../../css/Search.css";
+
 function SearchNotes() {
   const [searchResults, setSearchResults] = useState(null);
   const [error, setError] = useState(null);
@@ -17,12 +21,8 @@ function SearchNotes() {
 
     try {
       const searchInput = event.target.elements.searchInput.value;
-      const tokenCookie = document.cookie
-        .split(";")
-        .find((cookie) => cookie.trim().startsWith("token="));
-
-      if (tokenCookie) {
-        const token = tokenCookie.split("=")[1];
+      const token = extractTokenFromCookie();
+      if (token) {
         const response = await axios.get(
           `${
             import.meta.env.VITE_REACT_APP_SEARCH_NOTE_ENDPOINT

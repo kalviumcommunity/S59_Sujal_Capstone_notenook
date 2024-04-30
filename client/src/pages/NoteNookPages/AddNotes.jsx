@@ -1,8 +1,9 @@
-import React from "react";
-import "../css/AddNotes.css";
 import { Routes, Route } from "react-router-dom";
-import WriteNote from "../components/WriteNote";
-import MyNotes from "../components/MyNotes";
+
+import WriteNote from "../../components/AddNotesComponent/WriteNote";
+import MyNotes from "../../components/AddNotesComponent/MyNotes";
+
+import "../../css/AddNotes.css";
 
 function AddNotes() {
   return (
