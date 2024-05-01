@@ -1,13 +1,40 @@
-import { useContext } from "react";
-
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { UserContext } from "../../context/userContext";
 
 import MyNote from "./MyNote";
-
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import "../../css/NoteList.css";
 
 function MyNoteList({ handleClick }) {
-  const { user } = useContext(UserContext);
+  const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    const fetchNotes = async (token) => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_REACT_APP_GET_NOTE_ENDPOINT}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        setNotes(response.data.notes);
+        console.log(notes);
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching notes:", error);
+      }
+    };
+
+    const token = extractTokenFromCookie();
+    if (token) {
+      fetchNotes(token);
+    }
+  }, []);
 
   return (
     <div className="myNoteList">
@@ -18,7 +45,7 @@ function MyNoteList({ handleClick }) {
         </button>
       </div>
       <div className="myNotes">
-        {user?.notes.map((note, i) => {
+        {notes.map((note, i) => {
           return <MyNote note={note} key={i} />;
         })}
       </div>

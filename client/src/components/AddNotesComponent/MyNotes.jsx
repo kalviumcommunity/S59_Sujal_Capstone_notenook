@@ -15,6 +15,7 @@ function MyNotes() {
   return (
     <>
       {postNewNote && <NewNoteForm handleClick={handleClick} />}
+      
       <MyNoteList handleClick={handleClick} />
 
       {width < 1024 && (

@@ -8,30 +8,6 @@
   padding: 2rem;
   gap: 10px;
   height: 100%;
-  align-items: center;
-}
-
-.file-input-container {
-  position: relative;
-}
-
-.file-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.file-input-label {
-  display: inline-block;
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 .noteDetails.initiatePostNoteForm {
@@ -42,16 +18,21 @@
 }
 
 .noteDetails {
+  background-color: #d2fffd;
   max-height: 100%;
   overflow-y: scroll;
   display: flex;
   max-width: 80vw;
+  padding: 2rem 1rem;
+  border-radius: 10px;
   flex-direction: column;
   align-items: center;
+  justify-self: center;
 }
 
 .noteDetails .field {
-  width: 90%;
+  background-color: white;
+  width: 100%;
 }
 
 .addNoteButtons {
@@ -61,11 +42,13 @@
 }
 
 .postNoteForm {
+  display: grid;
+  height: 100%;
+  grid-template-rows: auto 1fr;
+  align-items: center;
   background-color: aliceblue;
-  padding: 2rem 1rem;
+  padding: 0 1rem;
   border-radius: 10px;
-  box-shadow: 0 0 5px 0 rgba(128, 128, 128, 0.319);
-  height: fit-content;
 }
 
 .newNoteForm {
@@ -94,9 +77,71 @@
   margin-bottom: 15%;
 }
 
-@media (max-width: 1024px) {
+.file-input-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+}
+
+.file-input-container {
+  flex: 1;
+  display: flex;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-input-label.button {
+  background-color: rgb(0, 183, 183);
+  color: #fff;
+  border-radius: 34px;
+  cursor: pointer;
+}
+
+.file-input-label.button:hover {
+  background-color: rgb(0, 135, 135);
+}
+
+.file-name-container {
+  width: 100%;
+  background-color: white;
+  text-align: center;
+
+  padding: 1rem;
+  font-size: 0.8rem;
+  color: rgb(74, 74, 74);
+  border-radius: 10px;
+}
+
+.file-name {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.button.post {
+  background-color: #1abc9c;
+}
+
+.button.post:hover {
+  background-color: #0e9076;
+}
+
+.button.showDetails {
+  display: block;
+  margin: auto;
+  background-color: #0e9076;
+}
+@media (max-width: 1200px) {
   .addNotesPage {
     height: 120%;
+  }
+
+  .noteDetails {
+    width: 450px;
   }
   .addNotes {
     grid-template-columns: 1fr;
@@ -104,11 +149,18 @@
     padding-bottom: 4rem;
     grid-template-rows: 90% auto;
   }
+
   .addNoteButtons {
     width: 80vw;
     max-width: 400px;
   }
+
   .postNoteForm {
+    padding: 2rem;
     padding-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
   }
 }

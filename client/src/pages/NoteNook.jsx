@@ -8,20 +8,13 @@ import SearchUsers from "./NoteNookPages/SearchUsers";
 import { DeviceWidthProvider } from "../context/deviceWidthContext";
 import AddNotes from "./NoteNookPages/AddNotes";
 import { useEffect } from "react";
+import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 function NoteNook() {
   const navigate = useNavigate();
   useEffect(() => {
-    const cookies = document.cookie;
-    console.log(cookies)
-    if (cookies) {
-      const tokenCookie = document.cookie
-        .split(";")
-        .find((cookie) => cookie.trim().startsWith("token="))
-        .split("=")[1];
-      if (!tokenCookie) {
-        navigate("/");
-      }
-    } else {
+    const token = extractTokenFromCookie();
+
+    if (!token) {
       navigate("/");
     }
   }, []);
