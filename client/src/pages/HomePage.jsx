@@ -1,7 +1,9 @@
-import React, { useContext } from "react";
-import logo from "../assets/logo.jpeg";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+
 import { UserContext } from "../context/userContext";
+
+import logo from "../assets/logo.jpeg";
 
 function HomePage() {
   const { user } = useContext(UserContext);

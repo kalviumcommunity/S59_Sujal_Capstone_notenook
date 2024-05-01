@@ -15,10 +15,9 @@ function NoteDetailsForm() {
   };
 
   const handleFileChange = (event) => {
-    console.log(event.target.files);
     const file = event.target.files[0];
     setFileName(file ? file.name : "");
-    setValue("file", event.target.files[0]);
+    setValue("file", file);
   };
 
   const handleRemoveFile = () => {

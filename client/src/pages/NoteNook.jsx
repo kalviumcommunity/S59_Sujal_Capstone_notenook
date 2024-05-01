@@ -1,14 +1,18 @@
-import "../css/NoteNook.css";
+import { useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+
+import { DeviceWidthProvider } from "../context/deviceWidthContext";
+import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
+
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 import DashBoard from "./NoteNookPages/DashBoard";
-import { Routes, Route, useNavigate } from "react-router-dom";
 import SearchNotes from "./NoteNookPages/SearchNotes";
 import SearchUsers from "./NoteNookPages/SearchUsers";
-import { DeviceWidthProvider } from "../context/deviceWidthContext";
 import AddNotes from "./NoteNookPages/AddNotes";
-import { useEffect } from "react";
-import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
+
+import "../css/NoteNook.css";
+
 function NoteNook() {
   const navigate = useNavigate();
   useEffect(() => {

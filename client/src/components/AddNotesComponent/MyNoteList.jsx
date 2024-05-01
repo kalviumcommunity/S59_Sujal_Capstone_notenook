@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { UserContext } from "../../context/userContext";
 
 import MyNote from "./MyNote";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
@@ -8,7 +7,7 @@ import "../../css/NoteList.css";
 
 function MyNoteList({ handleClick }) {
   const [notes, setNotes] = useState([]);
-
+  const [error, setError] = useState(null);
   useEffect(() => {
     const fetchNotes = async (token) => {
       try {
@@ -27,6 +26,7 @@ function MyNoteList({ handleClick }) {
         console.log(response);
       } catch (error) {
         console.error("Error fetching notes:", error);
+        setError("Failed to fetch notes. Please try again.");
       }
     };
 
@@ -44,6 +44,7 @@ function MyNoteList({ handleClick }) {
           New Note
         </button>
       </div>
+      {error && <p className="error-message">{error}</p>}{" "}
       <div className="myNotes">
         {notes.map((note, i) => {
           return <MyNote note={note} key={i} />;

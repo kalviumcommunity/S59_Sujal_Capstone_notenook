@@ -1,7 +1,9 @@
-import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import "../../css/Search.css";
+
 import Connections from "../../components/Connections";
+
+import "../../css/Search.css";
+
 function SearchUsers() {
   return (
     <div className="searchUsersPage">

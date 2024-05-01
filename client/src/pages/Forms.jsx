@@ -1,8 +1,9 @@
-import React from "react";
-import logo from "../assets/logo.jpeg";
 import { Link, Route, Routes } from "react-router-dom";
+
 import RegistrationForm from "../components/UserForms/RegistrationForm";
 import LoginForm from "../components/UserForms/LoginForm";
+
+import logo from "../assets/logo.jpeg";
 
 function Forms() {
   return (
