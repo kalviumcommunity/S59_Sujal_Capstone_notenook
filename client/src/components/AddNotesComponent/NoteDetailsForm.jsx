@@ -115,7 +115,7 @@ function NoteDetailsForm() {
           </button>
         </form>
 
-        <PDFUploader />
+        <PDFUploader documentId={documentId}/>
       </div>
     </>
   );

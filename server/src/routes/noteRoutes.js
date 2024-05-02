@@ -8,6 +8,7 @@ const passport = require("passport");
 const {
   newNoteJoiSchema,
   updateNoteJoiSchema,
+  updateNoteFileReferenceJoiSchema,
 } = require("../validation/noteJoiSchemas");
 const { validateData } = require("../validation/validator");
 
@@ -173,6 +174,42 @@ router.patch(
       res.json({ message: "Note updated successfully", note });
     } catch (error) {
       console.error("Error updating note:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.patch(
+  "/updateNoteFileReferences",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const { noteId, fileName, url } = req.body;
+
+      const validationResult = validateData(
+        { noteId, fileName, url },
+        updateNoteFileReferenceJoiSchema
+      );
+
+      if (validationResult.error) {
+        return res
+          .status(400)
+          .json({ message: validationResult.error.details });
+      }
+
+      const note = await NoteModel.findByIdAndUpdate(
+        noteId,
+        { fileReference: { fileName, url } },
+        { new: true }
+      );
+
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+
+      res.json({ message: "File references updated successfully", note });
+    } catch (error) {
+      console.error("Error updating file references:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   }
