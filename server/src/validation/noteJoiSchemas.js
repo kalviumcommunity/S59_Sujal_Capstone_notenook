@@ -14,4 +14,14 @@ const updateNoteJoiSchema = Joi.object({
   }).optional(),
 });
 
-module.exports = { newNoteJoiSchema, updateNoteJoiSchema };
+const updateNoteFileReferenceJoiSchema = Joi.object({
+  noteId: Joi.string().required(),
+  fileName: Joi.string().required(),
+  url: Joi.string().uri().required(),
+});
+
+module.exports = {
+  newNoteJoiSchema,
+  updateNoteJoiSchema,
+  updateNoteFileReferenceJoiSchema,
+};
