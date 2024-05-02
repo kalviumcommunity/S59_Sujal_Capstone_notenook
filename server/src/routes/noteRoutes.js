@@ -117,11 +117,9 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
-      const note = await NoteModel.findById(req.body.noteId);
+      const { documentId } = req.query;
 
-      if (!note) {
-        return res.status(404).json({ error: "Note not found" });
-      }
+      const note = await NoteModel.findById(documentId);
 
       const noteData = {
         title: note.title,
@@ -143,6 +141,7 @@ router.patch(
     try {
       const { noteId, title, subject } = req.body;
 
+      console.log(noteId, title, subject);
       const validationResult = validateData(
         {
           title,

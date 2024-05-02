@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+
+import PDFUploader from "./PDFUploader";
 
 function NoteDetailsForm() {
-  const [fileName, setFileName] = useState("");
   const {
     register,
     handleSubmit,
@@ -10,23 +15,60 @@ function NoteDetailsForm() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const { documentId } = useParams();
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setFileName(file ? file.name : "");
-    setValue("file", file);
-  };
+  useEffect(() => {
+    const fetchDefaultValues = async () => {
+      const token = extractTokenFromCookie();
+      try {
+        if (token) {
+          const response = await axios.get(
+            `${
+              import.meta.env.VITE_REACT_APP_GET_USER_NOTE_ENDPOINT
+            }?documentId=${documentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-  const handleRemoveFile = () => {
-    setFileName("");
-    setValue("file", null);
+          setValue("noteTitle", response.data.note.title);
+          setValue("subject", response.data.note.subject);
+        }
+      } catch (error) {
+        console.error("Error fetching default values:", error);
+      }
+    };
 
-    const fileInput = document.getElementById("fileInput");
-    if (fileInput) {
-      fileInput.value = "";
+    fetchDefaultValues();
+  }, [setValue, useParams]);
+
+  const onSubmit = async (data) => {
+    try {
+      const formData = {
+        noteId: documentId,
+        title: data.noteTitle,
+        subject: data.subject,
+      };
+      console.log(formData);
+
+      const token = extractTokenFromCookie();
+      if (token) {
+        const response = await axios.patch(
+          import.meta.env.VITE_REACT_APP_UPDATE_NOTE_ENDPOINT,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error("Error submitting note details:", error);
     }
   };
 
@@ -41,7 +83,6 @@ function NoteDetailsForm() {
             Post
           </button>
         </div>
-
         <form className="noteDetails" onSubmit={handleSubmit(onSubmit)}>
           <div className="field">
             <label htmlFor="noteTitle">Note Title:</label>
@@ -69,53 +110,12 @@ function NoteDetailsForm() {
             <p className="error">{errors.subject?.message}</p>
           </div>
 
-          <div
-            className="file-name-container"
-            title={fileName || "No file chosen"}
-          >
-            <p className="file-name">{fileName || "No file"}</p>
-            {fileName ? (
-              <button
-                type="button"
-                className="ml-2 text-red-500"
-                onClick={handleRemoveFile}
-              >
-                Remove
-              </button>
-            ) : (
-              "chosen"
-            )}
-          </div>
-
-          <div className="flex w-full justify-around">
-            <div className="file-input-container ">
-              <input
-                type="file"
-                id="fileInput"
-                className="file-input"
-                aria-describedby="fileInputLabel"
-                accept=".pdf"
-                multiple={false}
-                {...register("file", {})}
-                defaultValue={null}
-                onChange={handleFileChange}
-              />
-
-              <label
-                htmlFor="fileInput"
-                className="file-input-label button"
-                role="button"
-                id="fileInputLabel"
-              >
-                Upload Pdf
-              </label>
-            </div>
-
-            <button type="submit" className="button post">
-              Update details
-            </button>
-          </div>
+          <button type="submit" className="button post">
+            Update details
+          </button>
         </form>
+
+        <PDFUploader />
       </div>
     </>
   );
