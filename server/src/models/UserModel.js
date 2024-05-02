@@ -19,26 +19,14 @@ const UserSchema = new Schema({
 
   oauthId: { type: String },
 
-  friends: [
-    {
-      userId: { type: Schema.Types.ObjectId, ref: "User" },
-      friendName: String,
-    },
-  ],
+  friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
 
-  notes: [
-    {
-      noteId: { type: Schema.Types.ObjectId, ref: "Note" },
-      title: { type: String, required: true },
-      subject: { type: String, required: true },
-      updatedOn: { type: Date, required: true },
-    },
-  ],
+  notes: [{ type: Schema.Types.ObjectId, ref: "Note" }],
 
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 });
 
-UserSchema.index({ username: 1, email: 1, "notes.updatedOn": -1 });
+UserSchema.index({ username: 1, email: 1 });
 
 UserSchema.methods.setPassword = async function (password) {
   try {

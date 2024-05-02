@@ -5,7 +5,7 @@ import formatDate from "../../Functions/FormatDate";
 function MyNote({ note }) {
   return (
     <div className="myNote">
-      <Link to={`writeNote/${note.noteId}`}>
+      <Link to={`writeNote/${note._id}`}>
         <div className="noteInfo">
           <p className="title">
             <span className="lable">Title: </span>
@@ -16,7 +16,7 @@ function MyNote({ note }) {
           </p>
         </div>
       </Link>
-      <p className="updatedDate">Updated {formatDate(note.updatedOn)}</p>
+      <p className="updatedDate">Updated {formatDate(note.updatedAt)}</p>
       <div className="noteButtons">
         <button className="update button">Update</button>
         <button className="delete button">Delete</button>

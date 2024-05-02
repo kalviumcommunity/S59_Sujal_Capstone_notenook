@@ -11,7 +11,7 @@ function Note({ note }) {
         <span className="lable">Subject: </span>
         {note.subject}
       </p>
-      <p className="updatedDate">Posted {formatDate(note.updatedOn)}</p>
+      <p className="updatedDate">Posted {formatDate(note.updatedAt)}</p>
       <div className="noteButtons">
         <button className="view button">View</button>
       </div>

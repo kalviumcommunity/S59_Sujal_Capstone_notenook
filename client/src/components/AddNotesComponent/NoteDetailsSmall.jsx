@@ -11,9 +11,9 @@ function NoteDetailsFormSmall() {
 
   const style = {
     position: "absolute",
-    top: "40%",
+    top: "10%",
     left: "50%",
-    transform: "translate(-50%, -50%)",
+    transform: "translate(-50%, 0%)",
     zIndex: "15",
   };
 
