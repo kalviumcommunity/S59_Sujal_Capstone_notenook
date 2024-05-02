@@ -5,7 +5,10 @@ const router = express.Router();
 const { UserModel } = require("../models/UserModel");
 const { NoteModel } = require("../models/NoteModel");
 const passport = require("passport");
-const { newNoteJoiSchema } = require("../validation/noteJoiSchemas");
+const {
+  newNoteJoiSchema,
+  updateNoteJoiSchema,
+} = require("../validation/noteJoiSchemas");
 const { validateData } = require("../validation/validator");
 
 router.post(
@@ -40,12 +43,7 @@ router.post(
 
       const savedNote = await newNote.save();
 
-      user.notes.push({
-        noteId: savedNote._id,
-        title,
-        subject,
-        updatedOn: savedNote.updatedAt,
-      });
+      user.notes.push(savedNote._id);
 
       await user.save();
       return res
@@ -59,7 +57,7 @@ router.post(
 );
 
 function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); 
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 router.get(
@@ -94,7 +92,13 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
-      const UserNotes = await UserModel.findById(req.user.id).select("notes");
+      const UserNotes = await UserModel.findById(req.user.id)
+        .select("notes")
+        .populate({
+          path: "notes",
+          select: "title subject fileReference updatedAt",
+          options: { sort: { updatedAt: -1 } },
+        });
 
       if (!UserNotes) {
         return res.status(404).json({ error: "User not found" });
@@ -103,6 +107,73 @@ router.get(
       res.json({ notes: UserNotes.notes });
     } catch (error) {
       console.error("Error fetching notes:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.get(
+  "/getNote",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const note = await NoteModel.findById(req.body.noteId);
+
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+
+      const noteData = {
+        title: note.title,
+        subject: note.subject,
+      };
+
+      res.json({ note: noteData });
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.patch(
+  "/updateNote",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const { noteId, title, subject } = req.body;
+
+      const validationResult = validateData(
+        {
+          title,
+          subject,
+        },
+        updateNoteJoiSchema
+      );
+
+      if (validationResult.error) {
+        return res
+          .status(400)
+          .json({ message: validationResult.error.details });
+      }
+
+      if (!noteId) {
+        return res.status(400).json({ error: "Note ID is required" });
+      }
+
+      const note = await NoteModel.findByIdAndUpdate(
+        noteId,
+        { title, subject },
+        { new: true }
+      );
+
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+
+      res.json({ message: "Note updated successfully", note });
+    } catch (error) {
+      console.error("Error updating note:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   }

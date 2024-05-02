@@ -46,7 +46,7 @@ function MyNoteList({ handleClick }) {
       </div>
       {error && <p className="error-message">{error}</p>}{" "}
       <div className="myNotes">
-        {notes.map((note, i) => {
+        {notes && notes.map((note, i) => {
           return <MyNote note={note} key={i} />;
         })}
       </div>
