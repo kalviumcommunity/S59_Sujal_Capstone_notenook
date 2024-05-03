@@ -84,11 +84,6 @@
   gap: 1rem;
 }
 
-.file-input-container {
-  flex: 1;
-  display: flex;
-}
-
 .file-input {
   display: none;
 }
@@ -125,6 +120,16 @@
 .button.post {
   background-color: #1abc9c;
 }
+
+.button.delete {
+  background-color: #e74c3c; 
+  color: #fff; 
+}
+
+.button.delete:hover {
+  background-color: #c0392b; 
+}
+
 
 .button.post:hover {
   background-color: #0e9076;

@@ -125,6 +125,7 @@ router.get(
       const noteData = {
         title: note.title,
         subject: note.subject,
+        fileReference: note.fileReference,
       };
 
       res.json({ note: noteData });
@@ -210,6 +211,31 @@ router.patch(
       res.json({ message: "File references updated successfully", note });
     } catch (error) {
       console.error("Error updating file references:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.delete(
+  "/deleteNoteFileReferences/:noteId",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const noteId = req.params.noteId;
+
+      const note = await NoteModel.findById(noteId);
+
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+
+      note.fileReference = undefined;
+
+      await note.save();
+
+      res.json({ message: "File references deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting file references:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   }

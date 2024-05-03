@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -15,6 +15,8 @@ function NoteDetailsForm() {
     formState: { errors },
   } = useForm();
 
+  const [fileName, setFileName] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
   const { documentId } = useParams();
 
   useEffect(() => {
@@ -32,7 +34,12 @@ function NoteDetailsForm() {
               },
             }
           );
-
+          const note = response.data.note;
+          console.log(note);
+          if (note.fileReference) {
+            setFileName(note.fileReference.fileName);
+            setFileUrl(note.fileReference.url);
+          }
           setValue("noteTitle", response.data.note.title);
           setValue("subject", response.data.note.subject);
         }
@@ -115,7 +122,13 @@ function NoteDetailsForm() {
           </button>
         </form>
 
-        <PDFUploader documentId={documentId} />
+        <PDFUploader
+          documentId={documentId}
+          fileName={fileName}
+          setFileName={setFileName}
+          fileUrl={fileUrl}
+          setFileUrl={setFileUrl}
+        />
       </div>
     </>
   );

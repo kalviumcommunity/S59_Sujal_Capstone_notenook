@@ -1,29 +1,68 @@
 import { useState, useRef } from "react";
 import { storage } from "../../firebase";
+import { deleteObject } from "firebase/storage";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
-function PDFUploader({ documentId }) {
-  const [fileName, setFileName] = useState("");
-  const [fileUrl, setFileUrl] = useState("");
+function PDFUploader({
+  documentId,
+  fileName,
+  setFileName,
+  fileUrl,
+  setFileUrl,
+}) {
   const [file, setFile] = useState(null);
+
   const fileInputRef = useRef(null);
 
-  const handleRemoveFile = () => {
+  const handleRemoveFile = async () => {
+    if (fileUrl) {
+      const token = extractTokenFromCookie();
+      if (!token) {
+        return;
+      }
+
+      try {
+        const storageRef = ref(storage, fileUrl);
+        await deleteObject(storageRef);
+        const res = await axios.delete(
+          `${import.meta.env.VITE_REACT_APP_DELETE_PDF_ENDPOINT}/${documentId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(res);
+        setFileUrl("");
+
+        alert("File removed successfully");
+      } catch (error) {
+        console.log(error);
+        alert("Failed to remove file");
+      }
+    }
+
     setFileName("");
-    setFileUrl("");
+    setFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setFileName(file ? file.name : "");
-    setFile(file);
+    const selectedFile = event.target.files[0];
+    if (selectedFile && selectedFile.type === "application/pdf") {
+      setFileName(selectedFile.name);
+      setFile(selectedFile);
+    } else {
+      alert("Please select a PDF file.");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
   };
 
   const uploadFile = async () => {
@@ -106,10 +145,10 @@ function PDFUploader({ documentId }) {
         {fileName ? (
           <button
             type="button"
-            className="ml-2 text-red-500"
+            className="ml-2 text-red-500 button delete mt-4"
             onClick={handleRemoveFile}
           >
-            Delete File
+            {fileUrl ? "Delete File" : "Remove file"}
           </button>
         ) : (
           "Uploaded"
