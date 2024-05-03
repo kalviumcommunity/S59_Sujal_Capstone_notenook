@@ -193,9 +193,10 @@ router.patch(
       );
 
       if (validationResult.error) {
-        return res
-          .status(400)
-          .json({ message: validationResult.error.details });
+        return res.status(400).json({
+          error: "Validation error",
+          details: validationResult.error.details,
+        });
       }
 
       const note = await NoteModel.findByIdAndUpdate(

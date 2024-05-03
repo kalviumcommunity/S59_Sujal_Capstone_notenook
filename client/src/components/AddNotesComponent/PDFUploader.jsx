@@ -14,7 +14,7 @@ function PDFUploader({
   setFileUrl,
 }) {
   const [file, setFile] = useState(null);
-
+  const MAX_FILE_SIZE = 10 * 1024 * 1024;
   const fileInputRef = useRef(null);
 
   const handleRemoveFile = async () => {
@@ -55,6 +55,12 @@ function PDFUploader({
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile && selectedFile.type === "application/pdf") {
+      if (selectedFile.size > MAX_FILE_SIZE) {
+        alert(
+          "File size exceeds the maximum limit (10MB). Please upload a smaller file."
+        );
+        return;
+      }
       setFileName(selectedFile.name);
       setFile(selectedFile);
     } else {
