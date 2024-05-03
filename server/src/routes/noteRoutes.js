@@ -8,6 +8,7 @@ const passport = require("passport");
 const {
   newNoteJoiSchema,
   updateNoteJoiSchema,
+  updateNoteFileReferenceJoiSchema,
 } = require("../validation/noteJoiSchemas");
 const { validateData } = require("../validation/validator");
 
@@ -124,6 +125,7 @@ router.get(
       const noteData = {
         title: note.title,
         subject: note.subject,
+        fileReference: note.fileReference,
       };
 
       res.json({ note: noteData });
@@ -173,6 +175,68 @@ router.patch(
       res.json({ message: "Note updated successfully", note });
     } catch (error) {
       console.error("Error updating note:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.patch(
+  "/updateNoteFileReferences",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const { noteId, fileName, url } = req.body;
+
+      const validationResult = validateData(
+        { noteId, fileName, url },
+        updateNoteFileReferenceJoiSchema
+      );
+
+      if (validationResult.error) {
+        return res.status(400).json({
+          error: "Validation error",
+          details: validationResult.error.details,
+        });
+      }
+
+      const note = await NoteModel.findByIdAndUpdate(
+        noteId,
+        { fileReference: { fileName, url } },
+        { new: true }
+      );
+
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+
+      res.json({ message: "File references updated successfully", note });
+    } catch (error) {
+      console.error("Error updating file references:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.delete(
+  "/deleteNoteFileReferences/:noteId",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const noteId = req.params.noteId;
+
+      const note = await NoteModel.findById(noteId);
+
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+
+      note.fileReference = undefined;
+
+      await note.save();
+
+      res.json({ message: "File references deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting file references:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   }
