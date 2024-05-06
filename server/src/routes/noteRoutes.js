@@ -5,6 +5,7 @@ const router = express.Router();
 const { UserModel } = require("../models/UserModel");
 const { NoteModel } = require("../models/NoteModel");
 const passport = require("passport");
+const mongoose = require("mongoose");
 const {
   newNoteJoiSchema,
   updateNoteJoiSchema,
@@ -129,6 +130,31 @@ router.get(
       };
 
       res.json({ note: noteData });
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+function isValidDocumentId(documentId) {
+  return mongoose.Types.ObjectId.isValid(documentId);
+}
+
+router.get(
+  "/viewNote",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const { documentId } = req.query;
+
+      if (!isValidDocumentId(documentId)) {
+        return res.status(400).json({ error: "Invalid documentId format" });
+      }
+
+      const note = await NoteModel.findById(documentId);
+
+      res.json({ note: note });
     } catch (error) {
       console.error("Error fetching notes:", error);
       res.status(500).json({ error: "Internal server error" });
