@@ -5,6 +5,7 @@ const router = express.Router();
 const { UserModel } = require("../models/UserModel");
 const { NoteModel } = require("../models/NoteModel");
 const passport = require("passport");
+const mongoose = require("mongoose");
 const {
   newNoteJoiSchema,
   updateNoteJoiSchema,
@@ -136,6 +137,10 @@ router.get(
   }
 );
 
+function isValidDocumentId(documentId) {
+  return mongoose.Types.ObjectId.isValid(documentId);
+}
+
 router.get(
   "/viewNote",
   passport.authenticate("jwt", { session: false }),
@@ -143,9 +148,12 @@ router.get(
     try {
       const { documentId } = req.query;
 
+      if (!isValidDocumentId(documentId)) {
+        return res.status(400).json({ error: "Invalid documentId format" });
+      }
+
       const note = await NoteModel.findById(documentId);
 
-      console.log(note);
       res.json({ note: note });
     } catch (error) {
       console.error("Error fetching notes:", error);

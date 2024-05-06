@@ -40,7 +40,6 @@ function ViewNote() {
         );
         const { note } = response.data;
         setNote(note);
-        console.log(note);
       } catch (error) {
         console.error("Error fetching default values:", error);
       }
@@ -99,10 +98,12 @@ function ViewNote() {
           <PdfViewer fileReference={fileReference} />
         </div>
       )}
-      
+
       {isPdfVisible && (
         <div className="backdrop" onClick={togglePdfVisibility}>
-          <button className="button">X</button>
+          <button className="button" aria-label="Close PDF Viewer">
+            Close PDF Viewer
+          </button>
         </div>
       )}
     </div>
