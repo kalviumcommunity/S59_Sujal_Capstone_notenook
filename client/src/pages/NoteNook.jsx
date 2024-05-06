@@ -10,6 +10,7 @@ import DashBoard from "./NoteNookPages/DashBoard";
 import SearchNotes from "./NoteNookPages/SearchNotes";
 import SearchUsers from "./NoteNookPages/SearchUsers";
 import AddNotes from "./NoteNookPages/AddNotes";
+import ViewNote from "./NoteNookPages/ViewNote";
 
 import "../css/NoteNook.css";
 
@@ -34,6 +35,7 @@ function NoteNook() {
             <Route path="/notes" element={<SearchNotes />}></Route>
             <Route path="/friends" element={<SearchUsers />}></Route>
             <Route path="/postNotes/*" element={<AddNotes />} />
+            <Route path="/viewNote/:documentId" element={<ViewNote />}></Route>
           </Routes>
         </div>
       </DeviceWidthProvider>

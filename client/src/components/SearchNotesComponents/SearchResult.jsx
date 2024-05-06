@@ -1,6 +1,7 @@
 import React from "react";
 import pic from "../../assets/pic.png";
 import formatDate from "../../Functions/FormatDate";
+import { Link } from "react-router-dom";
 function SearchResult({ result }) {
   return (
     <div className="searchNoteResult">
@@ -21,7 +22,9 @@ function SearchResult({ result }) {
           {result.subject}
         </p>
         <p className="updatedAt">Posted {formatDate(result.updatedAt)}</p>
-        <button className="view button">View</button>
+        <Link to={`/notenook/viewNote/${result._id}`}>
+          <button className="view button">View</button>
+        </Link>
       </div>
     </div>
   );

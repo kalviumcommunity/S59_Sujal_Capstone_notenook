@@ -1,4 +1,5 @@
 import formatDate from "../Functions/FormatDate";
+import { Link } from "react-router-dom";
 
 function Note({ note }) {
   return (
@@ -13,7 +14,9 @@ function Note({ note }) {
       </p>
       <p className="updatedDate">Posted {formatDate(note.updatedAt)}</p>
       <div className="noteButtons">
-        <button className="view button">View</button>
+        <Link to={`/notenook/viewNote/${note._id}`}>
+          <button className="view button">View</button>
+        </Link>
       </div>
     </div>
   );

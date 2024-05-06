@@ -136,6 +136,24 @@ router.get(
   }
 );
 
+router.get(
+  "/viewNote",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const { documentId } = req.query;
+
+      const note = await NoteModel.findById(documentId);
+
+      console.log(note);
+      res.json({ note: note });
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
 router.patch(
   "/updateNote",
   passport.authenticate("jwt", { session: false }),

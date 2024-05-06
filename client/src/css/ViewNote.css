@@ -1,0 +1,220 @@
+.viewNotePage {
+  height: 100%;
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.viewWindowContainer {
+  width: 100%;
+  transition: width 1s ease;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.noteViewDetails {
+  padding: 1rem 2rem;
+}
+
+.pdfViewer {
+  height: 100%;
+  width: 100%;
+}
+
+.iframe {
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.button.viewPdf {
+  background-color: #ff8c00;
+  display: block;
+  margin-left: auto;
+  margin-right: 2rem;
+}
+
+.button.viewPdf:hover {
+  background-color: #ff8c00;
+  opacity: 0.9;
+}
+
+.viewWindow {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.subject {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.postedInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.postedBy {
+  font-size: 14px;
+  color: #777;
+}
+
+.postedAt {
+  font-size: 14px;
+  color: #777;
+}
+
+.editorSection {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  min-height: 80%;
+}
+
+.editorContainer {
+  padding: 10px;
+}
+
+.editorContainer:hover {
+  border-color: #999;
+}
+
+.viewWindow {
+  padding: 20px;
+}
+
+.title,
+.subject,
+.postedInfo {
+  margin-bottom: 5px;
+}
+
+.label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.labelTitle {
+  color: #41cadf;
+}
+
+.labelSubject {
+  color: #41cadf;
+}
+
+.labelPostedBy {
+  color: #ff808c;
+}
+
+.labelPostedAt {
+  color: #41cadf;
+}
+
+@media (max-width: 1200px) {
+  .pdfContainer {
+    position: absolute;
+    top: 4rem;
+    height: 90%;
+    background-color: white;
+    width: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+  }
+  .backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(3px);
+    z-index: 10;
+  }
+
+  .backdrop .button {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+  }
+  .pdfContainer.visible {
+    animation: appear 1s ease forwards;
+  }
+  .pdfContainer.invisible {
+    animation: disappear 1s ease forwards;
+  }
+}
+
+@media (min-width: 1200px) {
+  .viewWindowContainer.withPdf {
+    width: 50%;
+  }
+
+  .pdfContainer.visible {
+    animation: fadeIn 1s ease forwards;
+  }
+
+  .pdfContainer.invisible {
+    animation: fadeOut 1s ease forwards;
+  }
+  .backdrop .button {
+    display: none;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    display: none;
+    width: 0%;
+    opacity: 0;
+  }
+  75% {
+    opacity: 0.2;
+  }
+  100% {
+    display: block;
+    width: 50%;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    display: block;
+    opacity: 1;
+    width: 50%;
+  }
+  to {
+    display: none;
+    opacity: 0;
+    width: 0%;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    display: none;
+  }
+  to {
+    display: block;
+    opacity: 1;
+  }
+}
+
+@keyframes disappear {
+  from {
+    opacity: 1;
+    display: block;
+  }
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
