@@ -115,17 +115,9 @@ router.post(
         note: noteId,
       });
 
-      const note = await NoteModel.findByIdAndUpdate(
-        noteId,
-        { title, subject },
-        { new: true }
-      );
-
-      if (!note) {
-        return res.status(500).json({ message: "Failed to update note" });
-      }
-
       await postedNote.save();
+      existingNote.postedNote = postedNote._id;
+      await existingNote.save();
 
       return res
         .status(201)
@@ -244,6 +236,13 @@ router.patch(
 
       if (!note) {
         return res.status(404).json({ error: "Note not found" });
+      }
+
+      const postedNote = await PostedNoteModel.findOne({ note: noteId });
+      if (postedNote) {
+        postedNote.title = title;
+        postedNote.subject = subject;
+        await postedNote.save();
       }
 
       res.json({ message: "Note updated successfully", note });
