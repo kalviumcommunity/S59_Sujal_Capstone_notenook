@@ -17,6 +17,7 @@ function NoteDetailsForm() {
 
   const [fileName, setFileName] = useState("");
   const [fileUrl, setFileUrl] = useState("");
+  const [note, setNote] = useState(null);
   const { documentId } = useParams();
 
   useEffect(() => {
@@ -35,7 +36,7 @@ function NoteDetailsForm() {
             }
           );
           const note = response.data.note;
-          console.log(note);
+          setNote(note);
           if (note.fileReference) {
             setFileName(note.fileReference.fileName);
             setFileUrl(note.fileReference.url);
@@ -79,6 +80,37 @@ function NoteDetailsForm() {
     }
   };
 
+  const postNote = async () => {
+    const token = extractTokenFromCookie();
+    if (!token || !note) {
+      return;
+    }
+    try {
+      const formData = {
+        noteId: documentId,
+        title: note.title,
+        subject: note.subject,
+      };
+      console.log(formData);
+
+      const response = await axios.post(
+        import.meta.env.VITE_REACT_APP_UPDATE_NOTE_ENDPOINT,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status == 201) {
+        alert("Posted Successfully");
+      }
+      console.log(response);
+    } catch (error) {
+      console.error("Error posting note:", error);
+    }
+  };
+
   return (
     <>
       <div className="postNoteForm">
@@ -86,7 +118,7 @@ function NoteDetailsForm() {
           <p className="w-3/4 font-bold text-gray-500">
             Upload the note so that everyone can view it
           </p>
-          <button type="submit" className="button post">
+          <button type="submit" className="button post" onClick={postNote}>
             Post
           </button>
         </div>

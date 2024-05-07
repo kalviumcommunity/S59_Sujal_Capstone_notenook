@@ -22,7 +22,7 @@ function SearchResult({ result }) {
           {result.subject}
         </p>
         <p className="updatedAt">Posted {formatDate(result.updatedAt)}</p>
-        <Link to={`/notenook/viewNote/${result._id}`}>
+        <Link to={`/notenook/viewNote/${result.note}`}>
           <button className="view button">View</button>
         </Link>
       </div>
