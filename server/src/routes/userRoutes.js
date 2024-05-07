@@ -106,13 +106,21 @@ router.put(
           .status(400)
           .json({ message: error.details.map((detail) => detail.message) });
       }
-      console.log(req.body.password);
       const isPasswordValid = await user.validatePassword(req.body.password);
       if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid password" });
       }
 
       if (req.body.username) {
+        const existingUser = await UserModel.findOne({
+          username: req.body.username,
+        });
+        if (
+          existingUser &&
+          existingUser._id.toString() !== user._id.toString()
+        ) {
+          return res.status(400).json({ message: "Username is already taken" });
+        }
         user.username = req.body.username;
       }
       if (req.body.fullname) {
