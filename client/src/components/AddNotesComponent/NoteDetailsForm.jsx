@@ -18,6 +18,7 @@ function NoteDetailsForm() {
   const [fileName, setFileName] = useState("");
   const [fileUrl, setFileUrl] = useState("");
   const [note, setNote] = useState(null);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { documentId } = useParams();
 
   useEffect(() => {
@@ -74,6 +75,7 @@ function NoteDetailsForm() {
         );
 
         console.log(response.data);
+        setUnsavedChanges(false);
       }
     } catch (error) {
       console.error("Error submitting note details:", error);
@@ -94,7 +96,7 @@ function NoteDetailsForm() {
       console.log(formData);
 
       const response = await axios.post(
-        import.meta.env.VITE_REACT_APP_UPDATE_NOTE_ENDPOINT,
+        import.meta.env.VITE_REACT_APP_POST_NOTE_ENDPOINT,
         formData,
         {
           headers: {
@@ -102,13 +104,18 @@ function NoteDetailsForm() {
           },
         }
       );
-      if (response.status == 201) {
+      if (response.status === 201) {
         alert("Posted Successfully");
+        setUnsavedChanges(false);
       }
       console.log(response);
     } catch (error) {
       console.error("Error posting note:", error);
     }
+  };
+
+  const handleInputChange = () => {
+    setUnsavedChanges(true);
   };
 
   return (
@@ -118,8 +125,15 @@ function NoteDetailsForm() {
           <p className="w-3/4 font-bold text-gray-500">
             Upload the note so that everyone can view it
           </p>
-          <button type="submit" className="button post" onClick={postNote}>
-            Post
+
+          <button
+            type="button"
+            className="button post"
+            onClick={postNote}
+            disabled={unsavedChanges}
+            title={unsavedChanges ? "Save the updates first" : null}
+          >
+            Post{" "}
           </button>
         </div>
         <form className="noteDetails" onSubmit={handleSubmit(onSubmit)}>
@@ -132,6 +146,7 @@ function NoteDetailsForm() {
               {...register("noteTitle", {
                 required: "Note title is required",
               })}
+              onChange={handleInputChange}
             />
             <p className="error">{errors.noteTitle?.message}</p>
           </div>
@@ -145,6 +160,7 @@ function NoteDetailsForm() {
               {...register("subject", {
                 required: "Subject is required",
               })}
+              onChange={handleInputChange}
             />
             <p className="error">{errors.subject?.message}</p>
           </div>

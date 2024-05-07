@@ -17,6 +17,7 @@ const noteSchema = new Schema(
         type: String,
       },
     },
+    postedNote: { type: Schema.Types.ObjectId, ref: "PostedNote" },
     document: Object,
   },
   { timestamps: true }
