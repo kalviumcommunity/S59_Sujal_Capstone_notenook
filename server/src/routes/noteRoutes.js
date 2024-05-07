@@ -4,6 +4,7 @@ const express = require("express");
 const router = express.Router();
 const { UserModel } = require("../models/UserModel");
 const { NoteModel } = require("../models/NoteModel");
+const { PostedNoteModel } = require("../models/PostedNoteModel");
 const passport = require("passport");
 const mongoose = require("mongoose");
 const {
@@ -79,11 +80,48 @@ router.get(
         ],
       };
 
-      const notes = await NoteModel.find(query);
+      const notes = await PostedNoteModel.find(query);
 
       return res.status(200).json({ notes });
     } catch (error) {
       console.error("Error searching notes:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+router.post(
+  "/addPostedNote",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const { title, subject, noteId } = req.body;
+
+      if (!title || !subject || !noteId) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+      const { username, _id } = req.user;
+
+      const postedNote = new PostedNoteModel({
+        postedBy: { userId: _id, username: username },
+        title,
+        subject,
+        note: noteId,
+      });
+
+      const note = await NoteModel.findByIdAndUpdate(
+        noteId,
+        { title, subject },
+        { new: true }
+      );
+
+      await postedNote.save();
+
+      return res
+        .status(201)
+        .json({ message: "Posted note added successfully" });
+    } catch (error) {
+      console.error("Error adding posted note:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
