@@ -100,6 +100,12 @@ router.post(
       if (!title || !subject || !noteId) {
         return res.status(400).json({ message: "Missing required fields" });
       }
+
+      const existingNote = await NoteModel.findById(noteId);
+      if (!existingNote) {
+        return res.status(404).json({ message: "Note not found" });
+      }
+
       const { username, _id } = req.user;
 
       const postedNote = new PostedNoteModel({
@@ -114,6 +120,10 @@ router.post(
         { title, subject },
         { new: true }
       );
+
+      if (!note) {
+        return res.status(500).json({ message: "Failed to update note" });
+      }
 
       await postedNote.save();
 
