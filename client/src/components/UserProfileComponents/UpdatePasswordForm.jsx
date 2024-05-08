@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 function UpdatePasswordForm() {
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
   const {
     register,
     formState: { errors },
@@ -10,7 +15,37 @@ function UpdatePasswordForm() {
     watch,
   } = useForm();
 
-  const submitForm = async (data) => {};
+  const submitForm = async (data) => {
+    try {
+      const token = extractTokenFromCookie();
+      if (!token) {
+        throw new Error("Token not found");
+      }
+
+      const response = await axios.patch(
+        import.meta.env.VITE_REACT_APP_USER_DETAIL_UPDATE_PASSOWRD_ENDPOINT,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Updated password successflully");
+        navigate("/notenook/profile");
+      } else {
+        setErrorMessage("Something went wrong. Please try again later.");
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Something went wrong. Please try again later.");
+      }
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(submitForm)} className="updatePasswordForm">
@@ -24,14 +59,6 @@ function UpdatePasswordForm() {
           name="password"
           {...register("password", {
             required: "Enter Password",
-            minLength: {
-              value: 10,
-              message: "Password Must be longer than 10 characters",
-            },
-            pattern: {
-              value: /^(?=.*[!@#$%^&*])/,
-              message: "Password must contain at least one special character",
-            },
           })}
         />
         <p className="error">{errors.password?.message || errorMessage}</p>
