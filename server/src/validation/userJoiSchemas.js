@@ -16,8 +16,12 @@ const userJoiSchema = Joi.object({
 });
 
 const userUpdateJoiSchema = Joi.object({
-  username: Joi.string().min(3).optional(),
-  fullname: Joi.string().required().optional(),
+  username: Joi.string().optional(),
+  fullname: Joi.string().optional(),
+  email: Joi.string().email().optional(),
+});
+
+const passwordUpdateJoiSchema = Joi.object({
   password: Joi.string().required(),
   newPassword: Joi.string()
     .min(10)
@@ -27,10 +31,11 @@ const userUpdateJoiSchema = Joi.object({
       "string.pattern.base":
         "Password must contain at least one special character",
     })
-    .optional(),
+    .required(),
 });
 
 module.exports = {
   userUpdateJoiSchema,
   userJoiSchema,
+  passwordUpdateJoiSchema,
 };

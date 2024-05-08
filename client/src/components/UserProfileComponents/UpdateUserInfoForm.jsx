@@ -1,15 +1,73 @@
-import React, { useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
-function UpdateUserForm() {
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import { UserContext } from "../../context/userContext";
+
+function UpdateUserForm({ userInfo, setUserInfo }) {
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
   const {
     register,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm();
 
-  const submitForm = async (data) => {};
+  useEffect(() => {
+    if (!userInfo) {
+      return;
+    }
+    setValue("username", userInfo.username);
+    setValue("fullname", userInfo.fullname);
+    setValue("email", userInfo.email);
+  }, [userInfo]);
+
+  const submitForm = async (data) => {
+    try {
+      const token = extractTokenFromCookie();
+      if (!token) {
+        throw new Error("Token not found");
+      }
+
+      const response = await axios.patch(
+        import.meta.env.VITE_REACT_APP_USER_DETAIL_UPDATE_ENDPOINT,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        alert("Updated details successflully");
+        setUser({
+          ...user,
+          username: data.username,
+          email: data.email,
+          fullname: data.fullname,
+        });
+        setUserInfo({
+          ...userInfo,
+          username: data.username,
+          email: data.email,
+          fullname: data.fullname,
+        });
+        navigate("/notenook/profile");
+      } else {
+        setErrorMessage("Something went wrong. Please try again later.");
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Something went wrong. Please try again later.");
+      }
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(submitForm)} className="updateUserForm">

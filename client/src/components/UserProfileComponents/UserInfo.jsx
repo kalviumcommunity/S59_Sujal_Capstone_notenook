@@ -1,15 +1,7 @@
-import React, { useState } from "react";
-import pic from "../../assets/pic.png";
 import { Link } from "react-router-dom";
-function UserInfo() {
-  const [userInfo, setUserInfo] = useState({
-    username: "shresu",
-    fullname: "Sujal Shrestha",
-    email: "sujshrest@gmail.com",
-    numberOfNotes: 6,
-    numberOfConnections: 0,
-  });
 
+import pic from "../../assets/pic.png";
+function UserInfo({ userInfo }) {
   return (
     <div className="userInfoComponent">
       <br />
