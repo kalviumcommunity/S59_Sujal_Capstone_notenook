@@ -55,7 +55,32 @@ function NoteDetailsForm() {
   }, [setValue, useParams]);
 
   const onSubmit = async (data) => {
-    console.log(data);
+    try {
+      const formData = {
+        noteId: documentId,
+        title: data.noteTitle,
+        subject: data.subject,
+      };
+      console.log(formData);
+
+      const token = extractTokenFromCookie();
+      if (token) {
+        const response = await axios.patch(
+          import.meta.env.VITE_REACT_APP_UPDATE_NOTE_ENDPOINT,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setUnsavedChanges(false);
+        setShowConfirmation(false);
+      }
+    } catch (error) {
+      console.error("Error submitting note details:", error);
+    }
   };
 
   const postNote = async () => {

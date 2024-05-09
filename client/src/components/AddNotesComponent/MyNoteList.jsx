@@ -35,7 +35,25 @@ function MyNoteList({ handleClick }) {
   }, []);
 
   const handleDelete = async (noteId) => {
-    console.log(noteId);
+    try {
+      const token = extractTokenFromCookie();
+      if (!token) return;
+
+      await axios.delete(
+        `${import.meta.env.VITE_REACT_APP_DELETE_NOTE_ENDPOINT}/${noteId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setNotes(notes.filter((note) => note._id !== noteId));
+    } catch (error) {
+      console.error("Error deleting note:", error);
+      setError("Failed to delete note. Please try again.");
+    }
   };
 
   return (
