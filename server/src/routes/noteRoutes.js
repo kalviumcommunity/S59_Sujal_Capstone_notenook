@@ -209,7 +209,6 @@ router.patch(
     try {
       const { noteId, title, subject } = req.body;
 
-      console.log(noteId, title, subject);
       const validationResult = validateData(
         {
           title,
@@ -334,6 +333,10 @@ router.delete(
   async (req, res) => {
     try {
       const noteId = req.params.noteId;
+
+      if (!mongoose.Types.ObjectId.isValid(noteId)) {
+        return res.status(400).json({ error: "Invalid note ID" });
+      }
 
       const note = await NoteModel.findById(noteId);
 
