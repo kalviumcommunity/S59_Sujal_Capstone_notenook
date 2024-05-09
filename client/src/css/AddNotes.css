@@ -117,21 +117,22 @@
   text-overflow: ellipsis;
 }
 
-.button.post {
+.button.post,
+.button.yes-button {
   background-color: #1abc9c;
 }
 
 .button.delete {
-  background-color: #e74c3c; 
-  color: #fff; 
+  background-color: #e74c3c;
+  color: #fff;
 }
 
 .button.delete:hover {
-  background-color: #c0392b; 
+  background-color: #c0392b;
 }
 
-
-.button.post:hover {
+.button.post:hover,
+.button.yes-button:hover {
   background-color: #0e9076;
 }
 
@@ -144,6 +145,34 @@
 .pdfUploader {
   width: 325px;
 }
+
+.confirmation-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 2px 0 gray;
+  border-radius: inherit;
+}
+
+.confirmation-popup .cancel-button {
+  background-color: #f44336;
+}
+
+.confirmation-popup .cancel-button:hover {
+  background-color: #be2115;
+}
+
 @media (max-width: 1200px) {
   .addNotesPage {
     height: 120%;
@@ -172,7 +201,7 @@
     align-items: center;
     gap: 2rem;
   }
-  
+
   .pdfUploader {
     width: 400px;
     max-width: 80vw;

@@ -8,6 +8,7 @@
 }
 
 .myNotes {
+  padding-top: 1rem;
   display: grid;
   height: 90%;
   overflow-y: scroll;
