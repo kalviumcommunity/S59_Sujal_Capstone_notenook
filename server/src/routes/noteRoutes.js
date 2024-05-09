@@ -203,6 +203,95 @@ router.get(
 );
 
 router.patch(
+  "/updateNote",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const { noteId, title, subject } = req.body;
+
+      console.log(noteId, title, subject);
+      const validationResult = validateData(
+        {
+          title,
+          subject,
+        },
+        updateNoteJoiSchema
+      );
+
+      if (validationResult.error) {
+        return res
+          .status(400)
+          .json({ message: validationResult.error.details });
+      }
+
+      if (!noteId) {
+        return res.status(400).json({ error: "Note ID is required" });
+      }
+
+      const note = await NoteModel.findByIdAndUpdate(
+        noteId,
+        { title, subject },
+        { new: true }
+      );
+
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+
+      const postedNote = await PostedNoteModel.findOne({ note: noteId });
+      if (postedNote) {
+        postedNote.title = title;
+        postedNote.subject = subject;
+        await postedNote.save();
+      }
+
+      res.json({ message: "Note updated successfully", note });
+    } catch (error) {
+      console.error("Error updating note:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.delete(
+  "/deleteNote/:noteId",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const noteId = req.params.noteId;
+
+      const note = await NoteModel.findById(noteId);
+
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+
+      if (note.postedNote) {
+        await PostedNoteModel.findByIdAndDelete(note.postedNote);
+      }
+
+      const user = await UserModel.findById(req.user.id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const index = user.notes.indexOf(noteId);
+      if (index !== -1) {
+        user.notes.splice(index, 1);
+      }
+      await user.save();
+
+      await NoteModel.findByIdAndDelete(noteId);
+
+      res.json({ message: "Note deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting note:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.patch(
   "/updateNoteFileReferences",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
