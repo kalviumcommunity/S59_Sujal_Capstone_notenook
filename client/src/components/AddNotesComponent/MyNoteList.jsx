@@ -22,8 +22,6 @@ function MyNoteList({ handleClick }) {
         );
 
         setNotes(response.data.notes);
-        console.log(notes);
-        console.log(response);
       } catch (error) {
         console.error("Error fetching notes:", error);
         setError("Failed to fetch notes. Please try again.");
@@ -36,6 +34,10 @@ function MyNoteList({ handleClick }) {
     }
   }, []);
 
+  const handleDelete = async (noteId) => {
+    console.log(noteId);
+  };
+
   return (
     <div className="myNoteList">
       <div className="flex w-full justify-between p-4">
@@ -46,9 +48,9 @@ function MyNoteList({ handleClick }) {
       </div>
       {error && <p className="error-message">{error}</p>}{" "}
       <div className="myNotes">
-        {notes && notes.map((note, i) => {
-          return <MyNote note={note} key={i} />;
-        })}
+        {notes.map((note) => (
+          <MyNote key={note._id} note={note} handleDelete={handleDelete} />
+        ))}
       </div>
     </div>
   );

@@ -20,6 +20,7 @@ function NoteDetailsForm() {
   const [note, setNote] = useState(null);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { documentId } = useParams();
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
     const fetchDefaultValues = async () => {
@@ -54,32 +55,7 @@ function NoteDetailsForm() {
   }, [setValue, useParams]);
 
   const onSubmit = async (data) => {
-    try {
-      const formData = {
-        noteId: documentId,
-        title: data.noteTitle,
-        subject: data.subject,
-      };
-      console.log(formData);
-
-      const token = extractTokenFromCookie();
-      if (token) {
-        const response = await axios.patch(
-          import.meta.env.VITE_REACT_APP_UPDATE_NOTE_ENDPOINT,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        console.log(response.data);
-        setUnsavedChanges(false);
-      }
-    } catch (error) {
-      console.error("Error submitting note details:", error);
-    }
+    console.log(data);
   };
 
   const postNote = async () => {
@@ -165,9 +141,30 @@ function NoteDetailsForm() {
             <p className="error">{errors.subject?.message}</p>
           </div>
 
-          <button type="submit" className="button post">
+          <div
+            onClick={() => setShowConfirmation(true)}
+            className="button post"
+          >
             Update details
-          </button>
+          </div>
+          {showConfirmation && (
+            <div className="confirmation-popup">
+              <p className="heading text-center">
+                Are you sure you want to update the note?
+              </p>
+              <div className="flex gap-10">
+                <button type="submit" className="button yes-button">
+                  Yes
+                </button>
+                <div
+                  onClick={() => setShowConfirmation(false)}
+                  className="button cancel-button"
+                >
+                  Cancel
+                </div>
+              </div>
+            </div>
+          )}
         </form>
 
         <PDFUploader
