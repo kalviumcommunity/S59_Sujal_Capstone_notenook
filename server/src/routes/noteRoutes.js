@@ -259,13 +259,29 @@ router.delete(
     try {
       const noteId = req.params.noteId;
 
+      if (!mongoose.Types.ObjectId.isValid(noteId)) {
+        return res.status(400).json({ error: "Invalid note ID" });
+      }
+
       const note = await NoteModel.findById(noteId);
 
       if (!note) {
         return res.status(404).json({ error: "Note not found" });
       }
 
+      if (note.postedBy.userId.toString() !== req.user.id) {
+        return res.status(403).json({ error: "Unauthorized access" });
+      }
+
       if (note.postedNote) {
+        const postedNote = await PostedNoteModel.findById(note.postedNote);
+        if (
+          !postedNote ||
+          postedNote.postedBy.userId.toString() !== req.user.id
+        ) {
+          return res.status(403).json({ error: "Unauthorized access" });
+        }
+
         await PostedNoteModel.findByIdAndDelete(note.postedNote);
       }
 
