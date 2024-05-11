@@ -109,6 +109,10 @@
   align-self: flex-end;
 }
 
+.userInfoComponent .confirmation-popup {
+  box-shadow: none;
+}
+
 @media (max-width: 640px) {
   .user-info {
     width: 90vw;

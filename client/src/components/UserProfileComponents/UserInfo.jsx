@@ -1,16 +1,24 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 import pic from "../../assets/pic.png";
+
 function UserInfo({ userInfo }) {
+  const [logoutConfirmation, setLogoutConfirmation] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/forms/login");
+  };
+
   return (
-    <div className="userInfoComponent">
+    <div className="userInfoComponent relative">
       <br />
       {userInfo && (
         <div className="user-info">
           <div className="user-details">
             <div className="flex items-center">
               <img src={pic} alt="Profile" className="profile-pic" />
-
               <div className="user-text">
                 <Link to={""}>
                   <div className="username-container">
@@ -33,9 +41,30 @@ function UserInfo({ userInfo }) {
             </Link>
           </div>
           <br />
-          <button className="logout button">Log Out</button>
+          <button
+            className="logout button"
+            onClick={() => setLogoutConfirmation(true)}
+          >
+            Log Out
+          </button>
           <br />
           <hr className="hrLine" />
+        </div>
+      )}
+      {logoutConfirmation && (
+        <div className="confirmation-popup">
+          <p className="heading">Are you sure you want to log out?</p>
+          <div className="flex gap-10">
+            <button onClick={handleLogout} className="button yes-button">
+              Yes
+            </button>
+            <button
+              onClick={() => setLogoutConfirmation(false)}
+              className="button cancel-button"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </div>
