@@ -39,7 +39,7 @@ router.post(
       }
 
       const newNote = new NoteModel({
-        postedBy: { userId: user._id, username: user.username },
+        postedBy: user._id,
         title,
         subject,
       });
@@ -80,7 +80,10 @@ router.get(
         ],
       };
 
-      const notes = await PostedNoteModel.find(query);
+      const notes = await PostedNoteModel.find(query).populate({
+        path: "postedBy",
+        select: "username",
+      });
 
       return res.status(200).json({ notes });
     } catch (error) {
@@ -109,7 +112,7 @@ router.post(
       const { username, _id } = req.user;
 
       const postedNote = new PostedNoteModel({
-        postedBy: { userId: _id, username: username },
+        postedBy: _id,
         title,
         subject,
         note: noteId,
