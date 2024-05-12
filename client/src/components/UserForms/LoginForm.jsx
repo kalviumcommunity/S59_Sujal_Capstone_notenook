@@ -23,7 +23,8 @@ function LoginForm() {
         import.meta.env.VITE_REACT_APP_USER_LOGIN_URL,
         data
       );
-      
+
+      document.cookie = `token=${res.data.token}; path=/`;
       setUser(res.data.user);
 
       navigate("/");

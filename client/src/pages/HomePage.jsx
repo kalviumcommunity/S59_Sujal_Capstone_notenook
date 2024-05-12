@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 
 import logo from "../assets/logo.jpeg";
+import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 
 function HomePage() {
   const { user } = useContext(UserContext);
@@ -49,11 +50,11 @@ function HomePage() {
 }
 
 function HomePageButtons() {
-  const { user } = useContext(UserContext);
+  const token = extractTokenFromCookie();
 
   return (
     <>
-      {user ? (
+      {token ? (
         <>
           <Link to="/notenook/dashboard">
             <button className="button" role="button">
