@@ -3,8 +3,6 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-
 function UpdatePasswordForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -17,19 +15,9 @@ function UpdatePasswordForm() {
 
   const submitForm = async (data) => {
     try {
-      const token = extractTokenFromCookie();
-      if (!token) {
-        throw new Error("Token not found");
-      }
-
       const response = await axios.patch(
         import.meta.env.VITE_REACT_APP_USER_DETAIL_UPDATE_PASSOWRD_ENDPOINT,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        data
       );
 
       if (response.status === 200) {
