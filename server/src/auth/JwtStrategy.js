@@ -12,7 +12,6 @@ passport.use(
     },
     async (jwtPayload, done) => {
       try {
-        console.log(jwtPayload);
         const user = await UserModel.findById(jwtPayload.userId);
 
         if (!user) {
@@ -21,7 +20,11 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        console.log(error);
+        if (process.env.NODE_ENV === "development") {
+          console.error("An error occurred in JwtStrategy:", error);
+        } else {
+          console.error("An error occurred in JwtStrategy:", error.message);
+        }
         return done(error, false);
       }
     }

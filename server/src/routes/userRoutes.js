@@ -95,6 +95,10 @@ router.get(
     try {
       const user = req.user;
 
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
       const userData = {
         username: user.username,
         fullname: user.fullname,
@@ -105,7 +109,11 @@ router.get(
 
       return res.status(200).json({ user: userData });
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      if (error.name === "UnauthorizedError") {
+        return res.status(401).json({ message: "Unauthorized access" });
+      } else {
+        return res.status(500).json({ message: "Internal Server Error" });
+      }
     }
   }
 );
