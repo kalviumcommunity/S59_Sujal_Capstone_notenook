@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import { UserContext } from "../../context/userContext";
 
 function UpdateUserForm({ userInfo, setUserInfo }) {
@@ -27,9 +28,19 @@ function UpdateUserForm({ userInfo, setUserInfo }) {
 
   const submitForm = async (data) => {
     try {
+      const token = extractTokenFromCookie();
+      if (!token) {
+        throw new Error("Token not found");
+      }
+
       const response = await axios.patch(
         import.meta.env.VITE_REACT_APP_USER_DETAIL_UPDATE_ENDPOINT,
-        data
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 200) {
         alert("Updated details successflully");

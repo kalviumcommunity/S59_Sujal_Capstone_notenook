@@ -5,6 +5,7 @@ import axios from "axios";
 import UserInfo from "../../components/UserProfileComponents/UserInfo";
 import UpdatePasswordForm from "../../components/UserProfileComponents/UpdatePasswordForm";
 import UpdateUserForm from "../../components/UserProfileComponents/UpdateUserInfoForm";
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 import "../../css/UserProfile.css";
 
@@ -13,9 +14,18 @@ function UserProfile() {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
+      const token = extractTokenFromCookie();
+      if (!token) {
+        throw new Error("Token not found");
+      }
       try {
         const response = await axios.get(
-          import.meta.env.VITE_REACT_APP_USER_DETAIL_ENDPOINT
+          import.meta.env.VITE_REACT_APP_USER_DETAIL_ENDPOINT,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         setUserInfo(response.data.user);
