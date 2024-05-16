@@ -5,6 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import googleLogo from "../../assets/googleLogo.png";
+
 function RegistrationForm() {
   const navigate = useNavigate();
 
@@ -133,7 +135,14 @@ function RegistrationForm() {
           Register
         </button>
       </form>
-
+      <div className="googleLoginButton">
+        or
+        <button className="button">
+          <img src={googleLogo} alt="googleLogo" />
+          Continue With Google
+        </button>
+      </div>
+      <br />
       <p className="text-center mt-0 xl:mt-4">
         Already have an account?{" "}
         {

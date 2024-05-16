@@ -11,6 +11,27 @@ function UserProvider({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/auth/google/getSession",
+          {
+            withCredentials: true,
+          }
+        );
+        if (response.status === 200) {
+          document.cookie = `token=${response.data.token}; path=/`;
+          setUser(response.data.user);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchSession();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async (token) => {
       try {
         const response = await axios.post(

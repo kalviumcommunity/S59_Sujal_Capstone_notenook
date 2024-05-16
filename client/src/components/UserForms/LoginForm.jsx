@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context/userContext";
 
+import googleLogo from "../../assets/googleLogo.png";
+
 function LoginForm() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
@@ -42,6 +44,10 @@ function LoginForm() {
           : "Network error. Please check your connection."
       );
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = import.meta.env.VITE_GOOGLE_LOGIN_URI;
   };
 
   return (
@@ -86,7 +92,14 @@ function LoginForm() {
           Login
         </button>
       </form>
-
+      <div className="googleLoginButton">
+        or
+        <button className="button" onClick={handleGoogleLogin}>
+          <img src={googleLogo} alt="googleLogo" />
+          Continue With Google
+        </button>
+      </div>
+      <br />
       <p className="text-center mt-0 xl:mt-4">
         Don't have an account?{" "}
         {
