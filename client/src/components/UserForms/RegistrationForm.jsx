@@ -32,6 +32,10 @@ function RegistrationForm() {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = import.meta.env.VITE_GOOGLE_LOGIN_URI;
+  };
+
   return (
     <div className="formDiv mb-24 xl:mb-0">
       <h1>Register Now!</h1>
@@ -137,7 +141,7 @@ function RegistrationForm() {
       </form>
       <div className="googleLoginButton">
         or
-        <button className="button">
+        <button className="button" onClick={handleGoogleLogin}>
           <img src={googleLogo} alt="googleLogo" />
           Continue With Google
         </button>
