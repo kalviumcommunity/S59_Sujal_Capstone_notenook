@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios"; // Import axios
 
 import pic from "../../assets/pic.png";
 
@@ -7,9 +8,17 @@ function UserInfo({ userInfo }) {
   const [logoutConfirmation, setLogoutConfirmation] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    navigate("/forms/login");
+  const handleLogout = async () => {
+    try {
+      await axios.get("http://localhost:8080/auth/google/logout", {
+        withCredentials: true,
+      });
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      navigate("/forms/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   return (

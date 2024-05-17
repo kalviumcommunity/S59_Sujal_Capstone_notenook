@@ -12,6 +12,26 @@ form {
   box-sizing: border-box;
 }
 
+.googleLoginButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.googleLoginButton .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+.googleLoginButton .button img {
+  width: 30px; 
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
 .field {
   width: 90%;
   justify-self: center;
