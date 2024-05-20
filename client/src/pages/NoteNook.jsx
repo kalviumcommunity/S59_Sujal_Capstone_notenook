@@ -12,6 +12,8 @@ import SearchUsers from "./NoteNookPages/SearchUsers";
 import AddNotes from "./NoteNookPages/AddNotes";
 import ViewNote from "./NoteNookPages/ViewNote";
 import UserProfile from "./NoteNookPages/UserProfile";
+import NotificationPage from "./NoteNookPages/NotificationPage";
+import ViewUser from "./NoteNookPages/ViewUser";
 
 import "../css/NoteNook.css";
 
@@ -38,6 +40,8 @@ function NoteNook() {
             <Route path="/postNotes/*" element={<AddNotes />} />
             <Route path="/viewNote/:documentId" element={<ViewNote />}></Route>
             <Route path="/profile/*" element={<UserProfile />}></Route>
+            <Route path="/notifications" element={<NotificationPage />}></Route>
+            <Route path="/viewUser/:userId" element={<ViewUser />}></Route>
           </Routes>
         </div>
       </DeviceWidthProvider>

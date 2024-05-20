@@ -6,6 +6,7 @@ import axios from "axios";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 import PDFUploader from "./PDFUploader";
+import { NIL } from "uuid";
 
 function NoteDetailsForm() {
   const {
@@ -108,6 +109,34 @@ function NoteDetailsForm() {
       if (response.status === 201) {
         alert("Posted Successfully");
         setUnsavedChanges(false);
+        setNote({ ...note, postedNote: true });
+      }
+      console.log(response);
+    } catch (error) {
+      console.error("Error posting note:", error);
+    }
+  };
+
+  const deletePostedNote = async () => {
+    const token = extractTokenFromCookie();
+    if (!token || !note) {
+      return;
+    }
+    console.log(token);
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_REACT_APP_DELETE_POSTEDNOTE_ENDPOINT}/${
+          documentId
+        }`, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 204) {
+        alert("Posted note Deleted Successfully");
+        setNote({ ...note, postedNote: false });
       }
       console.log(response);
     } catch (error) {
@@ -126,16 +155,26 @@ function NoteDetailsForm() {
           <p className="w-3/4 font-bold text-gray-500">
             Upload the note so that everyone can view it
           </p>
-
-          <button
-            type="button"
-            className="button post"
-            onClick={postNote}
-            disabled={unsavedChanges}
-            title={unsavedChanges ? "Save the updates first" : null}
-          >
-            Post{" "}
-          </button>
+          {note?.postedNote ? (
+            <button
+              type="button"
+              className="button delete"
+              onClick={deletePostedNote}
+              title={"Remove the post?"}
+            >
+              Unpost
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="button post"
+              onClick={postNote}
+              disabled={unsavedChanges}
+              title={unsavedChanges ? "Save the updates first" : null}
+            >
+              Post{" "}
+            </button>
+          )}
         </div>
         <form className="noteDetails" onSubmit={handleSubmit(onSubmit)}>
           <div className="field">

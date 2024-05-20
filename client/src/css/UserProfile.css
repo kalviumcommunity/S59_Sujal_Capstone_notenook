@@ -85,6 +85,15 @@
   background-color: #d32f2f;
 }
 
+.user-info .addFriend.button {
+  background-color: #009e9e;
+  margin-left: auto;
+}
+
+.user-info .addFriend.button:hover {
+  background-color: #006969;
+}
+
 .updatePasswordForm,
 .updateUserForm {
   width: 80vw;

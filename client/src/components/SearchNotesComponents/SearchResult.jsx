@@ -6,13 +6,16 @@ function SearchResult({ result }) {
   return (
     <div className="searchNoteResult">
       <div className="resultInfo">
-        <p className="postedBy">
-          <img
-            src={pic}
-            alt={`${result.postedBy.username}'s profile picture`}
-          />
-          <span>{result.postedBy.username}</span>
-        </p>
+        <Link to={`/notenook/viewUser/${result.postedBy._id}`}>
+          <p className="postedBy">
+            <img
+              src={pic}
+              alt={`${result.postedBy.username}'s profile picture`}
+            />
+            <span>{result.postedBy.username}</span>
+          </p>
+        </Link>
+
         <p className="title">
           <span className="lable">Title: </span>
           {result.title}

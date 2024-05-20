@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
 
@@ -6,6 +7,7 @@ import UserInfo from "../../components/UserProfileComponents/UserInfo";
 import UpdatePasswordForm from "../../components/UserProfileComponents/UpdatePasswordForm";
 import UpdateUserForm from "../../components/UserProfileComponents/UpdateUserInfoForm";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import { UserContext } from "../../context/userContext";
 
 import "../../css/UserProfile.css";
 
@@ -53,10 +55,12 @@ function UserProfile() {
 }
 
 function UpdateForms({ userInfo, setUserInfo }) {
+  const {user} = useContext(UserContext);
+  console.log(user);
   return (
     <div className="updateForms">
       <UpdateUserForm userInfo={userInfo} setUserInfo={setUserInfo} />
-      <UpdatePasswordForm />
+      {!user.oauthId && <UpdatePasswordForm />}
     </div>
   );
 }

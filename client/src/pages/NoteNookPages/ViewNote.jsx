@@ -81,12 +81,12 @@ function ViewNote() {
               </span>
             </p>
           </div>
+          {note?.fileReference && (
+            <button className="button viewPdf" onClick={togglePdfVisibility}>
+              {isPdfVisible ? "Hide Pdf" : "View Pdf"}
+            </button>
+          )}
         </div>
-        {note?.fileReference && (
-          <button className="button viewPdf" onClick={togglePdfVisibility}>
-            {isPdfVisible ? "Hide Pdf" : "View Pdf"}
-          </button>
-        )}
 
         <ViewWindow note={note} />
       </div>
