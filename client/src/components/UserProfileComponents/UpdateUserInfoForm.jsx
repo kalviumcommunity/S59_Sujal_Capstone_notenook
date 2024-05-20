@@ -101,6 +101,7 @@ function UpdateUserForm({ userInfo, setUserInfo }) {
       <div className="field">
         <label htmlFor="fullname">Full Name:</label>
         <input
+          disabled={user.oauthId}
           type="text"
           id="fullname"
           name="fullname"
@@ -114,6 +115,7 @@ function UpdateUserForm({ userInfo, setUserInfo }) {
       <div className="field span2">
         <label htmlFor="email">Email:</label>
         <input
+          disabled={user.oauthId}
           type="email"
           id="email"
           name="email"
@@ -123,19 +125,6 @@ function UpdateUserForm({ userInfo, setUserInfo }) {
           })}
         />
         <p className="error">{errors.email?.message}</p>
-      </div>
-
-      <div className="field">
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          {...register("password", {
-            required: "Enter Password",
-          })}
-        />
-        <p className="error">{errors.password?.message || errorMessage}</p>
       </div>
 
       <button type="submit" className="button">

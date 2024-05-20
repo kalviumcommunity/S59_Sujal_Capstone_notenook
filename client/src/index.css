@@ -69,6 +69,11 @@ body {
   cursor: not-allowed;
 }
 
+.updatedDate {
+  font-size: 0.75rem;
+  color: #888;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }
