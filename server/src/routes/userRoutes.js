@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { UserModel } = require("../models/UserModel");
+const { FriendRequestModel } = require("../models/FriendRequestModel");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const {
@@ -241,6 +242,7 @@ router.get("/searchUsers", authenticateJWT, async (req, res) => {
 router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
   try {
     const usrId = req.params.userId;
+    const authenticatedUserId = req.user.id;
 
     const user = await UserModel.findById(usrId);
 
@@ -248,15 +250,46 @@ router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const friendRequest = await FriendRequestModel.findOne({
+      $or: [
+        { sender: authenticatedUserId, receiver: usrId },
+        { sender: usrId, receiver: authenticatedUserId },
+      ],
+    });
+
+    let friendshipStatus = "none";
+
+    if (friendRequest) {
+      requestStatus = friendRequest.status;
+      if (friendRequest.status === "pending") {
+        if (friendRequest.sender.toString() === authenticatedUserId) {
+          friendshipStatus = "pending";
+        } else if (friendRequest.receiver.toString() === authenticatedUserId) {
+          friendshipStatus = "incoming";
+        }
+      } else if (friendRequest.status === "accepted") {
+        friendshipStatus = "friends";
+      }
+    } else {
+      const areFriends = user.friends.includes(authenticatedUserId);
+      if (areFriends) {
+        friendshipStatus = "friends";
+      }
+    }
+
     const userData = {
       username: user.username,
       fullname: user.fullname,
       email: user.email,
       numberOfConnections: user.friends.length,
+      friendshipStatus: friendshipStatus,
+      requestId: friendRequest?._id,
     };
 
+    console.log(userData);
     return res.status(200).json({ user: userData });
   } catch (error) {
+    console.error(error);
     if (error.name === "UnauthorizedError") {
       return res.status(401).json({ message: "Unauthorized access" });
     } else {

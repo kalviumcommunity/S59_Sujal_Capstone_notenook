@@ -23,6 +23,10 @@ const UserSchema = new Schema({
   notes: [{ type: Schema.Types.ObjectId, ref: "Note" }],
 
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
+
+  friendRequests: [{ type: Schema.Types.ObjectId, ref: "FriendRequest" }],
+
+  notificationList: { type: Schema.Types.ObjectId, ref: "NotificationList" },
 });
 
 UserSchema.index({ username: 1, email: 1 });

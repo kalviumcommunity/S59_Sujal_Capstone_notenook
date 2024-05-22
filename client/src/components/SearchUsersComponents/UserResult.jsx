@@ -13,8 +13,9 @@ function UserResult({ user }) {
             </div>
           </div>
         </Link>
-
-        <button className="addFriend button">Add Friend</button>
+        <Link to={`/notenook/viewUser/${user._id}`} className="addFriend">
+          <button className="addFriend button">View Profile</button>
+        </Link>
       </div>
     </div>
   );

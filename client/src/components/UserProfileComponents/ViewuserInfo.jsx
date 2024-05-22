@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import axios from "axios";
 import pic from "../../assets/pic.png";
+
 function ViewUserInfo() {
   const [userInfo, setUserInfo] = useState(null);
   const { userId } = useParams();
@@ -25,6 +26,7 @@ function ViewUserInfo() {
           }
         );
         console.log(response);
+        console.log(response.data.user);
         setUserInfo(response.data.user);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -32,7 +34,74 @@ function ViewUserInfo() {
     };
 
     fetchUserData();
-  }, []);
+  }, [userId]);
+
+  const handleFriendRequest = async (action) => {
+    const token = extractTokenFromCookie();
+    if (!token) {
+      return;
+    }
+
+    let apiURI = "";
+    let method = "";
+    let data = {};
+
+    switch (action) {
+      case "send":
+        apiURI = import.meta.env.VITE_REACT_APP_SEND_FRIEND_REQUEST_ENDPOINT;
+        method = "post";
+        data = { receiverId: userId };
+        break;
+      case "unsend":
+        apiURI = import.meta.env.VITE_REACT_APP_UNSEND_FRIEND_REQUEST_ENDPOINT;
+        method = "delete";
+        data = { receiverId: userId };
+        break;
+      case "accept":
+        apiURI = `${import.meta.env.VITE_REACT_APP_ACCEPT_FRIEND_REQUEST_ENDPOINT}/${userInfo.requestId}`;
+        method = "post";
+        data = { senderId: userId };
+        break;
+      case "reject":
+        apiURI = `${import.meta.env.VITE_REACT_APP_REJECT_FRIEND_REQUEST_ENDPOINT}/${userInfo.requestId}`;
+        method = "post";
+        data = { senderId: userId };
+        break;
+      case "remove":
+        apiURI = import.meta.env.VITE_REACT_APP_REMOVE_FRIEND_ENDPOINT;
+        method = "post";
+        data = { friendId: userId };
+        break;
+      default:
+        return;
+    }
+
+    try {
+      console.log(apiURI);
+      const response = await axios({
+        method: method,
+        url: apiURI,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: data,
+      });
+      console.log(response);
+
+      setUserInfo((prevState) => {
+        let newStatus = prevState.friendshipStatus;
+
+        if (action === "send") newStatus = "pending";
+        if (action === "unsend" || action === "reject" || action === "remove")
+          newStatus = "none";
+        if (action === "accept") newStatus = "friends";
+
+        return { ...prevState, friendshipStatus: newStatus };
+      });
+    } catch (error) {
+      console.error(`Error handling friend request (${action}):`, error);
+    }
+  };
 
   return (
     <div>
@@ -48,7 +117,6 @@ function ViewUserInfo() {
                     <h2 className="username">{userInfo.username}</h2>
                     <p className="fullname">{userInfo.fullname}</p>
                   </div>
-
                   <div className="user-stats">
                     <p className="notes">
                       Notes: <span>{userInfo.numberOfNotes}</span>
@@ -61,7 +129,46 @@ function ViewUserInfo() {
               </div>
             </div>
             <br />
-            <button className="addFriend button">Add Friend</button>
+            {userInfo.friendshipStatus === "none" && (
+              <button
+                className="addFriend button"
+                onClick={() => handleFriendRequest("send")}
+              >
+                Add Friend
+              </button>
+            )}
+            {userInfo.friendshipStatus === "pending" && (
+              <button
+                className="addFriend button"
+                onClick={() => handleFriendRequest("unsend")}
+              >
+                Cancel Request
+              </button>
+            )}
+            {userInfo.friendshipStatus === "incoming" && (
+              <div>
+                <button
+                  className="acceptFriend button"
+                  onClick={() => handleFriendRequest("accept")}
+                >
+                  Accept
+                </button>
+                <button
+                  className="rejectFriend button"
+                  onClick={() => handleFriendRequest("reject")}
+                >
+                  Reject
+                </button>
+              </div>
+            )}
+            {userInfo.friendshipStatus === "friends" && (
+              <button
+                className="removeFriend button"
+                onClick={() => handleFriendRequest("remove")}
+              >
+                Remove Friend
+              </button>
+            )}
             <br />
             <hr className="hrLine" />
           </div>

@@ -49,7 +49,7 @@ function UserProvider({ children }) {
           setUser(response.data.user);
         }
       } catch (err) {
-        if (err.response.status == 401) {
+        if (err.response?.status == 401) {
           alert("Session expired, please login again!!");
           document.cookie =
             "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
