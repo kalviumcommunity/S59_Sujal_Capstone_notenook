@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { UserModel } = require("../models/UserModel");
+const { FriendRequestModel } = require("../models/FriendRequestModel");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const {
@@ -75,15 +76,8 @@ router.post("/login", (req, res, next) => {
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
       expiresIn: "1hr",
     });
-    const userData = {
-      username: user.username,
-      fullname: user.fullname,
-      email: user.email,
-      oauthId: user.oauthId || null,
-      numberOfNotes: user.notes.length,
-      numberOfConnections: user.friends.length,
-    };
-    return res.status(200).json({ user: userData, token });
+
+    return res.status(200).json({ token });
   })(req, res, next);
 });
 
@@ -95,12 +89,22 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const userWithFriends = await UserModel.findById(user._id).populate({
+      path: "friends",
+      select: "username",
+    });
+
+    if (!userWithFriends) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const userData = {
-      username: user.username,
-      fullname: user.fullname,
-      email: user.email,
-      numberOfNotes: user.notes.length,
-      numberOfConnections: user.friends.length,
+      username: userWithFriends.username,
+      fullname: userWithFriends.fullname,
+      email: userWithFriends.email,
+      numberOfNotes: userWithFriends.notes.length,
+      numberOfConnections: userWithFriends.friends.length,
+      friends: userWithFriends.friends,
     };
 
     return res.status(200).json({ user: userData });
@@ -112,6 +116,7 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
     }
   }
 });
+
 
 router.patch("/update", authenticateJWT, async (req, res) => {
   try {
@@ -241,6 +246,7 @@ router.get("/searchUsers", authenticateJWT, async (req, res) => {
 router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
   try {
     const usrId = req.params.userId;
+    const authenticatedUserId = req.user.id;
 
     const user = await UserModel.findById(usrId);
 
@@ -248,15 +254,46 @@ router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const friendRequest = await FriendRequestModel.findOne({
+      $or: [
+        { sender: authenticatedUserId, receiver: usrId },
+        { sender: usrId, receiver: authenticatedUserId },
+      ],
+    });
+
+    let friendshipStatus = "none";
+
+    if (friendRequest) {
+      requestStatus = friendRequest.status;
+      if (friendRequest.status === "pending") {
+        if (friendRequest.sender.toString() === authenticatedUserId) {
+          friendshipStatus = "pending";
+        } else if (friendRequest.receiver.toString() === authenticatedUserId) {
+          friendshipStatus = "incoming";
+        }
+      } else if (friendRequest.status === "accepted") {
+        friendshipStatus = "friends";
+      }
+    } else {
+      const areFriends = user.friends.includes(authenticatedUserId);
+      if (areFriends) {
+        friendshipStatus = "friends";
+      }
+    }
+
     const userData = {
       username: user.username,
       fullname: user.fullname,
       email: user.email,
       numberOfConnections: user.friends.length,
+      friendshipStatus: friendshipStatus,
+      requestId: friendRequest?._id,
     };
 
+    console.log(userData);
     return res.status(200).json({ user: userData });
   } catch (error) {
+    console.error(error);
     if (error.name === "UnauthorizedError") {
       return res.status(401).json({ message: "Unauthorized access" });
     } else {

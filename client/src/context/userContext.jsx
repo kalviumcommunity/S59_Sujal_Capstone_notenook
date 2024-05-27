@@ -31,39 +31,6 @@ function UserProvider({ children }) {
     fetchSession();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async (token) => {
-      try {
-        const response = await axios.post(
-          import.meta.env.VITE_REACT_APP_TOKEN_CHECKIN_URL,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          setUser(response.data.user);
-        }
-      } catch (err) {
-        if (err.response.status == 401) {
-          alert("Session expired, please login again!!");
-          document.cookie =
-            "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-          navigate("/");
-        }
-      }
-    };
-
-    const token = extractTokenFromCookie();
-    if (token) {
-      fetchData(token);
-    }
-  }, []);
-
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}

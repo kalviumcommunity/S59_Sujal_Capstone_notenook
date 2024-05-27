@@ -22,8 +22,6 @@ function NoteList() {
         );
 
         setNotes(response.data.notes);
-        console.log(notes);
-        console.log(response);
       } catch (error) {
         console.error("Error fetching notes:", error);
       }

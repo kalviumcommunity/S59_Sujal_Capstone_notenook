@@ -69,11 +69,13 @@ const userRouter = require("./src/routes/userRoutes");
 const noteRouter = require("./src/routes/noteRoutes");
 const googleAuthRouter = require("./src/routes/googleOAuthRoutes");
 const verificationRouter = require("./src/routes/verificationRoutes");
+const friendRequestRouter = require("./src/routes/friendRequestRoutes");
 
 app.use("/user", userRouter);
 app.use("/note", noteRouter);
 app.use("/verification", verificationRouter);
 app.use("/auth", googleAuthRouter);
+app.use("/friendRequest", friendRequestRouter);
 
 // setting up the server to listen
 app.get("/", (req, res) => {
