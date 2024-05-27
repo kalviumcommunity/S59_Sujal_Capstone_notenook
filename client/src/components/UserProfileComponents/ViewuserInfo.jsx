@@ -58,12 +58,16 @@ function ViewUserInfo() {
         data = { receiverId: userId };
         break;
       case "accept":
-        apiURI = `${import.meta.env.VITE_REACT_APP_ACCEPT_FRIEND_REQUEST_ENDPOINT}/${userInfo.requestId}`;
+        apiURI = `${
+          import.meta.env.VITE_REACT_APP_ACCEPT_FRIEND_REQUEST_ENDPOINT
+        }/${userInfo.requestId}`;
         method = "post";
         data = { senderId: userId };
         break;
       case "reject":
-        apiURI = `${import.meta.env.VITE_REACT_APP_REJECT_FRIEND_REQUEST_ENDPOINT}/${userInfo.requestId}`;
+        apiURI = `${
+          import.meta.env.VITE_REACT_APP_REJECT_FRIEND_REQUEST_ENDPOINT
+        }/${userInfo.requestId}`;
         method = "post";
         data = { senderId: userId };
         break;
@@ -129,46 +133,49 @@ function ViewUserInfo() {
               </div>
             </div>
             <br />
-            {userInfo.friendshipStatus === "none" && (
-              <button
-                className="addFriend button"
-                onClick={() => handleFriendRequest("send")}
-              >
-                Add Friend
-              </button>
-            )}
-            {userInfo.friendshipStatus === "pending" && (
-              <button
-                className="addFriend button"
-                onClick={() => handleFriendRequest("unsend")}
-              >
-                Cancel Request
-              </button>
-            )}
-            {userInfo.friendshipStatus === "incoming" && (
-              <div>
+            <div className="friendshipButtons">
+              {userInfo.friendshipStatus === "none" && (
                 <button
-                  className="acceptFriend button"
-                  onClick={() => handleFriendRequest("accept")}
+                  className="addFriend button"
+                  onClick={() => handleFriendRequest("send")}
                 >
-                  Accept
+                  Add Friend
                 </button>
+              )}
+              {userInfo.friendshipStatus === "pending" && (
                 <button
-                  className="rejectFriend button"
-                  onClick={() => handleFriendRequest("reject")}
+                  className="addFriend button"
+                  onClick={() => handleFriendRequest("unsend")}
                 >
-                  Reject
+                  Cancel Request
                 </button>
-              </div>
-            )}
-            {userInfo.friendshipStatus === "friends" && (
-              <button
-                className="removeFriend button"
-                onClick={() => handleFriendRequest("remove")}
-              >
-                Remove Friend
-              </button>
-            )}
+              )}
+              {userInfo.friendshipStatus === "incoming" && (
+                <>
+                  <button
+                    className="acceptFriend button"
+                    onClick={() => handleFriendRequest("accept")}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="rejectFriend button"
+                    onClick={() => handleFriendRequest("reject")}
+                  >
+                    Reject
+                  </button>
+                </>
+              )}
+              {userInfo.friendshipStatus === "friends" && (
+                <button
+                  className="removeFriend button"
+                  onClick={() => handleFriendRequest("remove")}
+                >
+                  Remove Friend
+                </button>
+              )}
+            </div>
+
             <br />
             <hr className="hrLine" />
           </div>

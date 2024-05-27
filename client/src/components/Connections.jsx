@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
-
+import { Link } from "react-router-dom";
 import SmsIcon from "@mui/icons-material/Sms";
 
 import "../css/Connections.css";
@@ -20,21 +20,22 @@ function Connections() {
 
       <div className="connectionList">
         {friends &&
-          friends.map((friend, i) => (
-            <Connection key={i} username={friend.username} />
-          ))}
+          friends.map((friend, i) => <Connection key={i} friend={friend} />)}
       </div>
     </div>
   );
 }
 
-function Connection({ username }) {
+function Connection({ friend }) {
   return (
     <div className="connection">
-      <div className="connectionInfo">
-        <img className="connectionPic" src={pic} alt="" />
-        <p className="connectionUsername">{username}</p>
-      </div>
+      <Link to={`/notenook/viewUser/${friend._id}`}>
+        <div className="connectionInfo">
+          <img className="connectionPic" src={pic} alt="" />
+          <p className="connectionUsername">{friend.username}</p>
+        </div>
+      </Link>
+
       <SmsIcon fontSize="small" color="primary" />
     </div>
   );

@@ -94,6 +94,11 @@
   background-color: #006969;
 }
 
+.friendshipButtons {
+  align-self: flex-end;
+  display: flex;
+  gap: 10px;
+}
 .updatePasswordForm,
 .updateUserForm {
   width: 80vw;

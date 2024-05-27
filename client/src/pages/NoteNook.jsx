@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import { DeviceWidthProvider } from "../context/deviceWidthContext";
@@ -15,14 +15,45 @@ import UserProfile from "./NoteNookPages/UserProfile";
 import NotificationPage from "./NoteNookPages/NotificationPage";
 import ViewUser from "./NoteNookPages/ViewUser";
 
+import { UserContext } from "../context/userContext";
+import axios from "axios";
 import "../css/NoteNook.css";
 
 function NoteNook() {
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   useEffect(() => {
-    const token = extractTokenFromCookie();
+    const fetchData = async (token) => {
+      try {
+        const response = await axios.get(
+          import.meta.env.VITE_REACT_APP_USER_DETAIL_ENDPOINT,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-    if (!token) {
+        if (response.status === 200) {
+          console.log(response.data.user);
+          setUser(response.data.user);
+        }
+      } catch (err) {
+        if (err.response?.status == 401) {
+          alert("Session expired, please login again!!");
+          document.cookie =
+            "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          navigate("/");
+        }
+      }
+    };
+
+    const token = extractTokenFromCookie();
+    if (token) {
+      console.log(token);
+      fetchData(token);
+    } else {
       navigate("/");
     }
   }, []);

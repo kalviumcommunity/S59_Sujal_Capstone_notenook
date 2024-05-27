@@ -76,15 +76,8 @@ router.post("/login", (req, res, next) => {
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
       expiresIn: "1hr",
     });
-    const userData = {
-      username: user.username,
-      fullname: user.fullname,
-      email: user.email,
-      oauthId: user.oauthId || null,
-      numberOfNotes: user.notes.length,
-      numberOfConnections: user.friends.length,
-    };
-    return res.status(200).json({ user: userData, token });
+
+    return res.status(200).json({ token });
   })(req, res, next);
 });
 
@@ -96,12 +89,22 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const userWithFriends = await UserModel.findById(user._id).populate({
+      path: "friends",
+      select: "username",
+    });
+
+    if (!userWithFriends) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const userData = {
-      username: user.username,
-      fullname: user.fullname,
-      email: user.email,
-      numberOfNotes: user.notes.length,
-      numberOfConnections: user.friends.length,
+      username: userWithFriends.username,
+      fullname: userWithFriends.fullname,
+      email: userWithFriends.email,
+      numberOfNotes: userWithFriends.notes.length,
+      numberOfConnections: userWithFriends.friends.length,
+      friends: userWithFriends.friends,
     };
 
     return res.status(200).json({ user: userData });
@@ -113,6 +116,7 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
     }
   }
 });
+
 
 router.patch("/update", authenticateJWT, async (req, res) => {
   try {
