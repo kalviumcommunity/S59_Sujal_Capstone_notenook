@@ -1,0 +1,10 @@
+.profileContent {
+  width: 80vw;
+  max-width: 600px;
+  margin: auto;
+}
+@media (max-width: 640px) {
+  .profileContent {
+    width: 90vw;
+  }
+}

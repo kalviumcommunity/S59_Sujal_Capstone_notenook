@@ -3,9 +3,11 @@ const router = express.Router();
 const passport = require("passport");
 const { FriendRequestModel } = require("../models/FriendRequestModel");
 const { UserModel } = require("../models/UserModel");
-const NotificationList = require("../models/NotificationModel");
+const { NotificationListModel } = require("../models/NotificationModel");
 
 const authenticateJWT = passport.authenticate("jwt", { session: false });
+
+const { addNotification } = require("../functions/AddNofitications");
 
 router.post("/sendFriendRequest", authenticateJWT, async (req, res) => {
   const { receiverId } = req.body;
@@ -40,23 +42,12 @@ router.post("/sendFriendRequest", authenticateJWT, async (req, res) => {
       $push: { friendRequests: friendRequest._id },
     });
 
-    let notificationList = await NotificationList.findOne({ user: receiverId });
-    if (!notificationList) {
-      notificationList = new NotificationList({
-        user: receiverId,
-        notifications: [],
-      });
-    }
-
-    notificationList.notifications.push({
-      message: `${req.user.username} sent you a friend request.`,
-      category: "friends",
-    });
-    await notificationList.save();
-
-    await UserModel.findByIdAndUpdate(receiverId, {
-      notificationList: notificationList._id,
-    });
+    await addNotification(
+      receiverId,
+      `${req.user.username} sent you a friend request.`,
+      "friends",
+      senderId
+    );
 
     res.status(200).json({ message: "Friend request sent successfully" });
   } catch (error) {
@@ -95,6 +86,13 @@ router.post(
       });
 
       await FriendRequestModel.findByIdAndDelete(requestId);
+
+      await addNotification(
+        friendRequest.sender,
+        `${req.user.username} accepted your friend request.`,
+        "friends",
+        userId
+      );
 
       res.status(200).json({ message: "Friend request accepted" });
     } catch (error) {

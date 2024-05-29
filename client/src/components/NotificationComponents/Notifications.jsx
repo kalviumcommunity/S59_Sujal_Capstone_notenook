@@ -1,69 +1,30 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import FriendNotification from "./FriendNotification";
 import NoteNotification from "./NoteNotification";
-
-const sampleNotifications = {
-  friends: [
-    {
-      username: "John Doe",
-      message: "Friend request from John Doe",
-      date: new Date().toString(),
-    },
-    {
-      username: "Angel Doe",
-      message: "Angel Doe accepted your friend request",
-      date: new Date().toString(),
-    },
-    {
-      username: "John Doe",
-      message: "Friend request from John Doe",
-      date: new Date().toString(),
-    },
-    {
-      username: "Angel Doe",
-      message: "Angel Doe accepted your friend request",
-      date: new Date().toString(),
-    },
-  ],
-  notes: [
-    {
-      username: "John Doe",
-      message: "John Doe liked your note",
-      note: "BOCS CA-2",
-      date: new Date().toString(),
-    },
-    {
-      username: "John Doe",
-      message: "John Doe commented on your note",
-      note: "BOCS CA-2",
-      date: new Date().toString(),
-    },
-  ],
-};
+import { UserContext } from "../../context/userContext";
 
 function Notifications() {
+  const { user } = useContext(UserContext);
   const [activeTab, setActiveTab] = useState("friends");
 
   const renderContent = () => {
+    console.log(user);
+    if (!user || !user.notifications) {
+      return <div>Loading...</div>;
+    }
+
     if (activeTab === "friends") {
-      return sampleNotifications.friends.map((notification, index) => (
-        <FriendNotification
-          key={index}
-          username={notification.username}
-          message={notification.message}
-          date={notification.date}
-        />
-      ));
+      return user.notifications?.userNotifications?.map(
+        (notification, index) => (
+          <FriendNotification key={index} notification={notification} />
+        )
+      );
     } else if (activeTab === "notes") {
-      return sampleNotifications.notes.map((notification, index) => (
-        <NoteNotification
-          key={index}
-          username={notification.username}
-          message={notification.message}
-          note={notification.note}
-          date={notification.date}
-        />
-      ));
+      return user.notifications?.postNotifications?.map(
+        (notification, index) => (
+          <NoteNotification key={index} notification={notification} />
+        )
+      );
     }
     return null;
   };

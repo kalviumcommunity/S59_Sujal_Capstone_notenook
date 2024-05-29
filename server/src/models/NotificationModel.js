@@ -5,17 +5,20 @@ const notificationSchema = new Schema({
   message: { type: String, required: true },
   read: { type: Boolean, default: false },
   category: { type: String, enum: ["friends", "post"], required: true },
+  relatedUser: { type: Schema.Types.ObjectId, ref: "User" },
+  relatedPost: { type: Schema.Types.ObjectId, ref: "PostedNote" },
   createdAt: { type: Date, default: Date.now },
 });
 
 const notificationListSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  notifications: [notificationSchema],
+  userNotifications: [notificationSchema],
+  postNotifications: [notificationSchema],
 });
 
-const NotificationList = mongoose.model(
+const NotificationListModel = mongoose.model(
   "NotificationList",
   notificationListSchema
 );
 
-module.exports = NotificationList;
+module.exports = {NotificationListModel};
