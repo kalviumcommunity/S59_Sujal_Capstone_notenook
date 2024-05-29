@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { UserModel } = require("../models/UserModel");
 const { FriendRequestModel } = require("../models/FriendRequestModel");
+const { NotificationListModel } = require("../models/NotificationModel");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const {
@@ -98,6 +99,22 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const notificationList = await NotificationListModel.findOne({
+      user: user._id,
+    })
+      .populate({
+        path: "userNotifications.relatedUser",
+        select: "username",
+      })
+      .populate({
+        path: "postNotifications.relatedUser",
+        select: "username",
+      })
+      .populate({
+        path: "postNotifications.relatedPost",
+        select: "title content",
+      });
+
     const userData = {
       username: userWithFriends.username,
       fullname: userWithFriends.fullname,
@@ -105,6 +122,7 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
       numberOfNotes: userWithFriends.notes.length,
       numberOfConnections: userWithFriends.friends.length,
       friends: userWithFriends.friends,
+      notifications: notificationList || [],
     };
 
     return res.status(200).json({ user: userData });

@@ -58,7 +58,6 @@ function UserInfo({ userInfo }) {
             Log Out
           </button>
           <br />
-          <hr className="hrLine" />
         </div>
       )}
       {logoutConfirmation && (

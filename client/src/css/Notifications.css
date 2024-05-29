@@ -29,26 +29,7 @@
   overflow-y: scroll;
 }
 
-.tabs {
-  display: flex;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #ddd;
-}
 
-.tab {
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: color 0.3s, border-bottom 0.3s;
-}
-
-.tab:hover {
-  color: #3498db;
-}
-
-.tab.active {
-  color: #3498db;
-  border-bottom: 1px solid #3498db;
-}
 
 .header .notification {
   width: 270px;
@@ -93,9 +74,7 @@
 }
 
 .message {
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
+  text-align: left;
 }
 
 .notifications .username {

@@ -7,6 +7,7 @@ import UserInfo from "../../components/UserProfileComponents/UserInfo";
 import UpdatePasswordForm from "../../components/UserProfileComponents/UpdatePasswordForm";
 import UpdateUserForm from "../../components/UserProfileComponents/UpdateUserInfoForm";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import ProfileContent from "../../components/UserProfileComponents/ProfileContent";
 import { UserContext } from "../../context/userContext";
 
 import "../../css/UserProfile.css";
@@ -49,6 +50,7 @@ function UserProfile() {
             <UpdateForms userInfo={userInfo} setUserInfo={setUserInfo} />
           }
         ></Route>
+        <Route path="" element={<ProfileContent/>}></Route>
       </Routes>
     </div>
   );

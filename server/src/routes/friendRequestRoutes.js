@@ -3,9 +3,40 @@ const router = express.Router();
 const passport = require("passport");
 const { FriendRequestModel } = require("../models/FriendRequestModel");
 const { UserModel } = require("../models/UserModel");
-const NotificationList = require("../models/NotificationModel");
+const { NotificationListModel } = require("../models/NotificationModel");
 
 const authenticateJWT = passport.authenticate("jwt", { session: false });
+
+async function addNotification(userId, message, category, relatedUser) {
+  let user = await UserModel.findById(userId);
+
+  if (!user.notificationList) {
+    user.notificationList = new NotificationListModel({ user: userId });
+    await user.notificationList.save();
+    user.notificationList = user.notificationList._id;
+    await user.save();
+  }
+
+  let notificationList = await NotificationListModel.findById(
+    user.notificationList
+  );
+
+  const newNotification = {
+    message,
+    category,
+    relatedUser,
+  };
+
+  if (category === "friends") {
+    notificationList.userNotifications.push(newNotification);
+  } else if (category === "post") {
+    notificationList.postNotifications.push(newNotification);
+  } else {
+    throw new Error("Invalid notification category");
+  }
+
+  await notificationList.save();
+}
 
 router.post("/sendFriendRequest", authenticateJWT, async (req, res) => {
   const { receiverId } = req.body;
@@ -40,23 +71,12 @@ router.post("/sendFriendRequest", authenticateJWT, async (req, res) => {
       $push: { friendRequests: friendRequest._id },
     });
 
-    let notificationList = await NotificationList.findOne({ user: receiverId });
-    if (!notificationList) {
-      notificationList = new NotificationList({
-        user: receiverId,
-        notifications: [],
-      });
-    }
-
-    notificationList.notifications.push({
-      message: `${req.user.username} sent you a friend request.`,
-      category: "friends",
-    });
-    await notificationList.save();
-
-    await UserModel.findByIdAndUpdate(receiverId, {
-      notificationList: notificationList._id,
-    });
+    await addNotification(
+      receiverId,
+      `${req.user.username} sent you a friend request.`,
+      "friends",
+      senderId
+    );
 
     res.status(200).json({ message: "Friend request sent successfully" });
   } catch (error) {
