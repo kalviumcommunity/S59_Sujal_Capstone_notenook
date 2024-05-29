@@ -18,6 +18,12 @@ const UserSchema = new Schema({
 
   oauthId: { type: String },
 
+  friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
+
+  notes: [{ type: Schema.Types.ObjectId, ref: "Note" }],
+
+  postedNotes: [{ type: Schema.Types.ObjectId, ref: "PostedNote" }],
+
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 
   friendRequests: [{ type: Schema.Types.ObjectId, ref: "FriendRequest" }],

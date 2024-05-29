@@ -111,6 +111,12 @@ router.post("/addPostedNote", authenticateJWT, async (req, res) => {
     existingNote.postedNote = postedNote._id;
     await existingNote.save();
 
+    await UserModel.findByIdAndUpdate(
+      _id,
+      { $addToSet: { postedNotes: postedNote._id } },
+      { new: true }
+    );
+
     return res.status(201).json({ message: "Posted note added successfully" });
   } catch (error) {
     console.error("Error adding posted note:", error);
@@ -118,31 +124,45 @@ router.post("/addPostedNote", authenticateJWT, async (req, res) => {
   }
 });
 
+
 router.delete(
   "/deletePostedNote/:noteId",
   authenticateJWT,
   async (req, res) => {
     const noteId = req.params.noteId;
 
-    const existingNote = await NoteModel.findById(noteId);
-    if (!existingNote) {
-      return res.status(404).json({ message: "Note not found" });
-    }
-
-    const postedNoteId = existingNote.postedNote;
-
-    if (!postedNoteId) {
-      return res.status(400).json({ message: "Note not Posted" });
-    }
-
     try {
+      const note = await NoteModel.findById(noteId);
+
+      if (!note) {
+        return res.status(404).json({ message: "Note not found" });
+      }
+
+      const postedNoteId = note.postedNote;
+
+      if (!postedNoteId) {
+        return res.status(400).json({ message: "Note not posted" });
+      }
+
       await PostedNoteModel.findByIdAndDelete(postedNoteId);
 
-      existingNote.postedNote = undefined;
-      await existingNote.save();
+      note.postedNote = undefined;
+      await note.save();
+
+      const user = await UserModel.findById(req.user.id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const index = user.postedNotes.indexOf(postedNoteId);
+      if (index !== -1) {
+        user.postedNotes.splice(index, 1);
+      }
+      await user.save();
 
       res.status(204).json({ message: "Posted note deleted successfully" });
     } catch (error) {
+      console.error("Error deleting posted note:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   }
@@ -275,13 +295,10 @@ router.delete("/deleteNote/:noteId", authenticateJWT, async (req, res) => {
       return res.status(403).json({ error: "Unauthorized access" });
     }
 
-    if (note.postedNote) {
-      const postedNote = await PostedNoteModel.findById(note.postedNote);
-      if (!postedNote || postedNote.postedBy.toString() !== req.user.id) {
-        return res.status(403).json({ error: "Unauthorized access" });
-      }
+    const postedNoteId = note.postedNote;
 
-      await PostedNoteModel.findByIdAndDelete(note.postedNote);
+    if (postedNoteId) {
+      await PostedNoteModel.findByIdAndDelete(postedNoteId);
     }
 
     const user = await UserModel.findById(req.user.id);
