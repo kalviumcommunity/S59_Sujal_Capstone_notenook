@@ -7,36 +7,7 @@ const { NotificationListModel } = require("../models/NotificationModel");
 
 const authenticateJWT = passport.authenticate("jwt", { session: false });
 
-async function addNotification(userId, message, category, relatedUser) {
-  let user = await UserModel.findById(userId);
-
-  if (!user.notificationList) {
-    user.notificationList = new NotificationListModel({ user: userId });
-    await user.notificationList.save();
-    user.notificationList = user.notificationList._id;
-    await user.save();
-  }
-
-  let notificationList = await NotificationListModel.findById(
-    user.notificationList
-  );
-
-  const newNotification = {
-    message,
-    category,
-    relatedUser,
-  };
-
-  if (category === "friends") {
-    notificationList.userNotifications.push(newNotification);
-  } else if (category === "post") {
-    notificationList.postNotifications.push(newNotification);
-  } else {
-    throw new Error("Invalid notification category");
-  }
-
-  await notificationList.save();
-}
+const { addNotification } = require("../functions/AddNofitications");
 
 router.post("/sendFriendRequest", authenticateJWT, async (req, res) => {
   const { receiverId } = req.body;
@@ -115,6 +86,13 @@ router.post(
       });
 
       await FriendRequestModel.findByIdAndDelete(requestId);
+
+      await addNotification(
+        friendRequest.sender,
+        `${req.user.username} accepted your friend request.`,
+        "friends",
+        userId
+      );
 
       res.status(200).json({ message: "Friend request accepted" });
     } catch (error) {
