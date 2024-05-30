@@ -39,7 +39,7 @@ function MyNote({ note, handleDelete }) {
       </Link>
       <p className="updatedDate">Updated {formatDate(note.updatedAt)}</p>
       <div className="noteButtons">
-        <Link to={`writeNote/${note._id}`}>
+        <Link to={`/notenook/postNotes/writeNote/${note._id}`}>
           <button className="update button">Update</button>
         </Link>
         <button

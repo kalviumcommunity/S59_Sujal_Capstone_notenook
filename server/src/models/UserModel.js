@@ -18,6 +18,12 @@ const UserSchema = new Schema({
 
   oauthId: { type: String },
 
+  friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
+
+  notes: [{ type: Schema.Types.ObjectId, ref: "Note" }],
+
+  postedNotes: [{ type: Schema.Types.ObjectId, ref: "PostedNote" }],
+
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 
   friendRequests: [{ type: Schema.Types.ObjectId, ref: "FriendRequest" }],
@@ -26,6 +32,10 @@ const UserSchema = new Schema({
 });
 
 UserSchema.index({ username: 1, email: 1 });
+
+UserSchema.index({ friends: 1 });
+UserSchema.index({ notes: 1 });
+UserSchema.index({ postedNotes: 1 });
 
 UserSchema.methods.setPassword = async function (password) {
   try {
