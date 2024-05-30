@@ -102,18 +102,18 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
     const notificationList = await NotificationListModel.findOne({
       user: user._id,
     })
-      .populate({
-        path: "userNotifications.relatedUser",
-        select: "username",
-      })
-      .populate({
-        path: "postNotifications.relatedUser",
-        select: "username",
-      })
-      .populate({
-        path: "postNotifications.relatedPost",
-        select: "title content",
-      });
+    .populate({
+      path: "userNotifications.relatedUser",
+      select: "username",
+    })
+    .populate({
+      path: "postNotifications.relatedUser",
+      select: "username",
+    })
+    .populate({
+      path: "postNotifications.relatedPost",
+      select: "title content",
+    });
 
     const userData = {
       username: userWithFriends.username,
@@ -129,7 +129,10 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
   } catch (error) {
     if (error.name === "UnauthorizedError") {
       return res.status(401).json({ message: "Unauthorized access" });
+    } else if (error.name === "CastError") {
+      return res.status(400).json({ message: "Invalid user ID format" });
     } else {
+      console.error(error);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -142,18 +145,18 @@ router.get("/myProfile", authenticateJWT, async (req, res) => {
     }
 
     const user = await UserModel.findById(req.user._id)
-      .populate({
-        path: "notes",
-        select: "title subject updatedAt",
-      })
-      .populate({
-        path: "postedNotes",
-        select: "-postedBy",
-      })
-      .populate({
-        path: "friends",
-        select: "username",
-      });
+    .populate({
+      path: "notes",
+      select: "title subject updatedAt",
+    })
+    .populate({
+      path: "postedNotes",
+      select: "-postedBy",
+    })
+    .populate({
+      path: "friends",
+      select: "username",
+    });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -175,8 +178,10 @@ router.get("/myProfile", authenticateJWT, async (req, res) => {
   } catch (error) {
     if (error.name === "UnauthorizedError") {
       return res.status(401).json({ message: "Unauthorized access" });
+    } else if (error.name === "CastError") {
+      return res.status(400).json({ message: "Invalid user ID format" });
     } else {
-      console.log(error);
+      console.error(error);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -188,14 +193,14 @@ router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
     const authenticatedUserId = req.user.id;
 
     const user = await UserModel.findById(usrId)
-      .populate({
-        path: "friends",
-        select: "_id username",
-      })
-      .populate({
-        path: "postedNotes",
-        select: "-postedBy",
-      });
+    .populate({
+      path: "friends",
+      select: "_id username",
+    })
+    .populate({
+      path: "postedNotes",
+      select: "-postedBy",
+    });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -211,18 +216,20 @@ router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
     let friendshipStatus = "none";
 
     if (friendRequest) {
-      requestStatus = friendRequest.status;
-      if (friendRequest.status === "pending") {
+      const requestStatus = friendRequest.status;
+      if (requestStatus === "pending") {
         if (friendRequest.sender.toString() === authenticatedUserId) {
           friendshipStatus = "pending";
         } else if (friendRequest.receiver.toString() === authenticatedUserId) {
           friendshipStatus = "incoming";
         }
-      } else if (friendRequest.status === "accepted") {
+      } else if (requestStatus === "accepted") {
         friendshipStatus = "friends";
       }
     } else {
-      const areFriends = user.friends.includes(authenticatedUserId);
+      const areFriends = user.friends.some(
+        (friend) => friend._id.toString() === authenticatedUserId
+      );
       if (areFriends) {
         friendshipStatus = "friends";
       }
@@ -232,7 +239,7 @@ router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
       username: user.username,
       fullname: user.fullname,
       email: user.email,
-      numberOfNotes: user.notes.length,
+      numberOfNotes: user.postedNotes.length,
       numberOfConnections: user.friends.length,
       friendshipStatus: friendshipStatus,
       requestId: friendRequest?._id,
@@ -243,10 +250,12 @@ router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
     console.log(userData);
     return res.status(200).json({ user: userData });
   } catch (error) {
-    console.error(error);
     if (error.name === "UnauthorizedError") {
       return res.status(401).json({ message: "Unauthorized access" });
+    } else if (error.name === "CastError") {
+      return res.status(400).json({ message: "Invalid user ID format" });
     } else {
+      console.error(error);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
