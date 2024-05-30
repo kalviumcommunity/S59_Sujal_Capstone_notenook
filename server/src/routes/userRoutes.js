@@ -135,12 +135,67 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
   }
 });
 
+router.get("/myProfile", authenticateJWT, async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const user = await UserModel.findById(req.user._id)
+      .populate({
+        path: "notes",
+        select: "title subject updatedAt",
+      })
+      .populate({
+        path: "postedNotes",
+        select: "-postedBy",
+      })
+      .populate({
+        path: "friends",
+        select: "username",
+      });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userData = {
+      username: user.username,
+      fullname: user.fullname,
+      email: user.email,
+      numberOfNotes: user.notes.length,
+      numberOfPostedNotes: user.postedNotes.length,
+      numberOfConnections: user.friends.length,
+      friends: user.friends,
+      notes: user.notes,
+      postedNotes: user.postedNotes,
+    };
+
+    return res.status(200).json({ user: userData });
+  } catch (error) {
+    if (error.name === "UnauthorizedError") {
+      return res.status(401).json({ message: "Unauthorized access" });
+    } else {
+      console.log(error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+});
+
 router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
   try {
     const usrId = req.params.userId;
     const authenticatedUserId = req.user.id;
 
-    const user = await UserModel.findById(usrId);
+    const user = await UserModel.findById(usrId)
+      .populate({
+        path: "friends",
+        select: "_id username",
+      })
+      .populate({
+        path: "postedNotes",
+        select: "-postedBy",
+      });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -181,6 +236,8 @@ router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
       numberOfConnections: user.friends.length,
       friendshipStatus: friendshipStatus,
       requestId: friendRequest?._id,
+      friends: user.friends,
+      postedNotes: user.postedNotes,
     };
 
     console.log(userData);
