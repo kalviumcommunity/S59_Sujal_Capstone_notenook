@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import FriendsList from "./FriendsList";
+import NotesList from "./NotesList";
+import PostedNotesList from "./PostedNotesList";
 import "../../css/Tabs.css";
 import "../../css/ProfileContent.css";
 
-const ProfileContent = () => {
+const ProfileContent = ({ userInfo }) => {
   const [activeTab, setActiveTab] = useState("Notes");
 
   const handleTabClick = (tab) => {
@@ -32,9 +35,9 @@ const ProfileContent = () => {
         </div>
       </div>
       <div className="tab-content">
-        {activeTab === "Notes" && <div>Notes content goes here.</div>}
-        {activeTab === "Posted" && <div>Posted content goes here.</div>}
-        {activeTab === "Friends" && <div>Friends content goes here.</div>}
+        {activeTab === "Notes" && <NotesList notes={userInfo?.notes} />}
+        {activeTab === "Posted" && <PostedNotesList postedNotes={userInfo?.postedNotes} />}
+        {activeTab === "Friends" && <FriendsList friends={userInfo?.friends} />}
       </div>
     </div>
   );

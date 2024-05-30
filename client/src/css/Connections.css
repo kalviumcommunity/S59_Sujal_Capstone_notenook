@@ -12,8 +12,17 @@
   overflow-y: scroll;
 }
 
-.connectionList {
+.profileFriendList .connectionList {
+  display: grid;
+}
+
+.profileFriendList .connection {
   width: 100%;
+}
+
+.profileContent .connectionList {
+  width: 80%;
+  margin: auto;
 }
 
 .connection {
@@ -36,4 +45,33 @@
 .connectionPic {
   height: 2.5rem;
   margin-right: 10px;
+}
+
+.profileContent .connectionUsername {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 300px;
+  max-width: 40vw;
+  overflow: hidden;
+}
+
+.button.viewProfile {
+  background-color: #03b4ab;
+  font-size: 12px;
+}
+
+.button.viewProfile:hover {
+  background-color: #00817b;
+}
+
+.profileContent .myNotes{
+  display: block;
+  height: auto;
+  overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .connectionList{
+    width: 95%;
+  }
 }

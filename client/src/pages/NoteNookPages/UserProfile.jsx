@@ -23,13 +23,14 @@ function UserProfile() {
       }
       try {
         const response = await axios.get(
-          import.meta.env.VITE_REACT_APP_USER_DETAIL_ENDPOINT,
+          import.meta.env.VITE_REACT_APP_MYPROFILE_ENDPOINT,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
+        console.log(response.data.user);
 
         setUserInfo(response.data.user);
       } catch (error) {
@@ -50,14 +51,14 @@ function UserProfile() {
             <UpdateForms userInfo={userInfo} setUserInfo={setUserInfo} />
           }
         ></Route>
-        <Route path="" element={<ProfileContent/>}></Route>
+        <Route path="" element={<ProfileContent userInfo={userInfo} />}></Route>
       </Routes>
     </div>
   );
 }
 
 function UpdateForms({ userInfo, setUserInfo }) {
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   console.log(user);
   return (
     <div className="updateForms">
