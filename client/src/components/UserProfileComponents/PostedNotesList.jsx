@@ -1,13 +1,20 @@
 import formatDate from "../../Functions/FormatDate";
 import { Link } from "react-router-dom";
 import "../../css/NoteList.css";
+import Note from "../Note";
 
-function PostedNotesList({ postedNotes }) {
+function PostedNotesList({ postedNotes, isMyProfile }) {
+  let Post;
+  if (!isMyProfile) {
+    Post = Note;
+  } else {
+    Post = PostedNote;
+  }
   return (
     <div className="myNoteList">
       <div className="myNotes">
         {postedNotes &&
-          postedNotes.map((note) => <PostedNote key={note._id} note={note} />)}
+          postedNotes.map((note) => <Post key={note._id} note={note} />)}
       </div>
     </div>
   );

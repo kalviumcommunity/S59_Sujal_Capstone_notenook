@@ -1,40 +1,10 @@
-import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import axios from "axios";
 import pic from "../../assets/pic.png";
 
-function ViewUserInfo() {
-  const [userInfo, setUserInfo] = useState(null);
+function ViewUserInfo({userInfo}) {
   const { userId } = useParams();
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const token = extractTokenFromCookie();
-      if (!token) {
-        return;
-      }
-      try {
-        const response = await axios.get(
-          `${
-            import.meta.env.VITE_REACT_APP_GET_USER_DETAIL_ENDPOINT
-          }/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(response);
-        console.log(response.data.user);
-        setUserInfo(response.data.user);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, [userId]);
 
   const handleFriendRequest = async (action) => {
     const token = extractTokenFromCookie();
@@ -177,7 +147,6 @@ function ViewUserInfo() {
             </div>
 
             <br />
-            <hr className="hrLine" />
           </div>
         )}
       </div>

@@ -23,7 +23,7 @@ function Stats() {
         </div>
 
         <div className="statDiv">
-          <p>No. of Notes Posted</p>
+          <p>No. of Notes</p>
           <div>
             <div className="iconDiv notesStat">
               <EventNoteIcon style={{ color: "white" }} fontSize="small" />

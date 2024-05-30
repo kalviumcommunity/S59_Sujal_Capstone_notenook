@@ -1,23 +1,29 @@
-# notenook - Note Sharing Web App
+# Notenook - Note Sharing Web App
+
+## Table of Contents
+- [Introduction](#introduction)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Deployed Links](#deployed-links)
 
 ## Introduction:
 
-Notenook is a platform designed to facilitate note sharing, discussions, and networking among students within the Kalvium. Built using the MERN stack (MongoDB, Express.js, React.js, Node.js), the app provides features for posting notes, engaging in discussions, connecting with other students, and more.
+Notenook is a platform designed to help students share notes, engage in discussions, and connect with each other. It's built using the MERN stack (MongoDB, Express.js, React.js, Node.js) and offers an easy-to-use interface for seamless collaboration.
 
 ## Features:
 
-- **Post Notes Section**
-- **Discussion Forum**
-- **Profile Viewing**
-- **Connect and Follow**
-- **Chat Functionality**
-- **Markdown Editor**
+- **Post Notes Section**: Easily upload and share your notes with others, making learning a collaborative effort.
+- **Profile Viewing**: Explore profiles of other students to find peers with similar interests and connect with them.
+- **Connect and Follow**: Stay connected with other users and follow their activities to build a network of learning buddies.
+- **Chat Functionality**: Chat in real-time with other users to discuss topics and collaborate on projects.
+- **Text Editor for Creating Notes**: Create and format notes effortlessly using our intuitive text editor powered by Quill.
+- **Discussion Forum**: Engage in discussions, share ideas, and seek help from the community in our dedicated discussion forum.
 
 ## Technology Stack:
 
 - **Frontend:**
   - React.js
-  - Markdown Editor Library
+  - Quill
 - **Backend:**
   - Node.js
   - Express.js
@@ -25,35 +31,7 @@ Notenook is a platform designed to facilitate note sharing, discussions, and net
 - **Additional Libraries and Tools:**
   - Socket.io.
   - Passport.js
-  - Redux
 
 ## Deployed Links
 ### FrontEnd deployed link:
 [Netlify Deployed link](https://notenook.netlify.app/)
-
-## Weekly Plans
-
-### Week 1: Setup and Backend Development
-
-- Set up MongoDB database and develop database schema for storing educational content, user data, and messages.
-- Implement CRUD operations for managing educational content, user data, and messages.
-
-### Week 2: Backend Development and initialize Frontend Development
-
-- Backend Development
-
-  - Develop API endpoints for frontend integration.
-
-- Frontend Development
-  - Initialize React application, set up folder structure, and start developing user interface components.
-  - Research and integrate necessary libraries for frontend development.
-
-### Week 3: Frontend Development
-
-- Implement high-fidelity designs.
-- Develop user authentication and registration functionality.
-- Responsiveness
-
-### Week 4: Testing and Deployment
-- Testing
-- Deployment
