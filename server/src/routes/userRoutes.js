@@ -102,18 +102,27 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
     const notificationList = await NotificationListModel.findOne({
       user: user._id,
     })
-    .populate({
-      path: "userNotifications.relatedUser",
-      select: "username",
-    })
-    .populate({
-      path: "postNotifications.relatedUser",
-      select: "username",
-    })
-    .populate({
-      path: "postNotifications.relatedPost",
-      select: "title content",
-    });
+      .populate({
+        path: "userNotifications.relatedUser",
+        select: "username",
+      })
+      .populate({
+        path: "postNotifications.relatedUser",
+        select: "username",
+      })
+      .populate({
+        path: "postNotifications.relatedPost",
+        select: "title content",
+      });
+    console.log(notificationList.userNotifications);
+
+    notificationList.userNotifications.sort(
+      (a, b) => b.createdAt - a.createdAt
+    );
+    console.log(notificationList.userNotifications);
+    notificationList.postNotifications.sort(
+      (a, b) => b.createdAt - a.createdAt
+    );
 
     const userData = {
       username: userWithFriends.username,
@@ -145,18 +154,18 @@ router.get("/myProfile", authenticateJWT, async (req, res) => {
     }
 
     const user = await UserModel.findById(req.user._id)
-    .populate({
-      path: "notes",
-      select: "title subject updatedAt",
-    })
-    .populate({
-      path: "postedNotes",
-      select: "-postedBy",
-    })
-    .populate({
-      path: "friends",
-      select: "username",
-    });
+      .populate({
+        path: "notes",
+        select: "title subject updatedAt",
+      })
+      .populate({
+        path: "postedNotes",
+        select: "-postedBy",
+      })
+      .populate({
+        path: "friends",
+        select: "username",
+      });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -193,14 +202,14 @@ router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
     const authenticatedUserId = req.user.id;
 
     const user = await UserModel.findById(usrId)
-    .populate({
-      path: "friends",
-      select: "_id username",
-    })
-    .populate({
-      path: "postedNotes",
-      select: "-postedBy",
-    });
+      .populate({
+        path: "friends",
+        select: "_id username",
+      })
+      .populate({
+        path: "postedNotes",
+        select: "-postedBy",
+      });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

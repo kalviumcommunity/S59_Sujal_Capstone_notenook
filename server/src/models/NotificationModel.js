@@ -21,4 +21,4 @@ const NotificationListModel = mongoose.model(
   notificationListSchema
 );
 
-module.exports = {NotificationListModel};
+module.exports = { NotificationListModel };
