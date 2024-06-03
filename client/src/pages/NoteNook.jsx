@@ -14,6 +14,7 @@ import ViewNote from "./NoteNookPages/ViewNote";
 import UserProfile from "./NoteNookPages/UserProfile";
 import NotificationPage from "./NoteNookPages/NotificationPage";
 import ViewUser from "./NoteNookPages/ViewUser";
+import ChatPage from "./NoteNookPages/ChatPage";
 
 import { UserContext } from "../context/userContext";
 import axios from "axios";
@@ -73,6 +74,7 @@ function NoteNook() {
             <Route path="/profile/*" element={<UserProfile />}></Route>
             <Route path="/notifications" element={<NotificationPage />}></Route>
             <Route path="/viewUser/:userId" element={<ViewUser />}></Route>
+            <Route path="/chat/*" element={<ChatPage />}></Route>
           </Routes>
         </div>
       </DeviceWidthProvider>
