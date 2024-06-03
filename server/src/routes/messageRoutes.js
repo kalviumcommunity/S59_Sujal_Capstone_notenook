@@ -11,23 +11,33 @@ router.get("/getUsersForChat", authenticateJWT, async (req, res) => {
   try {
     const user = await UserModel.findById(req.user._id).populate({
       path: "chats",
-      select: "participants",
+      populate: {
+        path: "participants",
+        select: "username",
+      },
     });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    console.log(user);
+
     const participants = user.chats.reduce((acc, chat) => {
       chat.participants.forEach((participant) => {
-        if (participant.toString() !== req.user._id.toString()) {
-          acc.add(participant.toString());
+        if (participant._id.toString() !== req.user._id.toString()) {
+          acc.add(
+            JSON.stringify({
+              id: participant._id.toString(),
+              username: participant.username,
+            })
+          );
         }
       });
       return acc;
     }, new Set());
 
-    const filteredUsers = Array.from(participants);
+    const filteredUsers = Array.from(participants).map((participant) =>
+      JSON.parse(participant)
+    );
 
     res.status(200).json(filteredUsers);
   } catch (error) {
@@ -76,7 +86,6 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-
 
 router.get("/messages/:userToChatId", authenticateJWT, async (req, res) => {
   try {
