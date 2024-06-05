@@ -12,7 +12,9 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
   const { userToChatId } = useParams();
 
   useEffect(() => {
+    let source = axios.CancelToken.source();
     const token = extractTokenFromCookie();
+
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
@@ -29,13 +31,21 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
         setMessages(response.data.messages);
         setSelectedUser(response.data.userToChat);
       } catch (error) {
-        console.error("Error fetching messages:", error);
+        if (axios.isCancel(error)) {
+          console.log("Request canceled:", error.message);
+        } else {
+          console.error("Error fetching messages:", error);
+        }
       }
     };
 
     if (userToChatId && token) {
       fetchMessages();
     }
+
+    return () => {
+      source.cancel("Component unmounted");
+    };
   }, [userToChatId]);
 
   useEffect(() => {
