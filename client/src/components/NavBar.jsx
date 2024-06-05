@@ -31,7 +31,7 @@ function NavBar() {
           <PeopleAltIcon style={style} fontSize="small"/>
         </NavLink>
 
-        <NavLink className="chatIcon navButton" to="/notenook/chat">
+        <NavLink className="chatIcon navButton" to="/notenook/chatPage">
           <ChatBubbleIcon style={style} fontSize="small"/>
         </NavLink>
       </div>

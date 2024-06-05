@@ -1,24 +1,48 @@
-import React, { useState } from "react";
-import pic from "../../assets/pic.png";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import SendIcon from "@mui/icons-material/Send";
+import { Link, useParams } from "react-router-dom";
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import MessageInput from "./MessageInput";
+import Message from "./Message";
+import pic from "../../assets/pic.png";
 
-const Chat = ({ userToChatId }) => {
+const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
+  const lastMessageRef = useRef(null);
+  const { userToChatId } = useParams();
 
-  const sendMessage = async () => {
-    try {
-      const response = await axios.post(`/send/${userToChatId}`, {
-        message: newMessage,
-      });
-      setMessages([...messages, response.data]);
-      setNewMessage("");
-    } catch (error) {
-      console.error("Error sending message:", error);
+  useEffect(() => {
+    const token = extractTokenFromCookie();
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_REACT_APP_GET_MESSAGES_ENDPOINT
+          }/${userToChatId}`,
+          {
+            headers: {
+              Authorization: `bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setMessages(response.data.messages);
+        setSelectedUser(response.data.userToChat);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    if (userToChatId && token) {
+      fetchMessages();
     }
-  };
+  }, [userToChatId]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  }, [messages]);
 
   return (
     <div className="chat">
@@ -27,64 +51,30 @@ const Chat = ({ userToChatId }) => {
           <div className="connection userToChat">
             <div className="connectionInfo">
               <img className="connectionPic" src={pic} alt="User" />
-              <p className="connectionUsername">"username"</p>
+              <p className="connectionUsername">{selectedUser?.username}</p>
             </div>
           </div>
         </Link>
       </div>
       <div className="chat-messages">
-        {messages.map((msg, index) =>
-          msg.senderId === "1" ? (
-            <SentMessage
-              key={index}
+        {messages.map((msg, index) => (
+          <div key={index} ref={lastMessageRef} className="flex flex-col">
+            <Message
               message={msg.message}
-              timestamp={msg.timestamp}
+              createdAt={msg.createdAt}
+              senderId={msg.senderId}
+              selectedUser={selectedUser}
             />
-          ) : (
-            <ReceivedMessage
-              key={index}
-              message={msg.message}
-              timestamp={msg.timestamp}
-            />
-          )
-        )}
+          </div>
+        ))}
       </div>
-      <div className="chat-input-container">
-        <textarea
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message"
-          className="chat-input"
-        />
-        <button onClick={sendMessage} className="chat-send-button">
-          <SendIcon />
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const SentMessage = ({ message, timestamp }) => {
-  return (
-    <div className="chat-message sent">
-      {" "}
-      <div className="message-content">
-        <p>{message}</p>
-        <span>{new Date(timestamp).toLocaleString()}</span>
-      </div>
-      <img className="message-pic" src={pic} alt="User" />
-    </div>
-  );
-};
-
-const ReceivedMessage = ({ message, timestamp }) => {
-  return (
-    <div className="chat-message received">
-      <img className="message-pic" src={pic} alt="User" />
-      <div className="message-content">
-        <p>{message}</p>
-        <span>{new Date(timestamp).toLocaleString()}</span>
-      </div>
+      <MessageInput
+        userToChatId={userToChatId}
+        setMessages={setMessages}
+        messages={messages}
+        setTopUser={setTopUser}
+        selectedUser={selectedUser}
+      />
     </div>
   );
 };

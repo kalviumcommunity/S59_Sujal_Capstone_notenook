@@ -114,12 +114,10 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
         path: "postNotifications.relatedPost",
         select: "title content",
       });
-    console.log(notificationList.userNotifications);
 
     notificationList.userNotifications.sort(
       (a, b) => b.createdAt - a.createdAt
     );
-    console.log(notificationList.userNotifications);
     notificationList.postNotifications.sort(
       (a, b) => b.createdAt - a.createdAt
     );

@@ -37,7 +37,6 @@ function NoteNook() {
         );
 
         if (response.status === 200) {
-          console.log(response.data.user);
           setUser(response.data.user);
         }
       } catch (err) {
@@ -52,7 +51,6 @@ function NoteNook() {
 
     const token = extractTokenFromCookie();
     if (token) {
-      console.log(token);
       fetchData(token);
     } else {
       navigate("/");
@@ -74,7 +72,7 @@ function NoteNook() {
             <Route path="/profile/*" element={<UserProfile />}></Route>
             <Route path="/notifications" element={<NotificationPage />}></Route>
             <Route path="/viewUser/:userId" element={<ViewUser />}></Route>
-            <Route path="/chat/*" element={<ChatPage />}></Route>
+            <Route path="/chatPage/*" element={<ChatPage />}></Route>
           </Routes>
         </div>
       </DeviceWidthProvider>

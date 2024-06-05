@@ -79,6 +79,7 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
     await ChatModel.findByIdAndUpdate(chat._id, {
       $push: { messages: newMessage._id },
     });
+    console.log(newMessage);
 
     res.status(201).json(newMessage);
   } catch (err) {
@@ -94,13 +95,24 @@ router.get("/messages/:userToChatId", authenticateJWT, async (req, res) => {
 
     const chat = await ChatModel.findOne({
       participants: { $all: [senderId, userToChatId] },
-    }).populate("messages");
+    })
+      .populate("messages")
+      .populate("participants", "username _id");
 
-    if (!chat) return res.status(200).json([]);
+    if (!chat) return res.status(200).json({ messages: [], userToChat: null });
 
     const messages = chat.messages;
 
-    res.status(200).json(messages);
+    const userToChat = chat.participants.find(
+      (participant) => participant._id.toString() === userToChatId
+    );
+
+    if (!userToChat) return res.status(404).json({ error: "User not found" });
+
+    res.status(200).json({
+      messages,
+      userToChat: { username: userToChat.username, id: userToChat._id },
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
