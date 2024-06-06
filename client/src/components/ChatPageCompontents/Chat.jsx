@@ -3,16 +3,45 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import MessageInput from "./MessageInput";
+import { io } from "socket.io-client";
 import Message from "./Message";
 import pic from "../../assets/pic.png";
 
 const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
   const [messages, setMessages] = useState([]);
+  const [chatSocket, setChatSocket] = useState(null);
   const lastMessageRef = useRef(null);
   const { userToChatId } = useParams();
 
   useEffect(() => {
-    let source = axios.CancelToken.source();
+    const token = extractTokenFromCookie();
+    if (!token) {
+      return;
+    }
+    const socketConnection = io(
+      import.meta.env.VITE_REACT_APP_CHAT_SOCKET_ENDPOINT,
+      {
+        auth: { token },
+      }
+    );
+
+    setChatSocket(socketConnection);
+
+    socketConnection.on("connectionSuccess", (data) => {
+      console.log(data.message);
+    });
+
+    socketConnection.on("receiveMessage", (newMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
+    return () => {
+      socketConnection.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const source = axios.CancelToken.source();
     const token = extractTokenFromCookie();
 
     const fetchMessages = async () => {
@@ -23,11 +52,12 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
           }/${userToChatId}`,
           {
             headers: {
-              Authorization: `bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
+            cancelToken: source.token,
           }
         );
-        console.log(response.data);
+
         setMessages(response.data.messages);
         setSelectedUser(response.data.userToChat);
       } catch (error) {
@@ -46,7 +76,7 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
     return () => {
       source.cancel("Component unmounted");
     };
-  }, [userToChatId]);
+  }, [userToChatId, setSelectedUser]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -84,6 +114,7 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
         messages={messages}
         setTopUser={setTopUser}
         selectedUser={selectedUser}
+        chatSocket={chatSocket}
       />
     </div>
   );

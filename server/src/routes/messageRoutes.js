@@ -6,6 +6,8 @@ const { UserModel } = require("../models/UserModel");
 
 const router = express.Router();
 const { authenticateJWT } = require("../auth/authenticateJWT");
+const { getChatNamespace } = require("../socketHandlers/chatSocket");
+const { userSocketMap } = require("../socketHandlers/chatSocket");
 
 router.get("/getUsersForChat", authenticateJWT, async (req, res) => {
   try {
@@ -79,7 +81,13 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
     await ChatModel.findByIdAndUpdate(chat._id, {
       $push: { messages: newMessage._id },
     });
-    console.log(newMessage);
+
+    const chatNamespace = getChatNamespace();
+    const receiverSocketId = userSocketMap[receiverId];
+
+    if (chatNamespace && receiverSocketId) {
+      chatNamespace.to(receiverSocketId).emit("receiveMessage", newMessage); 
+    }
 
     res.status(201).json(newMessage);
   } catch (err) {

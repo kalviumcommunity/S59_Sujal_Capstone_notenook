@@ -1,6 +1,22 @@
 const { NoteModel } = require("../models/NoteModel");
+const jwt = require("jsonwebtoken");
 
 function textEditorSocket(io) {
+  io.use((socket, next) => {
+    const token = socket.handshake.auth.token;
+    if (!token) {
+      return next(new Error("Authentication error"));
+    }
+
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return next(new Error("Authentication error"));
+      }
+      socket.userId = decoded.userId;
+      next();
+    });
+  });
+
   io.on("connection", (socket) => {
     console.log("connected to text-editor socket...");
 
