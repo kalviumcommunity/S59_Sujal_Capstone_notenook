@@ -5,6 +5,7 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
 import ToolBar from "./ToolBar";
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 import "../../css/TextEditor.css";
 
@@ -16,8 +17,13 @@ function TextEditor() {
   const [savingError, setSavingError] = useState(null);
 
   useEffect(() => {
+    const token = extractTokenFromCookie();
+    if (!token) {
+      return;
+    }
     const socketConnection = io(
-      import.meta.env.VITE_REACT_APP_TEXT_EDITOR_SOCKET
+      import.meta.env.VITE_REACT_APP_TEXT_EDITOR_SOCKET,
+      { auth: { token } }
     );
 
     setSocket(socketConnection);
