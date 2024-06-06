@@ -9,13 +9,24 @@ function chatSocket(ioNamespace) {
   chatNamespace.use((socket, next) => {
     const token = socket.handshake.auth.token;
     if (!token) {
-      return next(new Error("Authentication error"));
+      return next(new Error("Authentication error: Token not provided"));
     }
 
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
       if (err) {
-        return next(new Error("Authentication error"));
+        let errorMessage = "Authentication error";
+        if (err.name === "TokenExpiredError") {
+          errorMessage = "Authentication error: Token has expired";
+        } else if (err.name === "JsonWebTokenError") {
+          errorMessage = "Authentication error: Invalid token";
+        }
+        return next(new Error(errorMessage));
       }
+
+      if (!decoded.userId) {
+        return next(new Error("Authentication error: Invalid token payload"));
+      }
+
       socket.userId = decoded.userId;
       next();
     });

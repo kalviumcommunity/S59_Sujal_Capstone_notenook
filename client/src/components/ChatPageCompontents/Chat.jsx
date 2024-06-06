@@ -16,8 +16,10 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
   useEffect(() => {
     const token = extractTokenFromCookie();
     if (!token) {
+      console.error("No token found");
       return;
     }
+
     const socketConnection = io(
       import.meta.env.VITE_REACT_APP_CHAT_SOCKET_ENDPOINT,
       {
@@ -26,6 +28,10 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
     );
 
     setChatSocket(socketConnection);
+
+    socketConnection.on("connect_error", (err) => {
+      console.error("Connection error:", err);
+    });
 
     socketConnection.on("connectionSuccess", (data) => {
       console.log(data.message);
