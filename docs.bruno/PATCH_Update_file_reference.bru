@@ -1,0 +1,23 @@
+meta {
+  name: PATCH_Update_file_reference
+  type: http
+  seq: 18
+}
+
+patch {
+  url: http://localhost:8080/note/updateNoteFileReferences
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2ZTZhOWIzNTQ5ZTFmZWYzMDljNjAiLCJpYXQiOjE3MTc3NzkzMzQsImV4cCI6MTcxNzc4MjkzNH0.8TjL0n2XdJjJz_GeX7DrGQ2IIitwQMW4XOJDUQntW9A
+}
+
+body:json {
+  {
+    "noteId":"665751b5af97e9d89d07748a",
+    "fileName":"23rd_Train_Ticket.pdf.pdf",
+    "url":"https://firebasestorage.googleapis.com/v0/b/notenook-4be2a.appspot.com/o/pdfs%2F23rd_Train_Ticket.pdf.pdf342e4d58-a5a6-47f5-b49b-f953e80d8982?alt=media&token=73127297-dde0-4e5b-ba60-7f90ca02cae4"
+  }
+}

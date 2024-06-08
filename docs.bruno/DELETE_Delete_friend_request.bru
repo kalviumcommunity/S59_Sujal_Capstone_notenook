@@ -1,0 +1,21 @@
+meta {
+  name: DELETE_Delete_friend_request
+  type: http
+  seq: 21
+}
+
+delete {
+  url: http://localhost:8080/friendRequest/unsendFriendRequest
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2ZTZhOWIzNTQ5ZTFmZWYzMDljNjAiLCJpYXQiOjE3MTc3NzkzMzQsImV4cCI6MTcxNzc4MjkzNH0.8TjL0n2XdJjJz_GeX7DrGQ2IIitwQMW4XOJDUQntW9A
+}
+
+body:json {
+  {
+    "receiverId":"66633479b3562f474072e8fc"
+  }
+}

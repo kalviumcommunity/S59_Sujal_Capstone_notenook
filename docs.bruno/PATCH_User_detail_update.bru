@@ -1,0 +1,22 @@
+meta {
+  name: PATCH_User_detail_update
+  type: http
+  seq: 16
+}
+
+patch {
+  url: http://localhost:8080/user/update
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2ZTZhOWIzNTQ5ZTFmZWYzMDljNjAiLCJpYXQiOjE3MTc3NzkzMzQsImV4cCI6MTcxNzc4MjkzNH0.8TjL0n2XdJjJz_GeX7DrGQ2IIitwQMW4XOJDUQntW9A
+}
+
+body:json {
+  {
+    "username":"sujshr","email":"suj@gmail.com",
+    "fullname": "Sujal"
+  }
+}
