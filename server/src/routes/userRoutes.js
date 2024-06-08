@@ -115,10 +115,10 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
         select: "title content",
       });
 
-    notificationList.userNotifications.sort(
+    notificationList?.userNotifications.sort(
       (a, b) => b.createdAt - a.createdAt
     );
-    notificationList.postNotifications.sort(
+    notificationList?.postNotifications.sort(
       (a, b) => b.createdAt - a.createdAt
     );
 
