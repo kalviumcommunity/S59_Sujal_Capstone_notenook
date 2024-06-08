@@ -115,12 +115,14 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
         select: "title content",
       });
 
-    notificationList.userNotifications.sort(
-      (a, b) => b.createdAt - a.createdAt
-    );
-    notificationList.postNotifications.sort(
-      (a, b) => b.createdAt - a.createdAt
-    );
+    if (notificationList) {
+      notificationList.userNotifications.sort(
+        (a, b) => b.createdAt - a.createdAt
+      );
+      notificationList.postNotifications.sort(
+        (a, b) => b.createdAt - a.createdAt
+      );
+    }
 
     const userData = {
       username: userWithFriends.username,
@@ -129,7 +131,10 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
       numberOfNotes: userWithFriends.notes.length,
       numberOfConnections: userWithFriends.friends.length,
       friends: userWithFriends.friends,
-      notifications: notificationList || [],
+      notifications: notificationList || {
+        userNotifications: [],
+        postNotifications: [],
+      },
     };
 
     return res.status(200).json({ user: userData });
@@ -144,6 +149,7 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
     }
   }
 });
+
 
 router.get("/myProfile", authenticateJWT, async (req, res) => {
   try {

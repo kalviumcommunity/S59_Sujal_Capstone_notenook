@@ -124,7 +124,6 @@ router.post("/addPostedNote", authenticateJWT, async (req, res) => {
   }
 });
 
-
 router.delete(
   "/deletePostedNote/:noteId",
   authenticateJWT,
@@ -194,7 +193,9 @@ router.get("/getNote", authenticateJWT, async (req, res) => {
     const { documentId } = req.query;
 
     const note = await NoteModel.findById(documentId);
-
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+    }
     const noteData = {
       title: note.title,
       subject: note.subject,
