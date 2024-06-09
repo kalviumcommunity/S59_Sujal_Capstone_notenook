@@ -35,7 +35,6 @@ function PDFUploader({
             },
           }
         );
-        console.log(res);
         setFileUrl("");
 
         alert("File removed successfully");
@@ -83,8 +82,7 @@ function PDFUploader({
       const pdfRef = ref(storage, `pdfs/${file.name + uuidv4()}`);
       const response = await uploadBytes(pdfRef, file);
       const url = await getDownloadURL(response.ref);
-      console.log(url);
-      setFileUrl(url); // Set file URL after successful upload
+      setFileUrl(url); 
       alert("Upload successful");
 
       const res = await axios.patch(
@@ -100,7 +98,6 @@ function PDFUploader({
           },
         }
       );
-      console.log(res);
     } catch (error) {
       console.log(error);
       alert("Upload failed");

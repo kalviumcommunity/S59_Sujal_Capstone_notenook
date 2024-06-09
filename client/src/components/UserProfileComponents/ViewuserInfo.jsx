@@ -3,7 +3,7 @@ import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import axios from "axios";
 import pic from "../../assets/pic.png";
 
-function ViewUserInfo({userInfo}) {
+function ViewUserInfo({ userInfo, setUserInfo }) {
   const { userId } = useParams();
 
   const handleFriendRequest = async (action) => {
@@ -51,7 +51,6 @@ function ViewUserInfo({userInfo}) {
     }
 
     try {
-      console.log(apiURI);
       const response = await axios({
         method: method,
         url: apiURI,
@@ -60,7 +59,6 @@ function ViewUserInfo({userInfo}) {
         },
         data: data,
       });
-      console.log(response);
 
       setUserInfo((prevState) => {
         let newStatus = prevState.friendshipStatus;

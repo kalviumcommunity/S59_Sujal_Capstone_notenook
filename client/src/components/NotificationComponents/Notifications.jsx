@@ -8,7 +8,6 @@ function Notifications() {
   const [activeTab, setActiveTab] = useState("friends");
 
   const renderContent = () => {
-    console.log(user);
     if (!user || !user.notifications) {
       return <div>Loading...</div>;
     }

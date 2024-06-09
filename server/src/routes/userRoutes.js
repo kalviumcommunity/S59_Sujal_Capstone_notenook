@@ -74,9 +74,13 @@ router.post("/login", (req, res, next) => {
       }
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "1hr",
-    });
+    const token = jwt.sign(
+      { userId: user._id, username },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "12hr",
+      }
+    );
 
     return res.status(200).json({ token });
   })(req, res, next);
@@ -149,7 +153,6 @@ router.get("/userDetails", authenticateJWT, async (req, res) => {
     }
   }
 });
-
 
 router.get("/myProfile", authenticateJWT, async (req, res) => {
   try {
@@ -260,7 +263,6 @@ router.get("/viewUserDetails/:userId", authenticateJWT, async (req, res) => {
       postedNotes: user.postedNotes,
     };
 
-    console.log(userData);
     return res.status(200).json({ user: userData });
   } catch (error) {
     if (error.name === "UnauthorizedError") {

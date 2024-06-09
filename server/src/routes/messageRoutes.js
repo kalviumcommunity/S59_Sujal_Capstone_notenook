@@ -11,24 +11,31 @@ const { userSocketMap } = require("../socketHandlers/chatSocket");
 
 router.get("/getUsersForChat", authenticateJWT, async (req, res) => {
   try {
-    const user = await UserModel.findById(req.user._id).populate({
-      path: "chats",
-      populate: {
-        path: "participants",
+    const user = await UserModel.findById(req.user._id)
+      .populate({
+        path: "chats",
+        populate: {
+          path: "participants",
+          select: "username",
+        },
+        options: { sort: { updatedAt: -1 } },
+      })
+      .populate({
+        path: "friends",
         select: "username",
-      },
-    });
+      });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
+    const friends = user.friends;
     const participants = user.chats.reduce((acc, chat) => {
       chat.participants.forEach((participant) => {
         if (participant._id.toString() !== req.user._id.toString()) {
           acc.add(
             JSON.stringify({
-              id: participant._id.toString(),
+              _id: participant._id.toString(),
               username: participant.username,
             })
           );
@@ -41,7 +48,7 @@ router.get("/getUsersForChat", authenticateJWT, async (req, res) => {
       JSON.parse(participant)
     );
 
-    res.status(200).json(filteredUsers);
+    res.status(200).json({ users: filteredUsers, friends });
   } catch (error) {
     console.error("Error in getUsersForChat: ", error.message);
     res.status(500).json({ error: "Internal server error" });
@@ -66,6 +73,21 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
       await UserModel.findByIdAndUpdate(req.user._id, {
         $push: { chats: chat._id },
       });
+      await UserModel.findByIdAndUpdate(receiverId, {
+        $push: { chats: chat._id },
+      });
+
+      const chatNamespace = getChatNamespace();
+
+      const receiverSocketId = userSocketMap[receiverId];
+
+      if (chatNamespace && receiverSocketId) {
+        chatNamespace.to(receiverSocketId).emit("newChatCreated", {
+          chatId: chat._id,
+          senderId,
+          senderUsername: req.user.username,
+        });
+      }
     }
 
     const newMessage = new MessageModel({
@@ -86,7 +108,7 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
     const receiverSocketId = userSocketMap[receiverId];
 
     if (chatNamespace && receiverSocketId) {
-      chatNamespace.to(receiverSocketId).emit("receiveMessage", newMessage); 
+      chatNamespace.to(receiverSocketId).emit("receiveMessage", newMessage);
     }
 
     res.status(201).json(newMessage);
@@ -103,23 +125,26 @@ router.get("/messages/:userToChatId", authenticateJWT, async (req, res) => {
 
     const chat = await ChatModel.findOne({
       participants: { $all: [senderId, userToChatId] },
-    })
-      .populate("messages")
-      .populate("participants", "username _id");
+    }).populate("messages");
 
-    if (!chat) return res.status(200).json({ messages: [], userToChat: null });
+    const userToChat = await UserModel.findById(userToChatId).select({
+      username: 1,
+      _id: 1,
+    });
+
+    if (!chat)
+      return res.status(200).json({
+        messages: [],
+        userToChat: { username: userToChat.username, _id: userToChat._id },
+      });
 
     const messages = chat.messages;
-
-    const userToChat = chat.participants.find(
-      (participant) => participant._id.toString() === userToChatId
-    );
 
     if (!userToChat) return res.status(404).json({ error: "User not found" });
 
     res.status(200).json({
       messages,
-      userToChat: { username: userToChat.username, id: userToChat._id },
+      userToChat: { username: userToChat.username, _id: userToChat._id },
     });
   } catch (err) {
     console.error(err);

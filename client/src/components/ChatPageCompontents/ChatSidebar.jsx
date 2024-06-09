@@ -1,36 +1,62 @@
 import React, { useEffect, useState } from "react";
 import UserToChat from "./UserToChat";
+import { useLocation, useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 
-const ChatSidebar = ({ users, selectedUser, topUser }) => {
+const ChatSidebar = ({ users, selectedUser, friends, setSelectedUser }) => {
   const [searchInput, setSearchInput] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchInput(value);
-    const filtered = users.filter((user) =>
-      user.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredUsers(filtered);
   };
 
   const handleSearch = () => {
-    const filtered = users.filter((user) =>
-      user.name.toLowerCase().includes(searchInput.toLowerCase())
+    const filtered = friends.filter((friend) =>
+      friend.username.toLowerCase().includes(searchInput.toLowerCase())
     );
     setFilteredUsers(filtered);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
+    navigate(`${user._id}`);
   };
 
   useEffect(() => {
+    if (searchInput.length) {
+      const filtered = friends.filter((friend) => {
+        return friend.username
+          .toLowerCase()
+          .includes(searchInput.toLowerCase());
+      });
+      setFilteredUsers(filtered);
+    } else {
+      setFilteredUsers(users);
+    }
+  }, [searchInput]);
+
+  useEffect(() => {
     setFilteredUsers(users);
+    if (selectedUser) {
+      setFilteredUsers((prevUsers) => {
+        const userIndex = prevUsers.findIndex(
+          (user) => user._id === selectedUser._id
+        );
+        if (userIndex === -1) {
+          return [selectedUser, ...prevUsers];
+        }
+        return prevUsers;
+      });
+    }
   }, [users]);
+
+  useEffect(() => {
+    setSearchInput("");
+  }, [location]);
 
   return (
     <div className="chat-sidebar">
@@ -40,7 +66,6 @@ const ChatSidebar = ({ users, selectedUser, topUser }) => {
           type="search"
           value={searchInput}
           onChange={handleInputChange}
-          onKeyDown={handleKeyPress}
         />
         <div className="searchIconContainer" onClick={handleSearch}>
           <SearchIcon
@@ -52,22 +77,14 @@ const ChatSidebar = ({ users, selectedUser, topUser }) => {
       </div>
 
       <ul className="chat-list">
-        {topUser && (
+        {filteredUsers.map((user) => (
           <UserToChat
-            user={topUser}
-            isSelected={selectedUser && topUser.id === selectedUser.id}
+            key={user._id}
+            user={user}
+            isSelected={selectedUser && user._id === selectedUser._id}
+            onUserClick={handleUserClick}
           />
-        )}
-        {filteredUsers.map((user) =>
-          topUser?.id != user.id ? (
-            <UserToChat
-              key={user.id}
-              user={user}
-              onClick={() => handleUserSelect(user)}
-              isSelected={selectedUser && user.id === selectedUser.id}
-            />
-          ) : null
-        )}
+        ))}
       </ul>
     </div>
   );

@@ -23,7 +23,6 @@ function RegistrationForm() {
         import.meta.env.VITE_REACT_APP_USER_REGISTRATION_URL,
         data
       );
-      console.log(res);
 
       alert("Registration successful!");
       navigate("/");

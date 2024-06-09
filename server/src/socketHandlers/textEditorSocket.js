@@ -20,10 +20,6 @@ function textEditorSocket(io) {
   io.on("connection", (socket) => {
     console.log("connected to text-editor socket...");
 
-    socket.on("send-changes", (delta) => {
-      console.log(delta);
-    });
-
     socket.on("get-document", async (documentId) => {
       try {
         const note = await NoteModel.findById(documentId);
@@ -42,7 +38,6 @@ function textEditorSocket(io) {
           const updatedNote = await NoteModel.findByIdAndUpdate(documentId, {
             document: data,
           });
-          console.log(updatedNote);
         } catch (error) {
           console.error("Error saving document:", error.message);
           socket.emit("document-save-error", "Error saving document");
