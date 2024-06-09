@@ -3,51 +3,15 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import MessageInput from "./MessageInput";
-import { io } from "socket.io-client";
 import Message from "./Message";
 import pic from "../../assets/pic.png";
 
-const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
+const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
   const [messages, setMessages] = useState([]);
-  const [chatSocket, setChatSocket] = useState(null);
   const lastMessageRef = useRef(null);
   const { userToChatId } = useParams();
 
   useEffect(() => {
-    const token = extractTokenFromCookie();
-    if (!token) {
-      console.error("No token found");
-      return;
-    }
-
-    const socketConnection = io(
-      import.meta.env.VITE_REACT_APP_CHAT_SOCKET_ENDPOINT,
-      {
-        auth: { token },
-      }
-    );
-
-    setChatSocket(socketConnection);
-
-    socketConnection.on("connect_error", (err) => {
-      console.error("Connection error:", err);
-    });
-
-    socketConnection.on("connectionSuccess", (data) => {
-      console.log(data.message);
-    });
-
-    socketConnection.on("receiveMessage", (newMessage) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
-
-    return () => {
-      socketConnection.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    const source = axios.CancelToken.source();
     const token = extractTokenFromCookie();
 
     const fetchMessages = async () => {
@@ -60,29 +24,32 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            cancelToken: source.token,
           }
         );
 
         setMessages(response.data.messages);
         setSelectedUser(response.data.userToChat);
       } catch (error) {
-        if (axios.isCancel(error)) {
-          console.log("Request canceled:", error.message);
-        } else {
-          console.error("Error fetching messages:", error);
-        }
+        console.error("Error fetching messages:", error);
       }
     };
 
     if (userToChatId && token) {
       fetchMessages();
     }
-
-    return () => {
-      source.cancel("Component unmounted");
-    };
   }, [userToChatId, setSelectedUser]);
+
+  useEffect(() => {
+    if (chatSocket) {
+      chatSocket.on("receiveMessage", (newMessage) => {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      });
+
+      return () => {
+        chatSocket.off("receiveMessage");
+      };
+    }
+  }, [chatSocket]);
 
   useEffect(() => {
     setTimeout(() => {

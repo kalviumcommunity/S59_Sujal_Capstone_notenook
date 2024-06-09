@@ -11,7 +11,6 @@ function NewNoteForm({ handleClick }) {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const tokenCookie = document.cookie
         .split(";")
@@ -31,7 +30,6 @@ function NewNoteForm({ handleClick }) {
           }
         );
 
-        console.log(response);
         navigate(`/notenook/postNotes/writeNote/${response.data.note._id}`);
       } else {
         console.log("Token cookie not found.");

@@ -5,7 +5,7 @@ import pic from "../../assets/pic.png";
 const Message = ({ message, createdAt, senderId, selectedUser }) => {
   const date = new Date(createdAt);
   const currentYear = new Date().getFullYear();
-  const isReceived = senderId === selectedUser.id;
+  const isReceived = senderId === selectedUser._id;
 
   const formatString =
     getYear(date) === currentYear ? "MM/dd, h:mm a" : "MM/dd/yyyy, h:mm a";

@@ -1,9 +1,9 @@
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { Route, Routes } from "react-router-dom";
+import { io } from "socket.io-client";
 
 import { DeviceWidthContext } from "../../context/deviceWidthContext";
-
 import ChatSidebar from "../../components/ChatPageCompontents/ChatSidebar";
 import Chat from "../../components/ChatPageCompontents/Chat";
 
@@ -13,8 +13,10 @@ import "../../css/ChatPage.css";
 const ChatPage = () => {
   const width = useContext(DeviceWidthContext);
   const [users, setUsers] = useState([]);
+  const [friends, setFriends] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [topUser, setTopUser] = useState(null);
+  const [chatSocket, setChatSocket] = useState(null);
 
   useEffect(() => {
     const token = extractTokenFromCookie();
@@ -32,7 +34,8 @@ const ChatPage = () => {
             },
           }
         );
-        setUsers(response.data);
+        setUsers(response.data.users);
+        setFriends(response.data.friends);
       } catch (error) {
         console.error("Error fetching users for chat:", error);
       }
@@ -40,6 +43,79 @@ const ChatPage = () => {
 
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    const token = extractTokenFromCookie();
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    const socketConnection = io(
+      import.meta.env.VITE_REACT_APP_CHAT_SOCKET_ENDPOINT,
+      {
+        auth: { token },
+      }
+    );
+
+    setChatSocket(socketConnection);
+
+    socketConnection.on("connect_error", (err) => {
+      console.error("Connection error:", err);
+    });
+
+    socketConnection.on("connectionSuccess", (data) => {
+      console.log(data.message);
+    });
+
+    socketConnection.on("disconnect", () => {
+      console.log("Socket disconnected");
+    });
+
+    socketConnection.on("newChatCreated", (newChat) => {
+      setUsers((prevUsers) => {
+        return [
+          { _id: newChat.senderId, username: newChat.senderUsername },
+          ...prevUsers,
+        ];
+      });
+    });
+
+    return () => {
+      socketConnection.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (topUser) {
+      setUsers((prevUsers) => {
+        const userIndex = prevUsers.findIndex(
+          (user) => user._id === topUser._id
+        );
+        if (userIndex > -1) {
+          const updatedUsers = [...prevUsers];
+          const [userToMove] = updatedUsers.splice(userIndex, 1);
+          updatedUsers.unshift(userToMove);
+          return updatedUsers;
+        }
+        return prevUsers;
+      });
+    }
+  }, [topUser]);
+
+  useEffect(() => {
+    if (selectedUser) {
+      setUsers((prevUsers) => {
+        const userIndex = prevUsers.findIndex(
+          (user) => user._id === selectedUser._id
+        );
+        if (userIndex === -1) {
+          return [selectedUser, ...prevUsers];
+        }
+        return prevUsers;
+      });
+    }
+  }, [selectedUser]);
 
   return (
     <div className="chat-page">
@@ -50,6 +126,7 @@ const ChatPage = () => {
             selectedUser={selectedUser}
             setSelectedUser={setSelectedUser}
             topUser={topUser}
+            friends={friends}
           />
           <Routes>
             <Route
@@ -59,6 +136,7 @@ const ChatPage = () => {
                   selectedUser={selectedUser}
                   setSelectedUser={setSelectedUser}
                   setTopUser={setTopUser}
+                  chatSocket={chatSocket}
                 />
               }
             />
@@ -73,7 +151,7 @@ const ChatPage = () => {
                 users={users}
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
-                topUser={topUser}
+                friends={friends}
               />
             }
           />
@@ -83,6 +161,8 @@ const ChatPage = () => {
               <Chat
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
+                setTopUser={setTopUser}
+                chatSocket={chatSocket}
               />
             }
           />

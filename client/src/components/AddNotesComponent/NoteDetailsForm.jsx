@@ -62,7 +62,6 @@ function NoteDetailsForm() {
         title: data.noteTitle,
         subject: data.subject,
       };
-      console.log(formData);
 
       const token = extractTokenFromCookie();
       if (token) {
@@ -95,7 +94,6 @@ function NoteDetailsForm() {
         title: note.title,
         subject: note.subject,
       };
-      console.log(formData);
 
       const response = await axios.post(
         import.meta.env.VITE_REACT_APP_POST_NOTE_ENDPOINT,
@@ -111,7 +109,6 @@ function NoteDetailsForm() {
         setUnsavedChanges(false);
         setNote({ ...note, postedNote: true });
       }
-      console.log(response);
     } catch (error) {
       console.error("Error posting note:", error);
     }
@@ -122,7 +119,6 @@ function NoteDetailsForm() {
     if (!token || !note) {
       return;
     }
-    console.log(token);
     try {
       const response = await axios.delete(
         `${import.meta.env.VITE_REACT_APP_DELETE_POSTEDNOTE_ENDPOINT}/${
@@ -138,7 +134,6 @@ function NoteDetailsForm() {
         alert("Posted note Deleted Successfully");
         setNote({ ...note, postedNote: false });
       }
-      console.log(response);
     } catch (error) {
       console.error("Error posting note:", error);
     }

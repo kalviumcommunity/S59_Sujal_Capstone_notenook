@@ -30,7 +30,6 @@ function UserProfile() {
             },
           }
         );
-        console.log(response.data.user);
 
         setUserInfo(response.data.user);
       } catch (error) {
@@ -59,7 +58,6 @@ function UserProfile() {
 
 function UpdateForms({ userInfo, setUserInfo }) {
   const { user } = useContext(UserContext);
-  console.log(user);
   return (
     <div className="updateForms">
       <UpdateUserForm userInfo={userInfo} setUserInfo={setUserInfo} />

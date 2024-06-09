@@ -7,7 +7,6 @@ import "../css/Connections.css";
 import pic from "../assets/pic.png";
 
 function Connections() {
-  console.log("Connetion rerenederd");
   const { user } = useContext(UserContext);
   const friends = user?.friends;
   return (

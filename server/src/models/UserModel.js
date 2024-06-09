@@ -40,7 +40,6 @@ UserSchema.index({ postedNotes: 1 });
 UserSchema.methods.setPassword = async function (password) {
   try {
     this.password = await argon2.hash(password);
-    console.log(this);
   } catch (error) {
     throw new Error("Error hashing password");
   }

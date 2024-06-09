@@ -38,7 +38,7 @@ function ViewUser() {
 
   return (
     <div>
-      <ViewUserInfo userInfo={userInfo} />
+      <ViewUserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
       <ViewUserProfileContent userInfo={userInfo} />
     </div>
   );

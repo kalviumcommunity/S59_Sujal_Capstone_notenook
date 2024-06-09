@@ -13,13 +13,22 @@ function UserProvider({ children }) {
   useEffect(() => {
     const fetchSession = async () => {
       try {
+        const token = extractTokenFromCookie();
+        if (!token) {
+          throw new Error("No token found in cookies");
+        }
+
         const response = await axios.get(
-          "http://localhost:8080/auth/google/getSession",
+          "http://localhost:8080/auth/getSession",
           {
             withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
-        if (response.status === 200) {
+
+        if (response.status === 200 && response.data.newToken) {
           document.cookie = `token=${response.data.token}; path=/`;
           setUser(response.data.user);
         }
