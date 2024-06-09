@@ -16,7 +16,6 @@ const ChatPage = () => {
   const [friends, setFriends] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [topUser, setTopUser] = useState(null);
-  const [chatSocket, setChatSocket] = useState(null);
 
   useEffect(() => {
     const token = extractTokenFromCookie();
@@ -42,48 +41,6 @@ const ChatPage = () => {
     };
 
     fetchUsers();
-  }, []);
-
-  useEffect(() => {
-    const token = extractTokenFromCookie();
-    if (!token) {
-      console.error("No token found");
-      return;
-    }
-
-    const socketConnection = io(
-      import.meta.env.VITE_REACT_APP_CHAT_SOCKET_ENDPOINT,
-      {
-        auth: { token },
-      }
-    );
-
-    setChatSocket(socketConnection);
-
-    socketConnection.on("connect_error", (err) => {
-      console.error("Connection error:", err);
-    });
-
-    socketConnection.on("connectionSuccess", (data) => {
-      console.log(data.message);
-    });
-
-    socketConnection.on("disconnect", () => {
-      console.log("Socket disconnected");
-    });
-
-    socketConnection.on("newChatCreated", (newChat) => {
-      setUsers((prevUsers) => {
-        return [
-          { _id: newChat.senderId, username: newChat.senderUsername },
-          ...prevUsers,
-        ];
-      });
-    });
-
-    return () => {
-      socketConnection.disconnect();
-    };
   }, []);
 
   useEffect(() => {
@@ -136,7 +93,6 @@ const ChatPage = () => {
                   selectedUser={selectedUser}
                   setSelectedUser={setSelectedUser}
                   setTopUser={setTopUser}
-                  chatSocket={chatSocket}
                 />
               }
             />
@@ -162,7 +118,6 @@ const ChatPage = () => {
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
                 setTopUser={setTopUser}
-                chatSocket={chatSocket}
               />
             }
           />

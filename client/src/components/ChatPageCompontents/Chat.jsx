@@ -6,7 +6,7 @@ import MessageInput from "./MessageInput";
 import Message from "./Message";
 import pic from "../../assets/pic.png";
 
-const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
+const Chat = ({ selectedUser, setSelectedUser, setTopUser }) => {
   const [messages, setMessages] = useState([]);
   const lastMessageRef = useRef(null);
   const { userToChatId } = useParams();
@@ -38,18 +38,6 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
       fetchMessages();
     }
   }, [userToChatId, setSelectedUser]);
-
-  useEffect(() => {
-    if (chatSocket) {
-      chatSocket.on("receiveMessage", (newMessage) => {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-      });
-
-      return () => {
-        chatSocket.off("receiveMessage");
-      };
-    }
-  }, [chatSocket]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -87,7 +75,6 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
         messages={messages}
         setTopUser={setTopUser}
         selectedUser={selectedUser}
-        chatSocket={chatSocket}
       />
     </div>
   );
