@@ -13,9 +13,15 @@ router.get(
 router.get(
   "/google/redirect",
   passport.authenticate("google", {
-    successRedirect: process.env.CLIENT_DASHBOARD_URI,
     failureRedirect: process.env.CLIENT_LOGIN_URI,
-  })
+  }),
+  (req, res) => {
+    if (req.user.isNewUser) {
+      res.redirect("/");
+    } else {
+      res.redirect(process.env.CLIENT_DASHBOARD_URI);
+    }
+  }
 );
 
 router.get("/getSession", async (req, res) => {
@@ -69,7 +75,7 @@ router.get("/getSession", async (req, res) => {
     };
 
     if (newToken) {
-      return res.status(200).json({ user: userData, token: newToken });
+      return res.status(200).json({ user: userData, newToken });
     } else {
       return res.status(200).json({ user: userData });
     }

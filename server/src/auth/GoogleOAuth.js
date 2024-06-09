@@ -1,7 +1,7 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { UserModel } = require("../models/UserModel");
-
+const { TempUserModel } = require("../models/TempUserModel");
 passport.use(
   new GoogleStrategy(
     {
@@ -20,14 +20,14 @@ passport.use(
             user = await user.save();
           }
 
-          done(null, user);
+          done(null, user, { isNew: false });
         } else {
-          const newUser = new UserModel({
-            username: profile.name.givenName,
+          const newUser = new TempUserModel({
             email: profile.emails[0].value,
             oauthProvider: "google",
             oauthId: profile.id,
             fullname: profile.displayName,
+            isNewUser: true,
           });
 
           const savedUser = await newUser.save();

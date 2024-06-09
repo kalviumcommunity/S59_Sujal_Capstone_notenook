@@ -14,9 +14,6 @@ function UserProvider({ children }) {
     const fetchSession = async () => {
       try {
         const token = extractTokenFromCookie();
-        if (!token) {
-          throw new Error("No token found in cookies");
-        }
 
         const response = await axios.get(
           "http://localhost:8080/auth/getSession",
@@ -29,7 +26,7 @@ function UserProvider({ children }) {
         );
 
         if (response.status === 200 && response.data.newToken) {
-          document.cookie = `token=${response.data.token}; path=/`;
+          document.cookie = `token=${response.data.newToken}; path=/`;
           setUser(response.data.user);
         }
       } catch (error) {
