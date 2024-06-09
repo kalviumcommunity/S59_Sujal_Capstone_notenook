@@ -7,6 +7,7 @@ require("./src/auth/GoogleOAuth");
 // importing packages
 const express = require("express");
 const http = require("http");
+const { initializeSocketIO } = require("./src/socketHandlers/socketConfig");
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
@@ -49,6 +50,18 @@ app.use(
 // Initialize Passport and restore authentication state\
 app.use(passport.initialize());
 app.use(passport.session());
+
+// creating a socket instance
+const io = initializeSocketIO(server);
+
+// sockets with different namespaces
+const textEditorNamespace = io.of("/text-editor");
+const { textEditorSocket } = require("./src/socketHandlers/textEditorSocket");
+textEditorSocket(textEditorNamespace);
+
+const chatNamespace = io.of("/chat");
+const { chatSocket } = require("./src/socketHandlers/chatSocket");
+chatSocket(chatNamespace);
 
 // setting up routes
 const userRouter = require("./src/routes/userRoutes");

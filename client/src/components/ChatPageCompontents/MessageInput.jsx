@@ -14,6 +14,36 @@ const MessageInput = ({
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const sendMessage = async () => {
+    const token = extractTokenFromCookie();
+    if (!token || !newMessage.trim()) {
+      return;
+    }
+    try {
+      setIsLoading(true); 
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_REACT_APP_SEND_MESSAGE_ENDPOINT
+        }/${userToChatId}`,
+        {
+          message: newMessage,
+        },
+        {
+          headers: {
+            Authorization: `bearer ${token}`,
+          },
+        }
+      );
+      setMessages([...messages, response.data]);
+      setNewMessage("");
+      setTopUser(selectedUser);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="chat-input-container">
       <textarea

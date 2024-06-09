@@ -6,6 +6,8 @@ const { UserModel } = require("../models/UserModel");
 
 const router = express.Router();
 const { authenticateJWT } = require("../auth/authenticateJWT");
+const { getChatNamespace } = require("../socketHandlers/chatSocket");
+const { userSocketMap } = require("../socketHandlers/chatSocket");
 
 router.get("/getUsersForChat", authenticateJWT, async (req, res) => {
   try {
@@ -74,6 +76,26 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
       await UserModel.findByIdAndUpdate(receiverId, {
         $push: { chats: chat._id },
       });
+
+      const chatNamespace = getChatNamespace();
+
+      const receiverSocketId = userSocketMap[receiverId];
+
+      if (chatNamespace && receiverSocketId) {
+        chatNamespace.to(receiverSocketId).emit(
+          "newChatCreated",
+          {
+            chatId: chat._id,
+            senderId,
+            senderUsername: req.user.username,
+          },
+          (error) => {
+            if (error) {
+              console.error("Error emitting newChatCreated:", error);
+            }
+          }
+        );
+      }
     }
 
     const newMessage = new MessageModel({
@@ -90,12 +112,26 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
       $push: { messages: newMessage._id },
     });
 
+    const chatNamespace = getChatNamespace();
+    const receiverSocketId = userSocketMap[receiverId];
+
+    if (chatNamespace && receiverSocketId) {
+      chatNamespace
+        .to(receiverSocketId)
+        .emit("receiveMessage", newMessage, (error) => {
+          if (error) {
+            console.error("Error emitting receiveMessage:", error);
+          }
+        });
+    }
+
     res.status(201).json(newMessage);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 router.get("/messages/:userToChatId", authenticateJWT, async (req, res) => {
   try {
