@@ -82,11 +82,19 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
       const receiverSocketId = userSocketMap[receiverId];
 
       if (chatNamespace && receiverSocketId) {
-        chatNamespace.to(receiverSocketId).emit("newChatCreated", {
-          chatId: chat._id,
-          senderId,
-          senderUsername: req.user.username,
-        });
+        chatNamespace.to(receiverSocketId).emit(
+          "newChatCreated",
+          {
+            chatId: chat._id,
+            senderId,
+            senderUsername: req.user.username,
+          },
+          (error) => {
+            if (error) {
+              console.error("Error emitting newChatCreated:", error);
+            }
+          }
+        );
       }
     }
 
@@ -108,7 +116,13 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
     const receiverSocketId = userSocketMap[receiverId];
 
     if (chatNamespace && receiverSocketId) {
-      chatNamespace.to(receiverSocketId).emit("receiveMessage", newMessage);
+      chatNamespace
+        .to(receiverSocketId)
+        .emit("receiveMessage", newMessage, (error) => {
+          if (error) {
+            console.error("Error emitting receiveMessage:", error);
+          }
+        });
     }
 
     res.status(201).json(newMessage);
@@ -117,6 +131,7 @@ router.post("/send/:receiverId", authenticateJWT, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 router.get("/messages/:userToChatId", authenticateJWT, async (req, res) => {
   try {
