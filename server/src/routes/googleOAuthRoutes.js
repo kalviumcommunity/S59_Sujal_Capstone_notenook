@@ -44,6 +44,10 @@ router.get("/getSession", async (req, res) => {
         } catch (error) {
           return res.status(401).json({ message: "Invalid or expired token" });
         }
+      } else {
+        return res
+          .status(401)
+          .json({ message: "Authorization header missing" });
       }
     }
 
