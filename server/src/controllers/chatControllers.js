@@ -112,10 +112,11 @@ const sendMessage = async (req, res) => {
 
     if (chatNamespace && receiverSocketId) {
       chatNamespace
+        .timeout(5000)
         .to(receiverSocketId)
-        .emit("receiveMessage", newMessage, (error) => {
-          if (error) {
-            console.error("Error emitting receiveMessage:", error);
+        .emit("receiveMessage", newMessage, (err, responses) => {
+          if (err) {
+            console.error("Error emitting receiveMessage:", err);
           }
         });
     }
