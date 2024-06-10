@@ -253,30 +253,28 @@ const updateNoteFileReferences = async (req, res) => {
 };
 
 const deleteNoteFileReferences = async (req, res) => {
-  async (req, res) => {
-    try {
-      const noteId = req.params.noteId;
+  try {
+    const noteId = req.params.noteId;
 
-      if (!mongoose.Types.ObjectId.isValid(noteId)) {
-        return res.status(400).json({ error: "Invalid note ID" });
-      }
-
-      const note = await NoteModel.findById(noteId);
-
-      if (!note) {
-        return res.status(404).json({ error: "Note not found" });
-      }
-
-      note.fileReference = undefined;
-
-      await note.save();
-
-      res.json({ message: "File references deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting file references:", error);
-      res.status(500).json({ error: "Internal server error" });
+    if (!mongoose.Types.ObjectId.isValid(noteId)) {
+      return res.status(400).json({ error: "Invalid note ID" });
     }
-  };
+
+    const note = await NoteModel.findById(noteId);
+
+    if (!note) {
+      return res.status(404).json({ error: "Note not found" });
+    }
+
+    note.fileReference = undefined;
+
+    await note.save();
+
+    res.json({ message: "File references deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting file references:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 const searchNotes = async (req, res) => {

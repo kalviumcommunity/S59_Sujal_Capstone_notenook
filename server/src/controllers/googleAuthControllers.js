@@ -2,7 +2,7 @@ const { UserModel } = require("../models/UserModel");
 
 const googleRedirectHandler = (req, res) => {
   const user = req.user;
-
+  console.log(user);
   if (user.username === user.oauthId) {
     res.redirect("set-username");
   } else {
