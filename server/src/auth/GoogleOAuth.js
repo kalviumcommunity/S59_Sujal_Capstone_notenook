@@ -1,7 +1,7 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { UserModel } = require("../models/UserModel");
-const { TempUserModel } = require("../models/TempUserModel");
+
 passport.use(
   new GoogleStrategy(
     {
@@ -20,14 +20,14 @@ passport.use(
             user = await user.save();
           }
 
-          done(null, user, { isNew: false });
+          done(null, user);
         } else {
-          const newUser = new TempUserModel({
+          const newUser = new UserModel({
+            username: profile.id,
             email: profile.emails[0].value,
             oauthProvider: "google",
             oauthId: profile.id,
             fullname: profile.displayName,
-            isNewUser: true,
           });
 
           const savedUser = await newUser.save();
@@ -45,6 +45,11 @@ passport.serializeUser((user, done) => {
   done(null, user._id);
 });
 
-passport.deserializeUser((obj, done) => {
-  done(null, obj);
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await UserModel.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
 });
