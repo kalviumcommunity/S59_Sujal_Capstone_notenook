@@ -10,7 +10,7 @@ function UserInfo({ userInfo }) {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:8080/auth/google/logout", {
+      await axios.get(import.meta.env.VITE_APP_LOGOUT_ENDPOINT, {
         withCredentials: true,
       });
       document.cookie =
