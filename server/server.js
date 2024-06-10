@@ -70,17 +70,17 @@ const { chatSocket } = require("./src/socketHandlers/chatSocket");
 chatSocket(chatNamespace);
 
 // setting up routes
+const authRouter = require("./src/routes/authRoutes");
 const userRouter = require("./src/routes/userRoutes");
 const noteRouter = require("./src/routes/noteRoutes");
 const googleAuthRouter = require("./src/routes/googleOAuthRoutes");
-const verificationRouter = require("./src/routes/verificationRoutes");
 const friendRequestRouter = require("./src/routes/friendRequestRoutes");
 const messageRouter = require("./src/routes/messageRoutes");
 
+app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/note", noteRouter);
-app.use("/verification", verificationRouter);
-app.use("/auth", googleAuthRouter);
+app.use("/google/auth", googleAuthRouter);
 app.use("/friendRequest", friendRequestRouter);
 app.use("/message", messageRouter);
 

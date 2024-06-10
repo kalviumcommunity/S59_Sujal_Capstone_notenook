@@ -12,6 +12,6 @@ const friendRequestSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const FriendRequestModel = new mongoose.model("FriendRequest", friendRequestSchema);
+const FriendRequestModel = mongoose.model("FriendRequest", friendRequestSchema);
 
 module.exports = { FriendRequestModel };
