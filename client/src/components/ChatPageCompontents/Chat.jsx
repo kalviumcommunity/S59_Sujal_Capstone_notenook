@@ -41,8 +41,12 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
 
   useEffect(() => {
     if (chatSocket) {
-      chatSocket.on("receiveMessage", (newMessage) => {
+      chatSocket.on("receiveMessage", (newMessage, callback) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+        if (callback) {
+          callback("Message received successfully");
+        }
       });
 
       return () => {
