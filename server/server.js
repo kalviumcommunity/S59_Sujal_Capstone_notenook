@@ -11,6 +11,7 @@ const { initializeSocketIO } = require("./src/socketHandlers/socketConfig");
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
+const path = require("path");
 const app = express();
 
 const port = process.env.PORT || 3000;
@@ -47,9 +48,14 @@ app.use(
   })
 );
 
-// Initialize Passport and restore authentication state\
+// Initialize Passport and restore authentication state
 app.use(passport.initialize());
 app.use(passport.session());
+
+// setting view engine
+app.use(express.static(path.join(__dirname, "public")));
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "src", "views"));
 
 // creating a socket instance
 const io = initializeSocketIO(server);
