@@ -36,36 +36,50 @@ router.get("/google/set-username", (req, res) => {
   });
 });
 
+const UserModel = require("./path/to/userModel"); // Import the UserModel
+
 router.post("/google/set-username", async (req, res) => {
-  if (!req.isAuthenticated() || req.user.username !== req.user.oauthId) {
-    return res.redirect(process.env.CLIENT_DASHBOARD_URI);
-  }
-
-  const { username } = req.body;
-
-  if (!username || username.trim().length === 0) {
-    return res.render("set-username", {
-      user: req.user,
-      error: "Username cannot be empty.",
-    });
-  }
-
   try {
-    let result = await UserModel.updateOne(
+    if (!req.isAuthenticated() || req.user.username !== req.user.oauthId) {
+      return res.redirect(process.env.CLIENT_DASHBOARD_URI);
+    }
+
+    const { username } = req.body;
+
+    if (!username || username.trim().length === 0) {
+      return res.render("set-username", {
+        user: req.user,
+        error: "Username cannot be empty.",
+      });
+    }
+
+    const existingUser = await UserModel.findOne({ username });
+    if (
+      existingUser &&
+      existingUser._id.toString() !== req.user._id.toString()
+    ) {
+      return res.render("set-username", {
+        user: req.user,
+        error: "Username already exists. Please choose a different one.",
+      });
+    }
+
+    const result = await UserModel.updateOne(
       { _id: req.user._id },
       { $set: { username: username } }
     );
 
-    console.log(result);
     if (result.modifiedCount > 0) {
       res.redirect(process.env.CLIENT_DASHBOARD_URI);
     } else {
       res.status(404).json({ message: "User not found or username unchanged" });
     }
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 router.get("/getSession", async (req, res) => {
   try {
