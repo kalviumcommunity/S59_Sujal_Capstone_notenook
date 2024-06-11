@@ -80,7 +80,7 @@ const getSessionHandler = async (req, res) => {
     let username;
     let newToken;
 
-    if (req.session.passport && req.session.passport.user) {
+    if (req.session?.passport?.user) {
       userId = req.session.passport.user;
       const user = await UserModel.findById(userId);
       if (user) {
@@ -134,4 +134,5 @@ const getSessionHandler = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
 module.exports = { registerUser, loginUser, getSessionHandler };
