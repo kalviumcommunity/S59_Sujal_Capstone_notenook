@@ -7,6 +7,11 @@ const { app } = require("./jest.setup");
 const { getSessionHandler } = require("../controllers/authControllers");
 const { UserModel } = require("../models/UserModel");
 
+const createUser = async (userData) => {
+  const response = await request(app).post("/register").send(userData);
+  return response;
+};
+
 beforeAll(async () => {
   await mongoose.connect(process.env.TEST_DB_URI, {});
   console.log("Database connected");
@@ -30,7 +35,7 @@ describe("Authentication", () => {
         password: "Suj@l1234.",
       };
 
-      const response = await request(app).post("/register").send(newUser);
+      const response = await createUser(newUser);
 
       expect(response.status).toBe(201);
 
@@ -48,7 +53,7 @@ describe("Authentication", () => {
         email: "testuser@example.com",
         password: "TestUser123!",
       };
-      const response = await request(app).post("/register").send(newUser);
+      const response = await createUser(newUser);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBe("Email is already registered");
@@ -61,7 +66,7 @@ describe("Authentication", () => {
         email: "newtestuser@example.com",
         password: "TestUser123!",
       };
-      const response = await request(app).post("/register").send(newUser);
+      const response = await createUser(newUser);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBe("Username is already taken");
