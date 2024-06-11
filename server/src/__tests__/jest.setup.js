@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: ".env.test" });
 require("../auth/LocalStrategy");
 
 const express = require("express");
