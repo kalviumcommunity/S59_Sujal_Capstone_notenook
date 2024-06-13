@@ -1,8 +1,10 @@
 const { ChatModel } = require("../models/ChatModel");
 const { MessageModel } = require("../models/MessageModel");
 const { UserModel } = require("../models/UserModel");
-const { getChatNamespace } = require("../socketHandlers/chatSocket");
-const { userSocketMap } = require("../socketHandlers/chatSocket");
+const {
+  getChatNamespace,
+  getUserSocketId,
+} = require("../socketHandlers/chatSocket");
 
 const getUsersForChat = async (req, res) => {
   try {
@@ -74,7 +76,7 @@ const sendMessage = async (req, res) => {
 
       const chatNamespace = getChatNamespace();
 
-      const receiverSocketId = userSocketMap[receiverId];
+      const receiverSocketId = await getUserSocketId(receiverId);
 
       if (chatNamespace && receiverSocketId) {
         chatNamespace.to(receiverSocketId).emit(
@@ -108,7 +110,7 @@ const sendMessage = async (req, res) => {
     });
 
     const chatNamespace = getChatNamespace();
-    const receiverSocketId = userSocketMap[receiverId];
+    const receiverSocketId = await getUserSocketId(receiverId);
 
     if (chatNamespace && receiverSocketId) {
       chatNamespace
