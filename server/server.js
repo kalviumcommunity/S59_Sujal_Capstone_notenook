@@ -13,6 +13,13 @@ const session = require("express-session");
 const passport = require("passport");
 const path = require("path");
 const app = express();
+const RedisStore = require("connect-redis").default;
+
+const { redisClient } = require("./src/config/redisConfig");
+let redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "notenook:",
+});
 
 const port = process.env.PORT || 3000;
 
@@ -37,6 +44,7 @@ app.use(
 // Initialize express-session middleware
 app.use(
   session({
+    store: redisStore,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,

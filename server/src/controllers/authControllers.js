@@ -154,6 +154,7 @@ const getSessionHandler = async (req, res) => {
     let newToken;
 
     if (req.session?.passport?.user) {
+      console.log(req.session);
       userId = req.session.passport.user;
       const user = await UserModel.findById(userId);
       if (user) {

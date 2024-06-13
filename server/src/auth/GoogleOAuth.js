@@ -28,6 +28,7 @@ passport.use(
             oauthProvider: "google",
             oauthId: profile.id,
             fullname: profile.displayName,
+            verified: true,
           });
 
           const savedUser = await newUser.save();

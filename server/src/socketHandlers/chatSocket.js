@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
+const { redisClient } = require("../config/redisConfig");
 
 let chatNamespace = null;
-const userSocketMap = {};
 
 function chatSocket(ioNamespace) {
   chatNamespace = ioNamespace;
@@ -34,20 +34,30 @@ function chatSocket(ioNamespace) {
   });
 
   chatNamespace.on("connection", (socket) => {
-    userSocketMap[socket.userId] = socket.id;
+    redisClient.set(socket.userId, socket.id);
 
     socket.emit("connectionSuccess", {
       message: "You have successfully connected to the chat server.",
     });
 
     socket.on("disconnect", () => {
-      delete userSocketMap[socket.userId];
+      redisClient.del(socket.userId);
     });
   });
+}
+
+async function getUserSocketId(userId) {
+  try {
+    const socketId = await redisClient.get(userId);
+    return socketId;
+  } catch (err) {
+    console.error("Error retrieving socket ID from Redis:", err);
+    return null;
+  }
 }
 
 module.exports = {
   chatSocket,
   getChatNamespace: () => chatNamespace,
-  userSocketMap,
+  getUserSocketId,
 };
