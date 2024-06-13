@@ -12,6 +12,8 @@ const UserSchema = new Schema({
 
   email: { type: String, required: true, unique: true },
 
+  verified: { type: Boolean, required: true },
+
   password: { type: String },
 
   oauthProvider: { type: String },

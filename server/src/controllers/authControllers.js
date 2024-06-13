@@ -1,6 +1,10 @@
 const { UserModel } = require("../models/UserModel");
 const { userJoiSchema } = require("../validation/userJoiSchemas");
 const { validateData } = require("../validation/validator");
+const { UserOTPModel } = require("../models/UserOTPModel");
+const {
+  sendOTPVerificationEmail,
+} = require("../functions/SendOTPVerificationMail");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
@@ -30,15 +34,77 @@ const registerUser = async (req, res) => {
       username,
       fullname,
       email,
+      verified: false,
     });
 
     await newUser.setPassword(password);
 
     const savedUser = await newUser.save();
 
-    res.status(201).json(savedUser);
+    await sendOTPVerificationEmail(savedUser._id, savedUser.email);
+
+    res.status(201).json({
+      _id: savedUser._id,
+      email: savedUser.email,
+      username: savedUser.username,
+    });
   } catch (error) {
     console.error("Error registering user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const verifyOTP = async (req, res) => {
+  try {
+    const { userId, otp } = req.body;
+
+    const userOTP = await UserOTPModel.findOne({ userId });
+
+    console.log(userOTP);
+    if (!userOTP || !(await userOTP.validateOTP(otp.toString()))) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { verified: true },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await UserOTPModel.deleteOne({ userId });
+
+    res
+      .status(200)
+      .json({ message: "OTP verified successfully", user: updatedUser });
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const resendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.verified) {
+      return res.status(400).json({ message: "User is already verified" });
+    }
+
+    await sendOTPVerificationEmail(user._id, user.email);
+
+    res.status(200).json({ message: "OTP has been resent successfully" });
+  } catch (error) {
+    console.error("Error resending OTP:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -60,6 +126,14 @@ const loginUser = (req, res, next) => {
       } else {
         return res.status(401).json({ message: "Authentication failed" });
       }
+    }
+
+    if (!user.verified) {
+      return res.status(403).json({
+        _id: user._id,
+        email: user.email,
+        message: "Email not verified. Please verify your email to log in.",
+      });
     }
 
     const token = jwt.sign(
@@ -135,4 +209,10 @@ const getSessionHandler = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getSessionHandler };
+module.exports = {
+  registerUser,
+  verifyOTP,
+  resendOTP,
+  loginUser,
+  getSessionHandler,
+};
