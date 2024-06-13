@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import "../../css/Forms.css";
 import axios from "axios";
@@ -7,8 +7,9 @@ import { Link } from "react-router-dom";
 
 import googleLogo from "../../assets/googleLogo.png";
 
-function RegistrationForm() {
+function RegistrationForm({ setUserData }) {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const {
     register,
@@ -23,11 +24,14 @@ function RegistrationForm() {
         import.meta.env.VITE_REACT_APP_USER_REGISTRATION_URL,
         data
       );
-
+      setUserData(res.data);
       alert("Registration successful!");
-      navigate("/");
+      navigate("/forms/verification");
     } catch (error) {
-      alert("Registration failed. Please try again later.");
+      const errorMessage =
+        error.response?.data.message ||
+        "Registration failed. Please try again later.";
+      setErrorMessage(errorMessage);
     }
   };
 
@@ -38,6 +42,7 @@ function RegistrationForm() {
   return (
     <div className="formDiv mb-24 xl:mb-0">
       <h1>Register Now!</h1>
+
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
         className="grid form mb-8 xl:mb-0"
@@ -133,6 +138,7 @@ function RegistrationForm() {
           />
           <p className="error">{errors.confirmPassword?.message}</p>
         </div>
+        {errorMessage && <p className="error text-center span2">{errorMessage}</p>}
 
         <button type="submit" className="span2 button">
           Register

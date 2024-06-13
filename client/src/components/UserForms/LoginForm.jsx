@@ -8,7 +8,7 @@ import { UserContext } from "../../context/userContext";
 
 import googleLogo from "../../assets/googleLogo.png";
 
-function LoginForm() {
+function LoginForm({ setUserData }) {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const { setUser } = useContext(UserContext);
@@ -31,6 +31,10 @@ function LoginForm() {
 
       navigate("/");
     } catch (error) {
+      if (error.response?.status === 403) {
+        setUserData(error.response.data);
+        navigate("/forms/verification");
+      }
       const errorMessages = {
         404: "User not found. Please check your credentials.",
         500: "Server error. Please try again later.",

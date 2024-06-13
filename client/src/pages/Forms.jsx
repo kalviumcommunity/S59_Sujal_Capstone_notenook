@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
 import RegistrationForm from "../components/UserForms/RegistrationForm";
 import LoginForm from "../components/UserForms/LoginForm";
+import OTPVerificationForm from "../components/UserForms/OTPVerificationForm"; 
 
 import logo from "../assets/logo.jpeg";
 
 function Forms() {
+  const [userData, setUserData] = useState(null);
+
   return (
     <div className="overflow-x-hidden">
       <div className="flex w-screen justify-between items-center py-4 pl-4 pr-8">
@@ -37,8 +41,18 @@ function Forms() {
 
         <div>
           <Routes>
-            <Route path="/registration" element={<RegistrationForm />} />
-            <Route path="/login" element={<LoginForm />} />
+            <Route
+              path="/registration"
+              element={<RegistrationForm setUserData={setUserData} />}
+            />
+            <Route
+              path="/login"
+              element={<LoginForm setUserData={setUserData} />}
+            />
+            <Route
+              path="/verification"
+              element={<OTPVerificationForm userData={userData} />}
+            />
           </Routes>
         </div>
       </div>
