@@ -18,17 +18,18 @@ const sendOTPVerificationEmail = async (userId, userEmail) => {
       to: userEmail,
       subject: "Your OTP Code",
       html: `
-            <div style="font-family: 'Montserrat', sans-serif; padding: 20px; background-color: #d9edec; border-radius: 8px; text-align: center; margin: auto; width: fit-content;">
-              <div style="margin-bottom: 20px; text-align: center;">
-                  <img src=${process.env.LOGO_URL} alt="Logo" style="width: 125px;">
-               </div>
-               <h2 style="color: #157ce3; font-weight:900;">WELCOME TO NOTENOOK</h2>
-               <p style="color: #333; font-size: 16px;">Dear User,</p>
-               <p style="color: #333; font-size: 16px;">Your OTP code is <strong style="color: #157ce3;">${otp}</strong>.</p>
-               <p style="color: #333; font-size: 16px;">Please use this code to verify your account.</p>
-               <p style="color: #333; font-size: 16px;">Thank you!</p>
-      
-             </div>`,
+        <div style="font-family: 'Montserrat', sans-serif; padding: 20px; background-color: #d9edec; border-radius: 8px; text-align: center; margin: auto; width: fit-content;">
+          <div style="margin-bottom: 20px; text-align: center;">
+            <img src="${process.env.LOGO_URL}" alt="Logo" style="width: 125px;">
+          </div>
+          <h2 style="color: #157ce3; font-weight:900;">WELCOME TO NOTENOOK</h2>
+          <p style="color: #333;">Dear User,</p>
+          <p style="color: #333;">Your OTP code is <strong style="color: #157ce3;">${otp}</strong>.</p>
+          <p style="color: #333;">Please use this code to verify your account.</p>
+          <p style="color: #333;">The OTP will expire in <strong>10 minutes</strong></p>
+          <p style="color: #333;">Thank you!</p>
+        </div>
+      `,
     };
     let otpData = await UserOTPModel.findOne({ userId });
 
@@ -45,7 +46,14 @@ const sendOTPVerificationEmail = async (userId, userEmail) => {
 
     return otp;
   } catch (error) {
-    console.error("Error sending OTP email:", error);
+    if (error.name === "MongoError") {
+      console.error("Database error occurred while handling OTP:", error);
+    } else if (error.name === "SMTPError" || error.responseCode === 550) {
+      console.error("Email sending error occurred:", error);
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+
     throw error;
   }
 };

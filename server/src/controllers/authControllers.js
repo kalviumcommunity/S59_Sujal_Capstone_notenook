@@ -46,7 +46,6 @@ const registerUser = async (req, res) => {
     res.status(201).json({
       _id: savedUser._id,
       email: savedUser.email,
-      username: savedUser.username,
     });
   } catch (error) {
     console.error("Error registering user:", error);

@@ -9,13 +9,16 @@ const UserOTPSchema = new Schema(
       type: String,
       required: true,
     },
+    expireAt: { type: Date, required: true, expires: 0 },
   },
+
   { timestamps: true }
 );
 
 UserOTPSchema.methods.setOTP = async function (otp) {
   try {
     this.otp = await argon2.hash(otp);
+    this.expireAt = new Date(Date.now() + 10 * 60 * 1000);
   } catch (error) {
     throw new Error("Error hashing password");
   }
