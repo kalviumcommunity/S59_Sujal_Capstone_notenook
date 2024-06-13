@@ -26,7 +26,7 @@ form {
 }
 
 .googleLoginButton .button img {
-  width: 30px; 
+  width: 30px;
   height: 30px;
   border-radius: 50%;
   margin-right: 10px;
@@ -69,11 +69,27 @@ form {
   height: 0.8rem;
 }
 
+.message{
+  color: rgb(0, 29, 66);
+  font-size: 0.8rem;
+  height: 0.8rem;
+}
+
 .formDiv h1 {
   font-size: 1.5rem;
   font-weight: 700;
   text-align: center;
   margin-bottom: 1rem;
+}
+
+.button.resend {
+  background-color: #4dc0b5;
+  width: fit-content;
+  justify-self: center;
+}
+
+.button.resend:hover {
+  background-color: #3fa396;
 }
 
 @media only screen and (max-width: 650px) {
