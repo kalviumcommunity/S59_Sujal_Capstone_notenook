@@ -30,6 +30,7 @@ connectDB();
 // creating a server
 const server = http.createServer(app);
 
+
 // setting up middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -84,6 +85,16 @@ const noteRouter = require("./src/routes/noteRoutes");
 const googleAuthRouter = require("./src/routes/googleOAuthRoutes");
 const friendRequestRouter = require("./src/routes/friendRequestRoutes");
 const messageRouter = require("./src/routes/messageRoutes");
+
+const { rateLimiter } = require("./src/middlewares/rateLimiter");
+
+app.use(
+  rateLimiter({
+    excludedRoutes: ["/auth", "/google/auth", "/message"], 
+    maxRequests: 30,
+    windowSizeInSeconds: 60,
+  })
+);
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
