@@ -91,7 +91,7 @@ const { rateLimiter } = require("./src/middlewares/rateLimiter");
 app.use(
   rateLimiter({
     excludedRoutes: ["/auth", "/google/auth", "/message"], 
-    maxRequests: 100,
+    maxRequests: 30,
     windowSizeInSeconds: 60,
   })
 );

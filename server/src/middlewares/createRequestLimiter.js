@@ -3,8 +3,12 @@ const { redisClient } = require("../config/redisConfig");
 const createRateLimiter = (maxRequests, windowSizeInSeconds) => {
   return async (req, res, next) => {
     const ip = req.ip;
+    const method = req.method;
 
     try {
+      if (method === "GET") {
+        return next();
+      }
       const keyExists = await redisClient.exists(ip);
 
       if (!keyExists) {
@@ -31,6 +35,14 @@ const createRateLimiter = (maxRequests, windowSizeInSeconds) => {
       }
     } catch (err) {
       console.error("Redis error:", err);
+
+      if (
+        err.code === "CONNECTION_BROKEN" ||
+        err.code === "CONNECTION_TIMEOUT"
+      ) {
+        return res.status(503).send("Service Unavailable");
+      }
+
       return res.status(500).send("Internal Server Error");
     }
   };
