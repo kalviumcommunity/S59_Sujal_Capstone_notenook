@@ -1,10 +1,8 @@
 const { ChatModel } = require("../models/ChatModel");
 const { MessageModel } = require("../models/MessageModel");
 const { UserModel } = require("../models/UserModel");
-const {
-  getChatNamespace,
-  getUserSocketId,
-} = require("../socketHandlers/chatSocket");
+const { getChatNamespace } = require("../socketHandlers/chatSocket");
+const { getUserSocketId } = require("../utils/socketIdOperations");
 
 const getUsersForChat = async (req, res) => {
   try {
