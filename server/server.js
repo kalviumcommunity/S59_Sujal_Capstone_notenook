@@ -78,6 +78,10 @@ const chatNamespace = io.of("/chat");
 const { chatSocket } = require("./src/socketHandlers/chatSocket");
 chatSocket(chatNamespace);
 
+const AiChatNamespace = io.of("/aiChat");
+const { aiChatSocket } = require("./src/socketHandlers/aiChatSocket");
+aiChatSocket(AiChatNamespace);
+
 // setting up routes
 const authRouter = require("./src/routes/authRoutes");
 const userRouter = require("./src/routes/userRoutes");
