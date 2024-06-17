@@ -5,8 +5,6 @@ const createRateLimiter = (maxRequests, windowSizeInSeconds) => {
     const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     const method = req.method;
 
-    console.log(`Rate limiting request from IP: ${ip}, method: ${method}`);
-
     try {
       if (method === "GET") {
         return next();

@@ -1,21 +1,20 @@
-const { authenticateSocketHandshake } = require("../middlewares/socketHandshakeAuthentication");
+const {
+  authenticateSocketHandshake,
+} = require("../middlewares/socketHandshakeAuthentication");
 const { AIChatHistoryModel } = require("../models/AIChatHistoryModel");
 const { AIChatMessageModel } = require("../models/AIChatMessageModel");
 const { getAnswerFromAI } = require("../utils/aiUtils");
-const { setSocketUserId, deleteSocketUserId } = require("../utils/socketIdOperations");
-
-let aiChatNamespace = null;
 
 function aiChatSocket(ioNamespace) {
-  aiChatNamespace = ioNamespace;
+  const aiChatNamespace = ioNamespace;
 
   aiChatNamespace.use(authenticateSocketHandshake);
 
   aiChatNamespace.on("connection", async (socket) => {
-    await setSocketUserId(socket.userId, socket.id);
-
     let chatHistory = await fetchChatHistory(socket.userId);
-    let messageHistory = chatHistory ? chatHistory.messages.map(msg => [msg.role, msg.content]) : [];
+    let messageHistory = chatHistory
+      ? chatHistory.messages.map((msg) => [msg.role, msg.content])
+      : [];
 
     socket.emit("connectionSuccess", {
       message: "You have successfully connected to the AI chat server.",
@@ -33,7 +32,10 @@ function aiChatSocket(ioNamespace) {
 
         const assistantMessage = await getAnswerFromAI(messageHistory);
 
-        const [userMessage, assistantResponse] = await saveMessages(content, assistantMessage);
+        const [userMessage, assistantResponse] = await saveMessages(
+          content,
+          assistantMessage
+        );
 
         if (!chatHistory) {
           chatHistory = new AIChatHistoryModel({
@@ -55,16 +57,14 @@ function aiChatSocket(ioNamespace) {
         socket.emit("errorMessage", "Failed to send message.");
       }
     });
-
-    socket.on("disconnect", async () => {
-      await deleteSocketUserId(socket.userId);
-    });
   });
 }
 
 async function fetchChatHistory(userId) {
   try {
-    return await AIChatHistoryModel.findOne({ userId }).populate("messages").exec();
+    return await AIChatHistoryModel.findOne({ userId })
+      .populate("messages")
+      .exec();
   } catch (error) {
     console.error("Error fetching chat history:", error);
     return null;
@@ -73,8 +73,14 @@ async function fetchChatHistory(userId) {
 
 async function saveMessages(userContent, assistantContent) {
   try {
-    const userMessage = new AIChatMessageModel({ role: "user", content: userContent });
-    const assistantResponse = new AIChatMessageModel({ role: "assistant", content: assistantContent });
+    const userMessage = new AIChatMessageModel({
+      role: "user",
+      content: userContent,
+    });
+    const assistantResponse = new AIChatMessageModel({
+      role: "assistant",
+      content: assistantContent,
+    });
 
     await Promise.all([userMessage.save(), assistantResponse.save()]);
 
@@ -87,5 +93,4 @@ async function saveMessages(userContent, assistantContent) {
 
 module.exports = {
   aiChatSocket,
-  getAIChatNamespace: () => aiChatNamespace,
 };
