@@ -2,19 +2,23 @@ const { redisClient } = require("../config/redisConfig");
 
 const createRateLimiter = (maxRequests, windowSizeInSeconds) => {
   return async (req, res, next) => {
-    const ip = req.ip;
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     const method = req.method;
+
+    console.log(`Rate limiting request from IP: ${ip}, method: ${method}`);
 
     try {
       if (method === "GET") {
         return next();
       }
+
       const keyExists = await redisClient.exists(ip);
 
       if (!keyExists) {
         const setTransaction = redisClient.multi();
         setTransaction.set(ip, 1).expire(ip, windowSizeInSeconds);
         await setTransaction.exec();
+        console.log(`New rate limit key set for IP: ${ip}`);
         return next();
       }
 
@@ -22,7 +26,7 @@ const createRateLimiter = (maxRequests, windowSizeInSeconds) => {
       transaction.incr(ip).ttl(ip);
       const [requestCount, ttl] = await transaction.exec();
 
-      console.log("Request count and TTL", requestCount, ttl);
+      console.log(`IP: ${ip} - Request count: ${requestCount}, TTL: ${ttl}`);
 
       if (requestCount > maxRequests) {
         res.set("Retry-After", ttl);
