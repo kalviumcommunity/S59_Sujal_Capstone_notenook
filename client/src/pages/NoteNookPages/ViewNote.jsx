@@ -10,13 +10,6 @@ import PdfViewer from "../../components/ViewNoteComponent/PdfViewer";
 import formatDate from "../../Functions/FormatDate";
 import "../../css/ViewNote.css";
 
-import { pdfjs } from "react-pdf";
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.js",
-  import.meta.url
-).toString();
-
 function ViewNote() {
   const { documentId } = useParams();
 
