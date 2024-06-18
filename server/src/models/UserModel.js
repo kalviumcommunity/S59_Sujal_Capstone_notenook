@@ -26,6 +26,15 @@ const UserSchema = new Schema({
 
   postedNotes: [{ type: Schema.Types.ObjectId, ref: "PostedNote" }],
 
+  savedNotes: [
+    {
+      originalNote: { type: Schema.Types.ObjectId, ref: "Note" },
+      savedNote: { type: Schema.Types.ObjectId, ref: "Note" },
+    },
+  ],
+
+  reviewListCount: { type: Number, default: 0 },
+
   chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
 
   friendRequests: [{ type: Schema.Types.ObjectId, ref: "FriendRequest" }],

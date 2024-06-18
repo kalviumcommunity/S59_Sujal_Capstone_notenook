@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios"; // Import axios
+import axios from "axios"; 
 
 import pic from "../../assets/pic.png";
 

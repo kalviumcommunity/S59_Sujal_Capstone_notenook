@@ -1,8 +1,12 @@
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import { NotesContext } from "../../context/notesContext";
+
 function NewNoteForm({ handleClick }) {
+  const { updateNotes } = useContext(NotesContext);
   const navigate = useNavigate();
   const {
     register,
@@ -30,6 +34,8 @@ function NewNoteForm({ handleClick }) {
           }
         );
 
+        const newNote = response.data.note;
+        updateNotes(newNote);
         navigate(`/notenook/postNotes/writeNote/${response.data.note._id}`);
       } else {
         console.log("Token cookie not found.");

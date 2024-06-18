@@ -2,6 +2,7 @@ import { useEffect, useContext } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import { DeviceWidthProvider } from "../context/deviceWidthContext";
+import { NotesProvider } from "../context/notesContext";
 import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 
 import Header from "../components/Header";
@@ -62,19 +63,21 @@ function NoteNook() {
       <NavBar />
       <Header />
       <DeviceWidthProvider>
-        <div className="noteNook">
-          <Routes>
-            <Route path="/dashboard" element={<DashBoard />}></Route>
-            <Route path="/notes" element={<SearchNotes />}></Route>
-            <Route path="/friends" element={<SearchUsers />}></Route>
-            <Route path="/postNotes/*" element={<AddNotes />} />
-            <Route path="/viewNote/:documentId" element={<ViewNote />}></Route>
-            <Route path="/profile/*" element={<UserProfile />}></Route>
-            <Route path="/notifications" element={<NotificationPage />}></Route>
-            <Route path="/viewUser/:userId" element={<ViewUser />}></Route>
-            <Route path="/chatPage/*" element={<ChatPage />}></Route>
-          </Routes>
-        </div>
+        <NotesProvider>
+          <div className="noteNook">
+            <Routes>
+              <Route path="/dashboard" element={<DashBoard />} />
+              <Route path="/notes" element={<SearchNotes />} />
+              <Route path="/friends" element={<SearchUsers />} />
+              <Route path="/postNotes/*" element={<AddNotes />} />
+              <Route path="/viewNote/:documentId" element={<ViewNote />} />
+              <Route path="/profile/*" element={<UserProfile />} />
+              <Route path="/notifications" element={<NotificationPage />} />
+              <Route path="/viewUser/:userId" element={<ViewUser />} />
+              <Route path="/chatPage/*" element={<ChatPage />} />
+            </Routes>
+          </div>
+        </NotesProvider>
       </DeviceWidthProvider>
     </div>
   );

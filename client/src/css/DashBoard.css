@@ -13,6 +13,8 @@
   height: calc(100vh - 112px - 2rem);
 }
 
+
+
 .stats {
   background-color: #d9edec;
 }
@@ -22,9 +24,25 @@
   background-color: #e1ffe2;
 }
 
-.reviewList {
+.dashBoardComponent.reviewList {
   grid-row: span 3;
   background-color: #fff8b8;
+}
+
+.dashBoardComponent .reviewListContainer {
+  height: 92.5%;
+}
+
+.dashBoardComponent .reviewListContainer .tab-content {
+  height: 90%;
+}
+
+.dashBoardComponent.reviewList .myNotes {
+  display: flex;
+  flex-direction: column;
+  justify-content: unset;
+  height: 97.5%;
+  padding-top: 0;
 }
 
 .dashBoardComponent {
@@ -71,6 +89,14 @@
   font-weight: 600;
 }
 
+.myNotes::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0);
+}
+
+.myNotes:hover::-webkit-scrollbar-thumb {
+  background: #3dadf827;
+}
+
 @media (max-width: 1200px) {
   .dashBoardPage {
     grid-template-columns: 1fr;
@@ -87,7 +113,25 @@
   .dashboard .noteList,
   .dashboard .reviewList {
     min-height: 450px;
-    height: 40vh;
+    height: 42.5vh;
+  }
+  .dashboard .reviewList {
+    height: 57.5vh;
+  }
+}
+
+@media (max-width: 780px) {
+  .dashBoardComponent.reviewList .myNotes {
+    height: 90%;
+    overflow-x: scroll;
+    flex-wrap: wrap;
+    flex-direction: column;
+    overflow-y: hidden;
+    justify-content: space-around;
+  }
+
+  .dashBoardComponent.reviewList .myNotes .myNote {
+    width: 100%;
   }
 }
 
@@ -105,7 +149,7 @@
   .statDiv {
     min-width: 0;
   }
-  
+
   .dashboard .noteList,
   .dashboard .reviewList {
     width: 90vw;

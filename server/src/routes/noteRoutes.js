@@ -34,4 +34,20 @@ router.get("/getNote", noteControllers.getNote);
 
 router.get("/viewNote", noteControllers.viewNote);
 
+router.post("/saveNote/:documentId", noteControllers.saveNote);
+
+router.delete("/deleteSavedNote/:documentId", noteControllers.deleteSavedNote);
+
+router.get("/getSavedNotes", noteControllers.getSavedNotes);
+
+router.patch(
+  "/markNoteForReview/:documentId",
+  noteControllers.markNoteForReview
+);
+
+router.patch(
+  "/unmarkNoteForReview/:documentId",
+  noteControllers.unmarkNoteForReview
+);
+
 module.exports = router;

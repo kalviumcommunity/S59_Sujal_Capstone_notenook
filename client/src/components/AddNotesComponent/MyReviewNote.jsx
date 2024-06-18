@@ -7,12 +7,7 @@ import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CircularProgress from "@mui/material/CircularProgress";
 
-function MyNote({
-  note,
-  handleDelete,
-  handleMarkForReview,
-  handleUnmarkForReview,
-}) {
+function MyReviewNote({ note, handleMarkForReview, handleUnmarkForReview }) {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -78,16 +73,12 @@ function MyNote({
         <Link to={`/notenook/postNotes/writeNote/${note._id}`}>
           <button className="update button">Update</button>
         </Link>
-        
-        <button
-          onClick={() => setDeleteConfirmation(true)}
-          className="delete button"
-        >
-          Delete
-        </button>
+        <Link to={`/notenook/viewNote/${note._id}`}>
+          <button className="view button">View</button>
+        </Link>
       </div>
     </div>
   );
 }
 
-export default MyNote;
+export default MyReviewNote;

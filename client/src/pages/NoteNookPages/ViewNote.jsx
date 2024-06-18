@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Route, Routes, Link } from "react-router-dom";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-
 import ViewWindow from "../../components/ViewNoteComponent/ViewWindow";
 import PdfViewer from "../../components/ViewNoteComponent/PdfViewer";
-
 import formatDate from "../../Functions/FormatDate";
 import "../../css/ViewNote.css";
-
-import { pdfjs } from "react-pdf";
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.js",
-  import.meta.url
-).toString();
 
 function ViewNote() {
   const { documentId } = useParams();
@@ -23,6 +13,8 @@ function ViewNote() {
   const [note, setNote] = useState({});
   const [isPdfVisible, setIsPdfVisible] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const fetchDefaultValues = async () => {
@@ -38,8 +30,10 @@ function ViewNote() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        const { note } = response.data;
+        const { note, isOwner, isSaved } = response.data;
         setNote(note);
+        setIsOwner(isOwner);
+        setIsSaved(isSaved);
       } catch (error) {
         console.error("Error fetching default values:", error);
       }
@@ -53,6 +47,49 @@ function ViewNote() {
   const togglePdfVisibility = () => {
     setIsPdfVisible(!isPdfVisible);
     setHasInteracted(true);
+  };
+
+  const saveNote = async () => {
+    try {
+      const token = extractTokenFromCookie();
+      if (!token || !documentId) return;
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_REACT_APP_SAVE_NOTE_ENDPOINT}/${documentId}`,
+        null,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 201) {
+        setIsSaved(true);
+      }
+    } catch (error) {
+      console.error("Error saving note:", error);
+    }
+  };
+
+  const unsaveNote = async () => {
+    try {
+      const token = extractTokenFromCookie();
+      if (!token || !documentId) return;
+
+      const response = await axios.delete(
+        `${
+          import.meta.env.VITE_REACT_APP_DELETE_SAVE_NOTE_ENDPOINT
+        }/${documentId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        setIsSaved(false);
+      }
+    } catch (error) {
+      console.error("Error unsaving note:", error);
+    }
   };
 
   return (
@@ -81,11 +118,23 @@ function ViewNote() {
               </span>
             </p>
           </div>
-          {note?.fileReference && (
-            <button className="button viewPdf" onClick={togglePdfVisibility}>
-              {isPdfVisible ? "Hide Pdf" : "View Pdf"}
-            </button>
-          )}
+          <div className="w-full flex gap-10 justify-end">
+            {!isOwner && !isSaved && (
+              <button className="button saveNote" onClick={saveNote}>
+                Save Note
+              </button>
+            )}
+            {!isOwner && isSaved && (
+              <button className="button unsaveNote" onClick={unsaveNote}>
+                Unsave Note
+              </button>
+            )}
+            {note?.fileReference && (
+              <button className="button viewPdf" onClick={togglePdfVisibility}>
+                {isPdfVisible ? "Hide Pdf" : "View Pdf"}
+              </button>
+            )}
+          </div>
         </div>
 
         <ViewWindow note={note} />

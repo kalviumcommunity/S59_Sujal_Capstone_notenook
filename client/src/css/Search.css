@@ -79,12 +79,6 @@
   color: #888;
 }
 
-.noteButtons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
 .resultInfo button.view {
   background-color: #00cd30;
   color: #fff;

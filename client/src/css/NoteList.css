@@ -33,7 +33,8 @@
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 10px;
-  background-color: #f2f8fe;
+  background-color: hsl(0, 0%, 100%);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 .updatedDate {
@@ -41,9 +42,22 @@
   color: #888;
 }
 
+.goldenBookmark,
+.addBookmark {
+  justify-self: start;
+}
+
+.goldenBookmark {
+  color: gold;
+}
+
+.addBookmark {
+  color: gray;
+}
+
 .notesDisplay {
   height: 95%;
-  overflow-y: hidden;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -51,9 +65,12 @@
   padding-bottom: 0.5rem;
 }
 
-.notesDisplay:hover {
-  overflow-y: scroll;
-  width: 100%;
+.notesDisplay::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0);
+}
+
+.notesDisplay:hover::-webkit-scrollbar-thumb {
+  background: #3dadf827;
 }
 
 .myNote p,
@@ -78,8 +95,10 @@
 
 .noteButtons {
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   margin-top: 10px;
+  gap: 2rem;
+  align-items: center;
 }
 
 .noteButtons button.update {

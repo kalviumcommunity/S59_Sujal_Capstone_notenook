@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { DeviceWidthContext } from "../../context/deviceWidthContext";
 
 import Stats from "../../components/DashBoardComponents/Stats";
-import ReviewList from "../../components/DashBoardComponents/ReviewList";
+import DashboardReviewList from "../../components/DashBoardComponents/DashboardReviewList";
 import NoteList from "../../components/NoteList";
 import Connections from "../../components/Connections";
 
@@ -17,9 +17,9 @@ function DashBoard() {
       <div className="dashboard">
         <Stats />
         <NoteList />
-        <ReviewList />
+        <DashboardReviewList />
       </div>
-      {width > 1024 && <Connections />}
+      {width > 1200 && <Connections />}
     </div>
   );
 }

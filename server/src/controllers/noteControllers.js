@@ -199,16 +199,15 @@ const deleteNote = async (req, res) => {
       await PostedNoteModel.findByIdAndDelete(postedNoteId);
     }
 
-    const user = await UserModel.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+    const update = {
+      $pull: { notes: noteId },
+    };
+
+    if (note.markedForReview) {
+      update.$inc = { reviewListCount: -1 };
     }
 
-    const index = user.notes.indexOf(noteId);
-    if (index !== -1) {
-      user.notes.splice(index, 1);
-    }
-    await user.save();
+    await UserModel.findByIdAndUpdate(req.user.id, update);
 
     await NoteModel.findByIdAndDelete(noteId);
 
@@ -310,7 +309,7 @@ const getNotes = async (req, res) => {
       .select("notes")
       .populate({
         path: "notes",
-        select: "title subject fileReference updatedAt",
+        select: "title subject fileReference updatedAt markedForReview",
         options: { sort: { updatedAt: -1 } },
       });
 
@@ -350,6 +349,7 @@ const getNote = async (req, res) => {
 const viewNote = async (req, res) => {
   try {
     const { documentId } = req.query;
+    const userId = req.user._id;
 
     function isValidDocumentId(documentId) {
       return mongoose.Types.ObjectId.isValid(documentId);
@@ -364,10 +364,206 @@ const viewNote = async (req, res) => {
       select: "username",
     });
 
-    res.json({ note: note });
+    if (!note) {
+      return res.status(404).json({ error: "Note not found" });
+    }
+
+    const isOwner = note.postedBy._id.equals(userId);
+
+    let isSaved = false;
+    if (!isOwner) {
+      const user = await UserModel.findById(userId);
+      isSaved = user.savedNotes.some(
+        (entry) =>
+          entry.originalNote.equals(documentId) ||
+          entry.savedNote.equals(documentId)
+      );
+    }
+
+    res.json({ note, isOwner, isSaved });
   } catch (error) {
-    console.error("Error fetching notes:", error);
+    console.error("Error fetching note:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const saveNote = async (req, res) => {
+  const userId = req.user._id;
+  const noteId = req.params.documentId;
+  console.log(noteId);
+  try {
+    const originalNote = await NoteModel.findById(noteId);
+    if (!originalNote) {
+      return res.status(404).json({ error: "Note not found" });
+    }
+
+    const newNote = new NoteModel({
+      postedBy: originalNote.postedBy,
+      title: originalNote.title,
+      subject: originalNote.subject,
+      fileReference: originalNote.fileReference,
+      document: originalNote.document,
+    });
+
+    const savedNewNote = await newNote.save();
+
+    await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          savedNotes: { originalNote: noteId, savedNote: savedNewNote._id },
+        },
+      },
+      { new: true, useFindAndModify: false }
+    );
+
+    res.status(201).json(savedNewNote);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const deleteSavedNote = async (req, res) => {
+  const userId = req.user._id;
+  const noteId = req.params.documentId;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(noteId)) {
+      return res.status(400).json({ error: "Invalid note ID" });
+    }
+
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const savedNoteEntry = user.savedNotes.find(
+      (entry) =>
+        entry.savedNote.toString() === noteId ||
+        entry.originalNote.toString() === noteId
+    );
+
+    if (!savedNoteEntry) {
+      return res
+        .status(403)
+        .json({ error: "Saved note not found in user's saved notes" });
+    }
+
+    const note = await NoteModel.findById(savedNoteEntry.savedNote);
+
+    const isMarkedForReview = note?.markedForReview;
+
+    await NoteModel.findByIdAndDelete(savedNoteEntry.savedNote);
+
+    const update = {
+      $pull: { savedNotes: { _id: savedNoteEntry._id } },
+    };
+
+    if (isMarkedForReview) {
+      update.$inc = { reviewListCount: -1 };
+    }
+
+    await UserModel.findByIdAndUpdate(userId, update);
+
+    res.status(200).json({ message: "Saved note deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting saved note:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getSavedNotes = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await UserModel.findById(userId).populate({
+      path: "savedNotes.savedNote",
+      select: "_id title subject markedForReview createdAt",
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const savedNotes = user.savedNotes.map((entry) => ({
+      _id: entry._id,
+      originalNote: entry.originalNote,
+      savedNote: {
+        _id: entry.savedNote._id,
+        title: entry.savedNote.title,
+        subject: entry.savedNote.subject,
+        markedForReview: entry.savedNote.markedForReview,
+        createdAt: entry.savedNote.createdAt,
+      },
+    }));
+
+    res.status(200).json({ savedNotes });
+  } catch (error) {
+    console.error("Error fetching saved notes:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const markNoteForReview = async (req, res) => {
+  const userId = req.user._id;
+  const { documentId } = req.params;
+
+  console.log(documentId);
+
+  try {
+    const noteUpdateResult = await NoteModel.updateOne(
+      { _id: documentId, markedForReview: { $ne: true } },
+      { $set: { markedForReview: true } }
+    );
+
+    console.log(noteUpdateResult);
+
+    if (noteUpdateResult.modifiedCount > 0) {
+      await UserModel.updateOne(
+        { _id: userId },
+        { $inc: { reviewListCount: 1 } }
+      );
+      return res
+        .status(200)
+        .json({ message: "Note marked for review successfully" });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Note already marked for review or not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const unmarkNoteForReview = async (req, res) => {
+  const userId = req.user._id;
+  const { documentId } = req.params;
+
+  try {
+    const noteUpdateResult = await NoteModel.updateOne(
+      { _id: documentId, markedForReview: true },
+      { $set: { markedForReview: false } }
+    );
+
+    if (noteUpdateResult.modifiedCount > 0) {
+      await UserModel.updateOne(
+        { _id: userId },
+        { $inc: { reviewListCount: -1 } }
+      );
+      return res
+        .status(200)
+        .json({ message: "Note unmarked from review successfully" });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Note not marked for review or not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -383,4 +579,9 @@ module.exports = {
   getNotes,
   getNote,
   viewNote,
+  saveNote,
+  deleteSavedNote,
+  getSavedNotes,
+  markNoteForReview,
+  unmarkNoteForReview,
 };
