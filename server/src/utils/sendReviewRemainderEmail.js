@@ -43,7 +43,7 @@ const sendReviewReminderEmail = async () => {
       console.error("An unexpected error occurred:", error);
     }
 
-    throw error;
+    throw error; 
   }
 };
 
