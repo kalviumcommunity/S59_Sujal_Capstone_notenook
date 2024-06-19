@@ -14,6 +14,9 @@ function Note({ note }) {
       </p>
       <p className="updatedDate">Posted {formatDate(note.updatedAt)}</p>
       <div className="noteButtons">
+        <Link to={`/notenook/postNotes/writeNote/${note._id}`}>
+          <button className="update button">Update</button>
+        </Link>
         <Link to={`/notenook/viewNote/${note._id}`}>
           <button className="view button">View</button>
         </Link>
