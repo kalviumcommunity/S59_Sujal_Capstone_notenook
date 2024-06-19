@@ -115,3 +115,20 @@ app.get("/", (req, res) => {
 server.listen(port, () => {
   console.log(`App listening at port: ${port}`);
 });
+
+const cron = require("node-cron");
+
+const {
+  sendReviewReminderEmail,
+} = require("./src/utils/sendReviewRemainderEmail");
+
+// Schedule the task to run every Sunday at 5 AM
+cron.schedule("0 5 * * 0", async () => {
+  try {
+    await sendReviewReminderEmail();
+    console.log("Review reminder emails sent successfully.");
+  } catch (error) {
+    console.error("Error sending review reminder emails:", error);
+  }
+});
+
