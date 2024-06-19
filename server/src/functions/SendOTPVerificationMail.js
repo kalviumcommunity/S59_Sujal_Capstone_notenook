@@ -1,13 +1,6 @@
 const { UserOTPModel } = require("../models/UserOTPModel");
-const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const { otpTransporter } = require("../utils/nodeMailerTransporter");
 
 const sendOTPVerificationEmail = async (userId, userEmail) => {
   try {
@@ -42,7 +35,7 @@ const sendOTPVerificationEmail = async (userId, userEmail) => {
 
     await otpData.save();
 
-    await transporter.sendMail(mailOptions);
+    await otpTransporter.sendMail(mailOptions);
 
     return otp;
   } catch (error) {
