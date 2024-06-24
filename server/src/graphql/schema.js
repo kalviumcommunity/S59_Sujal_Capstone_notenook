@@ -1,14 +1,10 @@
-// src/graphql/schema.js
-const { gql } = require("apollo-server-express");
 const { NoteModel } = require("../models/NoteModel");
 const { CommentModel } = require("../models/CommentModel");
-
-const typeDefs = gql`
+const typeDefs = `#graphql
   type User {
     _id: ID!
     username: String!
   }
-
   type Comment {
     _id: ID!
     postedBy: User!
@@ -16,7 +12,6 @@ const typeDefs = gql`
     createdAt: String!
     updatedAt: String!
   }
-
   type Query {
     getCommentsByNoteId(noteId: ID!): [Comment]
   }
