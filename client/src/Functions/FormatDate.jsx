@@ -1,5 +1,5 @@
 const formatDate = (dateString) => {
-  const date = new Date(dateString);
+  const date = new Date(Number(dateString));
   const now = new Date();
 
   const diff = now.getTime() - date.getTime();

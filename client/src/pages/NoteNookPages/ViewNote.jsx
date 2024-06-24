@@ -4,6 +4,7 @@ import axios from "axios";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import ViewWindow from "../../components/ViewNoteComponent/ViewWindow";
 import PdfViewer from "../../components/ViewNoteComponent/PdfViewer";
+import CommentsWindow from "../../components/ViewNoteComponent/CommentsWindow";
 import formatDate from "../../Functions/FormatDate";
 import "../../css/ViewNote.css";
 
@@ -15,6 +16,7 @@ function ViewNote() {
   const [hasInteracted, setHasInteracted] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isCommentsVisible, setIsCommentsVisible] = useState(false);
 
   useEffect(() => {
     const fetchDefaultValues = async () => {
@@ -46,6 +48,17 @@ function ViewNote() {
 
   const togglePdfVisibility = () => {
     setIsPdfVisible(!isPdfVisible);
+    if (!isPdfVisible) {
+      setIsCommentsVisible(false);
+    }
+    setHasInteracted(true);
+  };
+
+  const toggleCommentsVisibility = () => {
+    setIsCommentsVisible(!isCommentsVisible);
+    if (!isCommentsVisible) {
+      setIsPdfVisible(false);
+    }
     setHasInteracted(true);
   };
 
@@ -134,6 +147,12 @@ function ViewNote() {
                 {isPdfVisible ? "Hide Pdf" : "View Pdf"}
               </button>
             )}
+            <button
+              className="button viewComments"
+              onClick={toggleCommentsVisibility}
+            >
+              {isCommentsVisible ? "Hide Comments" : "View Comments"}
+            </button>
           </div>
         </div>
 
@@ -148,10 +167,28 @@ function ViewNote() {
         </div>
       )}
 
+      {hasInteracted && (
+        <div
+          className={`commentsContainer ${
+            isCommentsVisible ? "visible" : "invisible"
+          }`}
+        >
+          <CommentsWindow />
+        </div>
+      )}
+
       {isPdfVisible && (
         <div className="backdrop" onClick={togglePdfVisibility}>
           <button className="button" aria-label="Close PDF Viewer">
             Close PDF Viewer
+          </button>
+        </div>
+      )}
+
+      {isCommentsVisible && (
+        <div className="backdrop" onClick={toggleCommentsVisibility}>
+          <button className="button" aria-label="Close Comments Window">
+            Close Comments Window
           </button>
         </div>
       )}

@@ -3,6 +3,7 @@
   display: flex;
   gap: 1rem;
   width: 100%;
+  overflow-x: hidden;
 }
 
 .viewWindowContainer {
@@ -58,9 +59,19 @@
   background-color: #d32f2f;
 }
 
+.button.viewComments {
+  margin-top: 1rem;
+  background-color: #2196f3;
+}
+
+.button.viewComments:hover {
+  background-color: #1976d2;
+}
+
 .viewWindow {
   font-family: Arial, sans-serif;
   padding: 20px;
+  overflow-x: hidden;
   flex: 1;
 }
 
@@ -138,7 +149,8 @@
 }
 
 @media (max-width: 1200px) {
-  .pdfContainer {
+  .pdfContainer,
+  .commentsContainer {
     position: absolute;
     top: 4rem;
     height: 90%;
@@ -163,10 +175,12 @@
     top: 1rem;
     right: 2rem;
   }
-  .pdfContainer.visible {
+  .pdfContainer.visible,
+  .commentsContainer.visible {
     animation: appear 1s ease forwards;
   }
-  .pdfContainer.invisible {
+  .pdfContainer.invisible,
+  .commentsContainer.invisible {
     animation: disappear 1s ease forwards;
   }
 }
@@ -176,11 +190,13 @@
     width: 50%;
   }
 
-  .pdfContainer.visible {
+  .pdfContainer.visible,
+  .commentsContainer.visible {
     animation: fadeIn 1s ease forwards;
   }
 
-  .pdfContainer.invisible {
+  .pdfContainer.invisible,
+  .commentsContainer.invisible {
     animation: fadeOut 1s ease forwards;
   }
   .backdrop .button {
@@ -191,7 +207,7 @@
 @keyframes fadeIn {
   0% {
     display: none;
-    width: 0%;
+    width: 0vw;
     opacity: 0;
   }
   75% {
@@ -199,7 +215,7 @@
   }
   100% {
     display: block;
-    width: 50%;
+    width: 50vw;
     opacity: 1;
   }
 }
@@ -208,12 +224,12 @@
   from {
     display: block;
     opacity: 1;
-    width: 50%;
+    width: 50vw;
   }
   to {
     display: none;
     opacity: 0;
-    width: 0%;
+    width: 0vw;
   }
 }
 
