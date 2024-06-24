@@ -1,6 +1,9 @@
+// src/graphql/schema.js
+const { gql } = require("apollo-server-express");
 const { NoteModel } = require("../models/NoteModel");
 const { CommentModel } = require("../models/CommentModel");
-const typeDefs = `#graphql
+
+const typeDefs = gql`
   type User {
     _id: ID!
     username: String!
@@ -27,7 +30,7 @@ const resolvers = {
           path: "comments",
           populate: {
             path: "postedBy",
-            select: "_id username", 
+            select: "_id username",
           },
         });
 

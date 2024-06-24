@@ -81,8 +81,6 @@ async function startApolloServer() {
   }
 }
 
-startApolloServer();
-
 // creating a socket instance
 const io = initializeSocketIO(server);
 
@@ -109,13 +107,13 @@ const messageRouter = require("./src/routes/messageRoutes");
 
 const { rateLimiter } = require("./src/middlewares/rateLimiter");
 
-// app.use(
-//   rateLimiter({
-//     excludedRoutes: ["/auth", "/google/auth", "/message"],
-//     maxRequests: 30,
-//     windowSizeInSeconds: 60,
-//   })
-// );
+app.use(
+  rateLimiter({
+    excludedRoutes: ["/auth", "/google/auth", "/message"],
+    maxRequests: 30,
+    windowSizeInSeconds: 60,
+  })
+);
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
@@ -131,6 +129,7 @@ app.get("/", (req, res) => {
 
 server.listen(port, () => {
   console.log(`App listening at port: ${port}`);
+  startApolloServer();
 });
 
 const cron = require("node-cron");
