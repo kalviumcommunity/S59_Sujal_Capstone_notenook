@@ -20,6 +20,7 @@ const noteSchema = new Schema(
     },
     postedNote: { type: Schema.Types.ObjectId, ref: "PostedNote" },
     document: Object,
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     markedForReview: { type: Boolean, default: false },
   },
   { timestamps: true }

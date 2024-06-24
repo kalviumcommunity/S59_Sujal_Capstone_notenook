@@ -16,6 +16,9 @@ const app = express();
 const RedisStore = require("connect-redis").default;
 
 const { redisClient } = require("./src/config/redisConfig");
+
+const apolloServer = require("./src/graphql/apolloServer");
+
 let redisStore = new RedisStore({
   client: redisClient,
   prefix: "notenook:",
@@ -29,7 +32,6 @@ connectDB();
 
 // creating a server
 const server = http.createServer(app);
-
 
 // setting up middlewares
 app.use(express.json());
@@ -66,6 +68,19 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src", "views"));
 
+// Initialize Apollo Server
+const { expressMiddleware } = require("@apollo/server/express4");
+
+async function startApolloServer() {
+  try {
+    await apolloServer.start();
+    app.use("/graphql", expressMiddleware(apolloServer));
+    console.log(`Apollo Server ready at http://localhost:${port}/graphql`);
+  } catch (error) {
+    console.error("Failed to start Apollo Server:", error);
+  }
+}
+
 // creating a socket instance
 const io = initializeSocketIO(server);
 
@@ -94,7 +109,7 @@ const { rateLimiter } = require("./src/middlewares/rateLimiter");
 
 app.use(
   rateLimiter({
-    excludedRoutes: ["/auth", "/google/auth", "/message"], 
+    excludedRoutes: ["/auth", "/google/auth", "/message"],
     maxRequests: 30,
     windowSizeInSeconds: 60,
   })
@@ -114,6 +129,7 @@ app.get("/", (req, res) => {
 
 server.listen(port, () => {
   console.log(`App listening at port: ${port}`);
+  startApolloServer();
 });
 
 const cron = require("node-cron");
@@ -131,4 +147,3 @@ cron.schedule("0 5 * * 0", async () => {
     console.error("Error sending review reminder emails:", error);
   }
 });
-
