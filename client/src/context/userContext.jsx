@@ -30,8 +30,6 @@ function UserProvider({ children }) {
         );
 
         if (response.status === 200) {
-          setUser(response.data.user);
-
           if (response.data.newToken) {
             document.cookie = `token=${response.data.newToken}; path=/`;
           }
