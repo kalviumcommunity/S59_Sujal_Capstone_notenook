@@ -190,6 +190,7 @@ const getSessionHandler = async (req, res) => {
     }
 
     const userData = {
+      _id: user._id,
       username: user.username,
       fullname: user.fullname,
       email: user.email,

@@ -70,11 +70,18 @@ app.set("views", path.join(__dirname, "src", "views"));
 
 // Initialize Apollo Server
 const { expressMiddleware } = require("@apollo/server/express4");
+const { authenticateJWT } = require("./src/auth/authenticateJWT");
 
 async function startApolloServer() {
   try {
     await apolloServer.start();
-    app.use("/graphql", expressMiddleware(apolloServer));
+    app.use(
+      "/graphql",
+      authenticateJWT,
+      expressMiddleware(apolloServer, {
+        context: async ({ req }) => ({ req }),
+      })
+    );
     console.log(`Apollo Server ready at http://localhost:${port}/graphql`);
   } catch (error) {
     console.error("Failed to start Apollo Server:", error);
