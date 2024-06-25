@@ -28,7 +28,6 @@ const CommentInput = ({ onCommentPosted }) => {
                   _id
                   username
                 }
-                createdAt
                 updatedAt
               }
             }

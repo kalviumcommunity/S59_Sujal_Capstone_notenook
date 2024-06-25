@@ -59,7 +59,6 @@ const verifyOTP = async (req, res) => {
 
     const userOTP = await UserOTPModel.findOne({ userId });
 
-    console.log(userOTP);
     if (!userOTP || !(await userOTP.validateOTP(otp.toString()))) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }

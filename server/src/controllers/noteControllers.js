@@ -390,7 +390,7 @@ const viewNote = async (req, res) => {
 const saveNote = async (req, res) => {
   const userId = req.user._id;
   const noteId = req.params.documentId;
-  console.log(noteId);
+  
   try {
     const originalNote = await NoteModel.findById(noteId);
     if (!originalNote) {
@@ -509,15 +509,11 @@ const markNoteForReview = async (req, res) => {
   const userId = req.user._id;
   const { documentId } = req.params;
 
-  console.log(documentId);
-
   try {
     const noteUpdateResult = await NoteModel.updateOne(
       { _id: documentId, markedForReview: { $ne: true } },
       { $set: { markedForReview: true } }
     );
-
-    console.log(noteUpdateResult);
 
     if (noteUpdateResult.modifiedCount > 0) {
       await UserModel.updateOne(

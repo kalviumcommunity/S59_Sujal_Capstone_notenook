@@ -2,35 +2,6 @@ const { NoteModel } = require("../models/NoteModel");
 const { CommentModel } = require("../models/CommentModel");
 const { AuthenticationError } = require("apollo-server-express");
 
-const typeDefs = `#graphql
-  type User {
-    _id: ID!
-    username: String!
-  }
-
-  type Comment {
-    _id: ID!
-    postedBy: User!
-    comment: String!
-    createdAt: String!
-    updatedAt: String!
-  }
-
-  type DeleteCommentResponse {
-    success: Boolean!
-    message: String
-  }
-
-  type Query {
-    getCommentsByNoteId(noteId: ID!): [Comment]
-  }
-
-  type Mutation {
-    postComment(noteId: ID!, comment: String!): Comment
-    deleteComment(commentId: ID!): DeleteCommentResponse
-  }
-`;
-
 const resolvers = {
   Query: {
     getCommentsByNoteId: async (_, { noteId }) => {
@@ -58,7 +29,7 @@ const resolvers = {
   Mutation: {
     postComment: async (_, { noteId, comment }, { req }) => {
       const user = req.user;
-      console.log(user);
+
       if (!user)
         throw new AuthenticationError(
           "You must be logged in to post a comment."
@@ -87,7 +58,7 @@ const resolvers = {
         throw new Error("Failed to post comment");
       }
     },
-    
+
     deleteComment: async (_, { commentId }, { req }) => {
       const user = req.user;
       if (!user) {
@@ -124,4 +95,4 @@ const resolvers = {
   },
 };
 
-module.exports = { typeDefs, resolvers };
+module.exports = { resolvers };
