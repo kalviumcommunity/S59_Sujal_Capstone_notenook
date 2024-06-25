@@ -10,7 +10,6 @@ import { UserContext } from "../../context/userContext";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import "../../css/Comments.css";
 
-
 function CommentsWindow() {
   const [comments, setComments] = useState([]);
   const [showMyComments, setShowMyComments] = useState(false);
@@ -63,12 +62,12 @@ function CommentsWindow() {
   };
 
   const deleteComment = async (commentId) => {
-    console.log(commentId)
+    console.log(commentId);
     try {
-      await axios.post(
+      const res = await axios.post(
         import.meta.env.VITE_REACT_APP_GRAPHQL_ENDPOINT,
         {
-          query: `
+          query: `#graphql
           mutation DeleteComment($commentId: ID!) {
             deleteComment(commentId: $commentId) {
               success
@@ -84,13 +83,13 @@ function CommentsWindow() {
           },
         }
       );
-
-      setComments(comments.filter((comment) => comment._id !== commentId));
+      console.log(res);
+      if (res.data.data.deleteComment.success)
+        setComments(comments.filter((comment) => comment._id !== commentId));
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
   };
-
 
   const handleCommentPosted = (newComment) => {
     setComments([...comments, newComment]);
