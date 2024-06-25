@@ -50,6 +50,7 @@ const getUserDetails = async (req, res) => {
     }
 
     const userData = {
+      _id: userWithFriends._id,
       username: userWithFriends.username,
       fullname: userWithFriends.fullname,
       email: userWithFriends.email,
