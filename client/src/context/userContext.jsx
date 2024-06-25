@@ -15,23 +15,20 @@ function UserProvider({ children }) {
       try {
         const token = extractTokenFromCookie();
 
-        if (!token) {
-          return;
-        }
-
         const response = await axios.get(
           import.meta.env.VITE_REACT_APP_GET_SESSION_ENDPOINT,
           {
             withCredentials: true,
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${token || null}`,
             },
           }
         );
-
+        console.log(response);
         if (response.status === 200) {
           if (response.data.newToken) {
             document.cookie = `token=${response.data.newToken}; path=/`;
+            navigate("/");
           }
         } else {
           navigate("/");
@@ -43,7 +40,7 @@ function UserProvider({ children }) {
     };
 
     fetchSession();
-  }, [navigate]);
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

@@ -143,10 +143,6 @@ body {
   outline: none;
 }
 
-.error-message{
-  font-size: 0.8rem;
-  color: rgb(255, 81, 81);
-}
 @media (max-width: 768px) {
   .logo {
     height: 4rem;
