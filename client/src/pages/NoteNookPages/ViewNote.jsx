@@ -4,7 +4,7 @@ import axios from "axios";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import ViewWindow from "../../components/ViewNoteComponent/ViewWindow";
 import PdfViewer from "../../components/ViewNoteComponent/PdfViewer";
-import CommentsWindow from "../../components/ViewNoteComponent/CommentsWindow";
+import WrappedCommentsWindow from "../../components/ViewNoteComponent/WrappedCommentWindow";
 import formatDate from "../../Functions/FormatDate";
 import "../../css/ViewNote.css";
 
@@ -173,7 +173,7 @@ function ViewNote() {
             isCommentsVisible ? "visible" : "invisible"
           }`}
         >
-          <CommentsWindow />
+          <WrappedCommentsWindow />
         </div>
       )}
 

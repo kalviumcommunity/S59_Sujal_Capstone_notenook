@@ -1,98 +1,90 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useQuery, useMutation, gql } from "@apollo/client";
 
 import Comment from "./Comment";
 import MyComment from "./MyComment";
 import CommentInput from "./CommentInput";
 import { UserContext } from "../../context/userContext";
-
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import "../../css/Comments.css";
 
+const GET_COMMENTS_BY_NOTE_ID = gql`
+  query GetCommentsByNoteId($noteId: ID!) {
+    getCommentsByNoteId(noteId: $noteId) {
+      _id
+      postedBy {
+        _id
+        username
+      }
+      comment
+      updatedAt
+    }
+  }
+`;
+
+const DELETE_COMMENT = gql`
+  mutation DeleteComment($commentId: ID!) {
+    deleteComment(commentId: $commentId) {
+      success
+      message
+    }
+  }
+`;
+
 function CommentsWindow() {
-  const [comments, setComments] = useState([]);
-  const [showMyComments, setShowMyComments] = useState(false);
   const { user } = useContext(UserContext);
   const { documentId: noteId } = useParams();
+  const [showMyComments, setShowMyComments] = useState(false);
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await axios.post(
-          import.meta.env.VITE_REACT_APP_GRAPHQL_ENDPOINT,
-          {
-            query: `
-            query GetCommentsByNoteId($noteId: ID!) {
-              getCommentsByNoteId(noteId: $noteId) {
-                _id
-                postedBy {
-                  _id
-                  username
-                }
-                comment
-                updatedAt
-              }
-            }
-          `,
-            variables: { noteId },
-          },
-          {
-            headers: {
-              Authorization: `bearer ${extractTokenFromCookie()}`,
-            },
-          }
-        );
+  const { loading, error, data, refetch } = useQuery(GET_COMMENTS_BY_NOTE_ID, {
+    variables: { noteId },
+    context: {
+      headers: {
+        Authorization: `bearer ${extractTokenFromCookie()}`,
+      },
+    },
+  });
 
-        setComments(response.data.data.getCommentsByNoteId);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
+  const [deleteComment] = useMutation(DELETE_COMMENT, {
+    context: {
+      headers: {
+        Authorization: `bearer ${extractTokenFromCookie()}`,
+      },
+    },
+    onCompleted: () => {
+      refetch();
+    },
+  });
 
-    fetchComments();
-  }, [noteId]);
+  if (loading) {
+    return <p>Loading comments...</p>;
+  }
+
+  if (error) {
+    return <p>Error loading comments: {error.message}</p>;
+  }
+
+  const comments = data.getCommentsByNoteId;
 
   const myComments = comments.filter(
     (comment) => comment.postedBy?._id === user?._id
   );
 
-  const toggleCommentsView = () => {
-    setShowMyComments(!showMyComments);
-  };
-
-  const deleteComment = async (commentId) => {
-    console.log(commentId);
+  const handleDeleteComment = async (commentId) => {
     try {
-      const res = await axios.post(
-        import.meta.env.VITE_REACT_APP_GRAPHQL_ENDPOINT,
-        {
-          query: `#graphql
-          mutation DeleteComment($commentId: ID!) {
-            deleteComment(commentId: $commentId) {
-              success
-              message
-            }
-          }
-        `,
-          variables: { commentId },
-        },
-        {
-          headers: {
-            Authorization: `bearer ${extractTokenFromCookie()}`,
-          },
-        }
-      );
-      console.log(res);
-      if (res.data.data.deleteComment.success)
-        setComments(comments.filter((comment) => comment._id !== commentId));
+      await deleteComment({ variables: { commentId } });
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
   };
 
-  const handleCommentPosted = (newComment) => {
-    setComments([...comments, newComment]);
+  const handleCommentPosted = () => {
+    refetch();
+  };
+
+  const toggleCommentsView = () => {
+    setShowMyComments(!showMyComments);
   };
 
   return (
@@ -110,7 +102,7 @@ function CommentsWindow() {
               <MyComment
                 key={comment._id}
                 comment={comment}
-                deleteComment={deleteComment}
+                deleteComment={handleDeleteComment}
               />
             ))
           ) : (
@@ -122,7 +114,7 @@ function CommentsWindow() {
           ))
         )}
       </div>
-      <CommentInput noteId={noteId} onCommentPosted={handleCommentPosted} />
+      <CommentInput noteId={noteId} handleCommentPosted={handleCommentPosted} />
     </>
   );
 }
