@@ -9,7 +9,10 @@ const path = require("path");
 
 const { initializeSocketIO } = require("./src/socketHandlers/socketConfig");
 const { connectDB } = require("./src/connection/dbConnection");
-const { startApolloServer } = require("./src/graphql/apolloServer");
+const {
+  createApolloServer,
+  startApolloServer,
+} = require("./src/graphql/ApolloServer");
 const { setupCronJobs } = require("./src/utils/cronJobs");
 const { setupMiddlewares } = require("./src/middlewares/setupMiddlewares");
 const { setupRoutes } = require("./src/routes/setupRoutes");
@@ -38,7 +41,8 @@ const io = initializeSocketIO(server);
 setupSockets(io);
 
 // Start Apollo server
-startApolloServer(app, port);
+const apolloServer = createApolloServer(server);
+startApolloServer(apolloServer, app, port);
 
 // Start server
 server.listen(port, () => {
