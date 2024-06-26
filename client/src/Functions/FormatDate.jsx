@@ -1,5 +1,7 @@
 const formatDate = (dateString) => {
-  const date = new Date(Number(dateString));
+  const date = isNaN(dateString)
+    ? new Date(dateString)
+    : new Date(Number(dateString));
   const now = new Date();
 
   const diff = now.getTime() - date.getTime();
