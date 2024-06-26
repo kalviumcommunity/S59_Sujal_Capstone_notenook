@@ -82,10 +82,20 @@ function CommentsWindow() {
 
   const { data: addedCommentData } = useSubscription(COMMENT_ADDED, {
     variables: { noteId },
+    context: {
+      headers: {
+        Authorization: `bearer ${extractTokenFromCookie()}`,
+      },
+    },
   });
 
   const { data: deletedCommentData } = useSubscription(COMMENT_DELETED, {
     variables: { noteId },
+    context: {
+      headers: {
+        Authorization: `bearer ${extractTokenFromCookie()}`,
+      },
+    },
   });
 
   useEffect(() => {

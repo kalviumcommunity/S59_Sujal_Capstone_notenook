@@ -7,6 +7,7 @@ const { useServer } = require("graphql-ws/lib/use/ws");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const { authenticateJWT } = require("../auth/authenticateJWT");
+const { verifyJWT } = require("../auth/verifyJWT");
 
 const { resolvers } = require("./resolvers");
 const { typeDefs } = require("./typeDefs");
@@ -20,6 +21,30 @@ function createApolloServer(server) {
   const serverCleanup = useServer(
     {
       schema,
+      onConnect: async (ctx) => {
+        const cookieHeader = ctx.extra.request.headers.cookie || "";
+        const token = cookieHeader
+          .split("; ")
+          .find((c) => c.startsWith("token="));
+
+        if (!token) {
+          throw new Error("Unauthorized: Missing token");
+        }
+
+        try {
+          const jwtToken = token.split("=")[1];
+          const { userId } = await verifyJWT(jwtToken);
+
+          if (!userId) {
+            throw new Error("Unauthorized: Invalid token");
+          }
+
+          return true;
+        } catch (error) {
+          console.error("Error verifying WebSocket connection:", error);
+          throw new Error("Unauthorized: Failed to verify token");
+        }
+      },
     },
     wsServer
   );
