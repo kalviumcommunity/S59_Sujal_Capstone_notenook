@@ -23,7 +23,12 @@ const typeDefs = `#graphql
 
   type Mutation {
     postComment(noteId: ID!, comment: String!): Comment
-    deleteComment(commentId: ID!): DeleteCommentResponse
+    deleteComment(commentId: ID!, noteId: ID!): DeleteCommentResponse
+  }
+
+  type Subscription {
+    commentAdded(noteId: ID!): Comment
+    commentDeleted(noteId: ID!): DeleteCommentResponse
   }
 `;
 

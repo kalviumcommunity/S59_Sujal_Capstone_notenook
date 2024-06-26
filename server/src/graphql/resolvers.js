@@ -2,12 +2,17 @@ const { NoteModel } = require("../models/NoteModel");
 const { CommentModel } = require("../models/CommentModel");
 const { AuthenticationError } = require("apollo-server-express");
 
+const { PubSub } = require("graphql-subscriptions");
+
+const pubsub = new PubSub();
+
 const resolvers = {
   Query: {
     getCommentsByNoteId: async (_, { noteId }) => {
       try {
         const note = await NoteModel.findById(noteId).populate({
           path: "comments",
+          options: { sort: { createdAt: -1 } },
           populate: {
             path: "postedBy",
             select: "_id username",
@@ -48,9 +53,14 @@ const resolvers = {
         await NoteModel.findByIdAndUpdate(noteId, {
           $push: { comments: savedComment._id },
         });
+
         const populatedComment = await CommentModel.findById(savedComment._id)
           .populate("postedBy", "_id username")
           .exec();
+
+        pubsub.publish(`COMMENT_ADDED_${noteId}`, {
+          commentAdded: populatedComment,
+        });
 
         return populatedComment;
       } catch (error) {
@@ -59,7 +69,7 @@ const resolvers = {
       }
     },
 
-    deleteComment: async (_, { commentId }, { req }) => {
+    deleteComment: async (_, { commentId, noteId }, { req }) => {
       const user = req.user;
       if (!user) {
         throw new AuthenticationError(
@@ -83,6 +93,13 @@ const resolvers = {
 
         await CommentModel.findByIdAndDelete(commentId);
 
+        pubsub.publish(`COMMENT_DELETED_${noteId}`, {
+          commentDeleted: {
+            success: true,
+            message: "Comment deleted successfully",
+          },
+        });
+
         return { success: true, message: "Comment deleted successfully" };
       } catch (error) {
         console.error("Error deleting comment:", error);
@@ -91,6 +108,17 @@ const resolvers = {
           message: "Comment delete unsuccessful",
         };
       }
+    },
+  },
+
+  Subscription: {
+    commentAdded: {
+      subscribe: (_, { noteId }) =>
+        pubsub.asyncIterator(`COMMENT_ADDED_${noteId}`),
+    },
+    commentDeleted: {
+      subscribe: (_, { noteId }) =>
+        pubsub.asyncIterator(`COMMENT_DELETED_${noteId}`),
     },
   },
 };
