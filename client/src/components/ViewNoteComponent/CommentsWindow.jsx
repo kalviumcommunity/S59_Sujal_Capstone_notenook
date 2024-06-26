@@ -1,6 +1,6 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql, useSubscription } from "@apollo/client";
 
 import Comment from "./Comment";
 import MyComment from "./MyComment";
@@ -24,8 +24,31 @@ const GET_COMMENTS_BY_NOTE_ID = gql`
 `;
 
 const DELETE_COMMENT = gql`
-  mutation DeleteComment($commentId: ID!) {
-    deleteComment(commentId: $commentId) {
+  mutation DeleteComment($commentId: ID!, $noteId: ID!) {
+    deleteComment(commentId: $commentId, noteId: $noteId) {
+      success
+      message
+    }
+  }
+`;
+
+const COMMENT_ADDED = gql`
+  subscription CommentAdded($noteId: ID!) {
+    commentAdded(noteId: $noteId) {
+      _id
+      postedBy {
+        _id
+        username
+      }
+      comment
+      updatedAt
+    }
+  }
+`;
+
+const COMMENT_DELETED = gql`
+  subscription CommentDeleted($noteId: ID!) {
+    commentDeleted(noteId: $noteId) {
       success
       message
     }
@@ -57,6 +80,26 @@ function CommentsWindow() {
     },
   });
 
+  const { data: addedCommentData } = useSubscription(COMMENT_ADDED, {
+    variables: { noteId },
+  });
+
+  const { data: deletedCommentData } = useSubscription(COMMENT_DELETED, {
+    variables: { noteId },
+  });
+
+  useEffect(() => {
+    if (addedCommentData) {
+      refetch();
+    }
+  }, [addedCommentData, refetch]);
+
+  useEffect(() => {
+    if (deletedCommentData) {
+      refetch();
+    }
+  }, [deletedCommentData, refetch]);
+
   if (loading) {
     return <p>Loading comments...</p>;
   }
@@ -73,7 +116,7 @@ function CommentsWindow() {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      await deleteComment({ variables: { commentId } });
+      await deleteComment({ variables: { commentId, noteId } });
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
