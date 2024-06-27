@@ -36,15 +36,15 @@ Notenook is a platform designed to help students share notes, engage in discussi
 ### FrontEnd deployed link:
 [Netlify Deployed link](https://notenook.netlify.app/)
 
-# Contributing to Notenook
+## Contributing to Notenook
 
 Thank you for your interest in contributing to Notenook! Please follow these steps:
 
-## Fork the Repository
+### Fork the Repository
 
 Start by forking the [Notenook repository](https://github.com/kalviumcommunity/S59_Sujal_Capstone_notenook) on GitHub. This will create a copy of the repository under your GitHub account.
 
-## Clone Your Fork
+### Clone Your Fork
 
 Clone the repository to your local machine using Git:
 
@@ -53,7 +53,7 @@ git clone https://github.com/<your-username>/S59_Sujal_Capstone_notenook.git
 cd S59_Sujal_Capstone_notenook
 ```
 
-## Install Dependencies
+### Install Dependencies
 
 Make sure you have Node.js and npm installed on your machine. Install project dependencies:
 
@@ -64,11 +64,11 @@ cd ../server
 npm install
 ```
 
-## Set Up Environment Variables
+### Set Up Environment Variables
 
-Create a `.env` file in the root directory based on the provided `.env.example`. Fill in the necessary environment variables in both `client` and `server` directory.
+Create a `.env` files in the `cleint` and the `server` directory based on the provided `.env.example`. Fill in the necessary environment variables in both `client` and `server` directory.
 
-## Submitting Changes
+### Submitting Changes
 
 1. Make your desired changes to the codebase.
 2. Go to your forked repository on GitHub.
