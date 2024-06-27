@@ -8,8 +8,8 @@ const FriendNotification = ({ notification }) => {
       <Link to={`/notenook/viewUser/${notification.relatedUser?._id}`}>
         <div className="info">
           <img src={pic} alt="User avatar" className="avatar" />
-          <div className="message">
-            <p className="username">{notification.relatedUser.username}</p>
+          <div>
+            <p className="username">{notification.relatedUser?.username}</p>
             <p className="updatedDate">{formatDate(notification.createdAt)}</p>
           </div>
         </div>
