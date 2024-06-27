@@ -1,5 +1,4 @@
 const { UserModel } = require("../models/UserModel");
-const { NotificationListModel } = require("../models/NotificationModel");
 const { FriendRequestModel } = require("../models/FriendRequestModel");
 const { validateData } = require("../validation/validator");
 const {
@@ -24,31 +23,6 @@ const getUserDetails = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const notificationList = await NotificationListModel.findOne({
-      user: user._id,
-    })
-      .populate({
-        path: "userNotifications.relatedUser",
-        select: "username",
-      })
-      .populate({
-        path: "postNotifications.relatedUser",
-        select: "username",
-      })
-      .populate({
-        path: "postNotifications.relatedPost",
-        select: "title content",
-      });
-
-    if (notificationList) {
-      notificationList.userNotifications.sort(
-        (a, b) => b.createdAt - a.createdAt
-      );
-      notificationList.postNotifications.sort(
-        (a, b) => b.createdAt - a.createdAt
-      );
-    }
-
     const userData = {
       _id: userWithFriends._id,
       username: userWithFriends.username,
@@ -57,10 +31,6 @@ const getUserDetails = async (req, res) => {
       numberOfNotes: userWithFriends.notes.length,
       numberOfConnections: userWithFriends.friends.length,
       friends: userWithFriends.friends,
-      notifications: notificationList || {
-        userNotifications: [],
-        postNotifications: [],
-      },
     };
 
     return res.status(200).json({ user: userData });
