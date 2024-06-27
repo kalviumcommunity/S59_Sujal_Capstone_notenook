@@ -1,10 +1,10 @@
-const { UserModel } = require("./server/src/models/UserModel");
-const { FriendRequestModel } = require("./server/src/models/FriendRequestModel");
-const { validateData } = require("./server/src/validation/validator");
+const { UserModel } = require("../models/UserModel");
+const { FriendRequestModel } = require("../models/FriendRequestModel");
+const { validateData } = require("../validation/validator");
 const {
   userUpdateJoiSchema,
   passwordUpdateJoiSchema,
-} = require("./server/src/validation/userJoiSchemas");
+} = require("../validation/userJoiSchemas");
 
 // Utility function to handle error responses
 const handleError = (res, error) => {
@@ -12,8 +12,22 @@ const handleError = (res, error) => {
     return res.status(401).json({ message: "Unauthorized access" });
   } else if (error.name === "CastError") {
     return res.status(400).json({ message: "Invalid user ID format" });
+  } else if (error.name === "ValidationError") {
+    return res
+      .status(400)
+      .json({ message: "Validation error", details: error.errors });
+  } else if (error.code && error.code === 11000) {
+    return res
+      .status(409)
+      .json({ message: "Duplicate key error", details: error.keyValue });
   } else {
-    console.error(error);
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code,
+    });
+
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

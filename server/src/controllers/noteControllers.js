@@ -24,7 +24,7 @@ function escapeRegExp(string) {
 }
 
 // Retrieve Note by ID function
-const getNoteById = async (noteId) => {
+const getNoteById = async (noteId, res) => {
   try {
     const note = await NoteModel.findById(noteId);
     if (!note) {
@@ -73,7 +73,7 @@ const addPostedNote = async (req, res) => {
   try {
     const { title, subject, noteId } = req.body;
 
-    const existingNote = await getNoteById(noteId);
+    const existingNote = await getNoteById(noteId, res);
 
     if (existingNote.postedNote) {
       return res.status(400).json({ message: "Note already Posted" });
@@ -106,7 +106,7 @@ const deletePostedNote = async (req, res) => {
   const noteId = req.params.noteId;
 
   try {
-    const note = await getNoteById(noteId);
+    const note = await getNoteById(noteId, res);
 
     const postedNoteId = note.postedNote;
 
@@ -173,7 +173,7 @@ const deleteNote = async (req, res) => {
   try {
     const noteId = req.params.noteId;
 
-    const note = await getNoteById(noteId);
+    const note = await getNoteById(noteId, res);
 
     const postedNoteId = note.postedNote;
 
@@ -298,7 +298,7 @@ const getNote = async (req, res) => {
   try {
     const { documentId } = req.query;
 
-    const note = await getNoteById(documentId);
+    const note = await getNoteById(documentId, res);
 
     const noteData = {
       title: note.title,
@@ -351,7 +351,7 @@ const saveNote = async (req, res) => {
   const noteId = req.params.documentId;
 
   try {
-    const originalNote = await getNoteById(noteId);
+    const originalNote = await getNoteById(noteId, res);
 
     const newNote = new NoteModel({
       postedBy: originalNote.postedBy,
