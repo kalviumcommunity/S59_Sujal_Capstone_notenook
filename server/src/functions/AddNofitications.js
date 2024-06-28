@@ -2,7 +2,13 @@ const mongoose = require("mongoose");
 const { UserModel } = require("../models/UserModel");
 const { NotificationListModel } = require("../models/NotificationModel");
 
-async function addNotification(userId, message, category, relatedUser) {
+async function addNotification(
+  userId,
+  message,
+  category,
+  relatedUser,
+  relatedPost = null
+) {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -24,6 +30,7 @@ async function addNotification(userId, message, category, relatedUser) {
       message,
       category,
       relatedUser,
+      relatedPost,
     };
 
     if (category === "friends") {

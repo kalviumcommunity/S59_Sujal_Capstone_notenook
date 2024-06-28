@@ -17,9 +17,9 @@ const getNotifications = async (req, res) => {
       })
       .populate({
         path: "postNotifications.relatedPost",
-        select: "title content",
+        select: "title",
       });
-
+      
     if (notificationList) {
       notificationList.userNotifications.sort(
         (a, b) => b.createdAt - a.createdAt
