@@ -1,26 +1,31 @@
+import { Link } from "react-router-dom";
 import pic from "../../assets/pic.png";
 import formatDate from "../../Functions/FormatDate";
-import { Link } from "react-router-dom";
+
 const NoteNotification = ({ notification }) => {
+  console.log(notification);
   return (
     <div className="notification">
-      <Link to={`/notenook/viewUser/${notification.user?._id}`}>
+      <Link to={`/notenook/viewUser/${notification.relatedUser?._id}`}>
         <div className="info">
           <img src={pic} alt="User avatar" className="avatar" />
-          <div className="message">
-            <p className="username">{notification.username}</p>
-            <p className="updatedDate">{formatDate(notification.date)}</p>
+          <div>
+            <p className="username">{notification.relatedUser?.username}</p>
+            <p className="updatedDate">{formatDate(notification.createdAt)}</p>
           </div>
         </div>
       </Link>
-      <div className="message">
-        <p>
-          {notification.message}
-          <Link to={`/notenook/viewNote/${notification.note?._id}`}>
-            {notification.note?.name}
-          </Link>
-        </p>
+      <div className="notificationMessage">
+        <p>{notification.message}</p>
       </div>
+      <p className="notificationMessage">
+        commented on:{" "}
+        <span className="font-bold text-green-600">
+          <Link to={`/notenook/viewNote/${notification.relatedPost?._id}`}>
+            {notification.relatedPost?.title}
+          </Link>
+        </span>
+      </p>
     </div>
   );
 };
