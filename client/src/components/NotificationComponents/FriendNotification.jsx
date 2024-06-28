@@ -15,7 +15,7 @@ const FriendNotification = ({ notification }) => {
         </div>
       </Link>
 
-      <div className="message">{notification.message}</div>
+      <div className="notificationMessage">{notification.message}</div>
       <div className="buttons">
         <Link
           to={`/notenook/viewUser/${notification.relatedUser?._id}`}

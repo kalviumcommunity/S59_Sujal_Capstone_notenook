@@ -29,22 +29,20 @@
   overflow-y: scroll;
 }
 
-
-
 .header .notification {
   width: 270px;
 }
 
-.notificationPage .notifications{
+.notificationPage .notifications {
   height: 70vh;
   overflow-y: hidden;
 }
 
-.notificationPage .notifications:hover{
+.notificationPage .notifications:hover {
   overflow-y: scroll;
 }
 
-.notificationPage .notifications .notification{
+.notificationPage .notifications .notification {
   width: 525px;
   max-width: 100%;
 }
@@ -73,7 +71,8 @@
   object-fit: contain;
 }
 
-.message {
+.notificationMessage {
+  font-size: 0.85rem;
   text-align: left;
 }
 
@@ -82,7 +81,7 @@
   font-size: 1rem;
 }
 
-.notification .message {
+.notification .notificationMessage {
   margin-top: 8px;
 }
 
