@@ -1,7 +1,7 @@
 const { UserModel } = require("../models/UserModel");
 const { NoteModel } = require("../models/NoteModel");
 const { PostedNoteModel } = require("../models/PostedNoteModel");
-const mongoose = require("mongoose");
+const { verifyNoteAuthor, isOwner } = require("../utils/verifyNoteAuthor");
 const { validateData } = require("../validation/validator");
 const {
   newNoteJoiSchema,
@@ -21,6 +21,12 @@ const handleInternalError = (res, error, message) => {
 
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function unauthorizedUserError(res) {
+  return res
+    .status(401)
+    .json({ message: "You are not authorized for this action." });
 }
 
 // Retrieve Note by ID function
@@ -75,6 +81,10 @@ const addPostedNote = async (req, res) => {
 
     const existingNote = await getNoteById(noteId, res);
 
+    if (!isOwner(req.user._id, existingNote.postedBy)) {
+      return unauthorizedUserError(res);
+    }
+
     if (existingNote.postedNote) {
       return res.status(400).json({ message: "Note already Posted" });
     }
@@ -114,6 +124,13 @@ const deletePostedNote = async (req, res) => {
       return res.status(400).json({ message: "Note not posted" });
     }
 
+    const postedNote = await PostedNoteModel.findById(postedNoteId).select(
+      "postedBy"
+    );
+    if (!isOwner(req.user._id, postedNote.postedBy)) {
+      return unauthorizedUserError(res);
+    }
+
     await PostedNoteModel.findByIdAndDelete(postedNoteId);
 
     note.postedNote = undefined;
@@ -146,6 +163,11 @@ const updateNote = async (req, res) => {
       return res.status(400).json({ message: validationResult.error });
     }
 
+    const note = await NoteModel.findById(noteId).select("postedBy");
+    if (!isOwner(req.user._id, note.postedBy)) {
+      return unauthorizedUserError(res);
+    }
+
     const updatedNote = await NoteModel.findByIdAndUpdate(
       noteId,
       { title, subject },
@@ -173,7 +195,10 @@ const deleteNote = async (req, res) => {
   try {
     const noteId = req.params.noteId;
 
-    const note = await getNoteById(noteId, res);
+    const note = await NoteModel.findById(noteId).select("postedBy");
+    if (!isOwner(req.user._id, note.postedBy)) {
+      return unauthorizedUserError(res);
+    }
 
     const postedNoteId = note.postedNote;
 
@@ -215,6 +240,11 @@ const updateNoteFileReferences = async (req, res) => {
       });
     }
 
+    const note = await NoteModel.findById(noteId).select("postedBy");
+    if (!isOwner(req.user._id, note.postedBy)) {
+      return unauthorizedUserError(res);
+    }
+
     const updatedNote = await NoteModel.findByIdAndUpdate(
       noteId,
       { fileReference: { fileName, url } },
@@ -239,6 +269,10 @@ const deleteNoteFileReferences = async (req, res) => {
     const noteId = req.params.noteId;
 
     const note = await NoteModel.findById(noteId);
+
+    if (!isOwner(req.user._id, note.postedBy)) {
+      return unauthorizedUserError(res);
+    }
 
     note.fileReference = undefined;
 
