@@ -1,9 +1,6 @@
 function isOwner(userId, postedById) {
-  if (userId.toString() === postedById.toString()) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  const userIdString = String(userId);
+  const postedByIdString = String(postedById);
 
-module.exports = { isOwner };
+  return userIdString === postedByIdString;
+}

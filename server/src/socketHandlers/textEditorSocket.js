@@ -32,9 +32,9 @@ function textEditorSocket(io) {
             await NoteModel.findByIdAndUpdate(documentId, {
               document: data,
             });
+            socket.emit("document-saved", "Document saved successfully");
           } catch (error) {
             console.error("Error saving document:", error.message);
-
             socket.emit("document-save-error", "Error saving document");
           }
         });

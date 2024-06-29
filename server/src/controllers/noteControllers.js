@@ -26,7 +26,7 @@ function escapeRegExp(string) {
 function unauthorizedUserError(res) {
   return res
     .status(401)
-    .json({ message: "You are authorized for this action." });
+    .json({ message: "You are not authorized for this action." });
 }
 
 // Retrieve Note by ID function
