@@ -115,6 +115,7 @@ const getUserDetails = async (req, res) => {
     }
 
     const userData = getUserData(userWithFriends);
+
     return res.status(200).json({ user: userData });
   } catch (error) {
     return handleError(res, error);
