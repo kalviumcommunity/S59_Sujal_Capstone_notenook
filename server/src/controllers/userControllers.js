@@ -6,6 +6,100 @@ const {
   passwordUpdateJoiSchema,
 } = require("../validation/userJoiSchemas");
 
+// Utility function to handle error responses
+const handleError = (res, error) => {
+  if (error.name === "UnauthorizedError") {
+    return res.status(401).json({ message: "Unauthorized access" });
+  } else if (error.name === "CastError") {
+    return res.status(400).json({ message: "Invalid user ID format" });
+  } else if (error.name === "ValidationError") {
+    return res
+      .status(400)
+      .json({ message: "Validation error", details: error.errors });
+  } else if (error.code && error.code === 11000) {
+    return res
+      .status(409)
+      .json({ message: "Duplicate key error", details: error.keyValue });
+  } else {
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code,
+    });
+
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Utility function to find user by ID and populate fields
+const findUserByIdAndPopulate = async (userId) => {
+  return await UserModel.findById(userId)
+    .populate({
+      path: "friends",
+      select: "username",
+    })
+    .populate({
+      path: "notes",
+      select: "title subject updatedAt",
+    })
+    .populate({
+      path: "postedNotes",
+      select: "-postedBy",
+    });
+};
+
+// Utility function to get user data
+const getUserData = (user) => ({
+  _id: user._id,
+  username: user.username,
+  fullname: user.fullname,
+  email: user.email,
+  numberOfNotes: user.notes.length,
+  numberOfConnections: user.friends.length,
+  friends: user.friends,
+  notes: user.notes,
+  postedNotes: user.postedNotes,
+});
+
+// Utility function to check friendship status
+const checkFriendshipStatus = async (authenticatedUserId, userId) => {
+  const friendRequest = await FriendRequestModel.findOne({
+    $or: [
+      { sender: authenticatedUserId, receiver: userId },
+      { sender: userId, receiver: authenticatedUserId },
+    ],
+  });
+
+  let friendshipStatus = "none";
+
+  if (friendRequest) {
+    const requestStatus = friendRequest.status;
+    if (requestStatus === "pending") {
+      if (friendRequest.sender.toString() === authenticatedUserId) {
+        friendshipStatus = "pending";
+      } else if (friendRequest.receiver.toString() === authenticatedUserId) {
+        friendshipStatus = "incoming";
+      }
+    } else if (requestStatus === "accepted") {
+      friendshipStatus = "friends";
+    }
+  } else {
+    const user = await UserModel.findById(userId).populate({
+      path: "friends",
+      select: "_id username",
+    });
+    const areFriends = user.friends.some(
+      (friend) => friend._id.toString() === authenticatedUserId
+    );
+    if (areFriends) {
+      friendshipStatus = "friends";
+    }
+  }
+
+  return { friendshipStatus, friendRequestId: friendRequest?._id };
+};
+
 const getUserDetails = async (req, res) => {
   try {
     const user = req.user;
@@ -14,35 +108,17 @@ const getUserDetails = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const userWithFriends = await UserModel.findById(user._id).populate({
-      path: "friends",
-      select: "username",
-    });
+    const userWithFriends = await findUserByIdAndPopulate(user._id);
 
     if (!userWithFriends) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const userData = {
-      _id: userWithFriends._id,
-      username: userWithFriends.username,
-      fullname: userWithFriends.fullname,
-      email: userWithFriends.email,
-      numberOfNotes: userWithFriends.notes.length,
-      numberOfConnections: userWithFriends.friends.length,
-      friends: userWithFriends.friends,
-    };
+    const userData = getUserData(userWithFriends);
 
     return res.status(200).json({ user: userData });
   } catch (error) {
-    if (error.name === "UnauthorizedError") {
-      return res.status(401).json({ message: "Unauthorized access" });
-    } else if (error.name === "CastError") {
-      return res.status(400).json({ message: "Invalid user ID format" });
-    } else {
-      console.error(error);
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+    return handleError(res, error);
   }
 };
 
@@ -52,46 +128,16 @@ const getMyProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const user = await UserModel.findById(req.user._id)
-      .populate({
-        path: "notes",
-        select: "title subject updatedAt",
-      })
-      .populate({
-        path: "postedNotes",
-        select: "-postedBy",
-      })
-      .populate({
-        path: "friends",
-        select: "username",
-      });
+    const user = await findUserByIdAndPopulate(req.user._id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const userData = {
-      username: user.username,
-      fullname: user.fullname,
-      email: user.email,
-      numberOfNotes: user.notes.length,
-      numberOfPostedNotes: user.postedNotes.length,
-      numberOfConnections: user.friends.length,
-      friends: user.friends,
-      notes: user.notes,
-      postedNotes: user.postedNotes,
-    };
-
+    const userData = getUserData(user);
     return res.status(200).json({ user: userData });
   } catch (error) {
-    if (error.name === "UnauthorizedError") {
-      return res.status(401).json({ message: "Unauthorized access" });
-    } else if (error.name === "CastError") {
-      return res.status(400).json({ message: "Invalid user ID format" });
-    } else {
-      console.error(error);
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+    return handleError(res, error);
   }
 };
 
@@ -100,71 +146,26 @@ const viewUserDetails = async (req, res) => {
     const usrId = req.params.userId;
     const authenticatedUserId = req.user.id;
 
-    const user = await UserModel.findById(usrId)
-      .populate({
-        path: "friends",
-        select: "_id username",
-      })
-      .populate({
-        path: "postedNotes",
-        select: "-postedBy",
-      });
+    const user = await findUserByIdAndPopulate(usrId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const friendRequest = await FriendRequestModel.findOne({
-      $or: [
-        { sender: authenticatedUserId, receiver: usrId },
-        { sender: usrId, receiver: authenticatedUserId },
-      ],
-    });
-
-    let friendshipStatus = "none";
-
-    if (friendRequest) {
-      const requestStatus = friendRequest.status;
-      if (requestStatus === "pending") {
-        if (friendRequest.sender.toString() === authenticatedUserId) {
-          friendshipStatus = "pending";
-        } else if (friendRequest.receiver.toString() === authenticatedUserId) {
-          friendshipStatus = "incoming";
-        }
-      } else if (requestStatus === "accepted") {
-        friendshipStatus = "friends";
-      }
-    } else {
-      const areFriends = user.friends.some(
-        (friend) => friend._id.toString() === authenticatedUserId
-      );
-      if (areFriends) {
-        friendshipStatus = "friends";
-      }
-    }
+    const { friendshipStatus, friendRequestId } = await checkFriendshipStatus(
+      authenticatedUserId,
+      usrId
+    );
 
     const userData = {
-      username: user.username,
-      fullname: user.fullname,
-      email: user.email,
-      numberOfNotes: user.postedNotes.length,
-      numberOfConnections: user.friends.length,
-      friendshipStatus: friendshipStatus,
-      requestId: friendRequest?._id,
-      friends: user.friends,
-      postedNotes: user.postedNotes,
+      ...getUserData(user),
+      friendshipStatus,
+      requestId: friendRequestId,
     };
 
     return res.status(200).json({ user: userData });
   } catch (error) {
-    if (error.name === "UnauthorizedError") {
-      return res.status(401).json({ message: "Unauthorized access" });
-    } else if (error.name === "CastError") {
-      return res.status(400).json({ message: "Invalid user ID format" });
-    } else {
-      console.error(error);
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+    return handleError(res, error);
   }
 };
 

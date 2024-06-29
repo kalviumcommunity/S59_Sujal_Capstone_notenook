@@ -9,41 +9,63 @@ const {
   updateNoteFileReferenceJoiSchema,
 } = require("../validation/noteJoiSchemas");
 
+// Utility Functions
+const handleValidationError = (res, error) => {
+  return res.status(400).json({ message: error });
+};
+
+const handleInternalError = (res, error, message) => {
+  console.error(message, error);
+  return res.status(500).json({ message: "Internal server error" });
+};
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Retrieve Note by ID function
+const getNoteById = async (noteId, res) => {
+  try {
+    const note = await NoteModel.findById(noteId);
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+    return note;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Note Controllers
 const createNewNote = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.user.id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
     const { title, subject } = req.body;
 
     const validationResult = validateData({ title, subject }, newNoteJoiSchema);
 
     if (validationResult.error) {
-      return res
-        .status(400)
-        .json({ message: validationResult.error.details[0].message });
+      return handleValidationError(res, validationResult.error);
     }
 
     const newNote = new NoteModel({
-      postedBy: user._id,
+      postedBy: req.user.id,
       title,
       subject,
     });
 
     const savedNote = await newNote.save();
 
-    user.notes.push(savedNote._id);
+    await UserModel.findByIdAndUpdate(
+      req.user.id,
+      { $addToSet: { notes: savedNote._id } },
+      { new: true }
+    );
 
-    await user.save();
     return res
       .status(201)
       .json({ message: "Note created successfully", note: newNote });
   } catch (error) {
-    console.error("Error creating note:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return handleInternalError(res, error, "Error creating note:");
   }
 };
 
@@ -51,23 +73,14 @@ const addPostedNote = async (req, res) => {
   try {
     const { title, subject, noteId } = req.body;
 
-    if (!title || !subject || !noteId) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
-
-    const existingNote = await NoteModel.findById(noteId);
-    if (!existingNote) {
-      return res.status(404).json({ message: "Note not found" });
-    }
+    const existingNote = await getNoteById(noteId, res);
 
     if (existingNote.postedNote) {
       return res.status(400).json({ message: "Note already Posted" });
     }
 
-    const { _id } = req.user;
-
     const postedNote = new PostedNoteModel({
-      postedBy: _id,
+      postedBy: req.user.id,
       title,
       subject,
       note: noteId,
@@ -78,57 +91,46 @@ const addPostedNote = async (req, res) => {
     await existingNote.save();
 
     await UserModel.findByIdAndUpdate(
-      _id,
+      req.user.id,
       { $addToSet: { postedNotes: postedNote._id } },
       { new: true }
     );
 
     return res.status(201).json({ message: "Posted note added successfully" });
   } catch (error) {
-    console.error("Error adding posted note:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return handleInternalError(res, error, "Error adding posted note:");
   }
 };
 
 const deletePostedNote = async (req, res) => {
-  async (req, res) => {
-    const noteId = req.params.noteId;
+  const noteId = req.params.noteId;
 
-    try {
-      const note = await NoteModel.findById(noteId);
+  try {
+    const note = await getNoteById(noteId, res);
 
-      if (!note) {
-        return res.status(404).json({ message: "Note not found" });
-      }
+    const postedNoteId = note.postedNote;
 
-      const postedNoteId = note.postedNote;
-
-      if (!postedNoteId) {
-        return res.status(400).json({ message: "Note not posted" });
-      }
-
-      await PostedNoteModel.findByIdAndDelete(postedNoteId);
-
-      note.postedNote = undefined;
-      await note.save();
-
-      const user = await UserModel.findById(req.user.id);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      const index = user.postedNotes.indexOf(postedNoteId);
-      if (index !== -1) {
-        user.postedNotes.splice(index, 1);
-      }
-      await user.save();
-
-      res.status(204).json({ message: "Posted note deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting posted note:", error);
-      res.status(500).json({ message: "Internal server error" });
+    if (!postedNoteId) {
+      return res.status(400).json({ message: "Note not posted" });
     }
-  };
+
+    await PostedNoteModel.findByIdAndDelete(postedNoteId);
+
+    note.postedNote = undefined;
+    await note.save();
+
+    const index = req.user.postedNotes.indexOf(postedNoteId);
+    if (index !== -1) {
+      req.user.postedNotes.splice(index, 1);
+    }
+    await req.user.save();
+
+    return res
+      .status(204)
+      .json({ message: "Posted note deleted successfully" });
+  } catch (error) {
+    return handleInternalError(res, error, "Error deleting posted note:");
+  }
 };
 
 const updateNote = async (req, res) => {
@@ -136,28 +138,21 @@ const updateNote = async (req, res) => {
     const { noteId, title, subject } = req.body;
 
     const validationResult = validateData(
-      {
-        title,
-        subject,
-      },
+      { title, subject },
       updateNoteJoiSchema
     );
 
     if (validationResult.error) {
-      return res.status(400).json({ message: validationResult.error.details });
+      return res.status(400).json({ message: validationResult.error });
     }
 
-    if (!noteId) {
-      return res.status(400).json({ error: "Note ID is required" });
-    }
-
-    const note = await NoteModel.findByIdAndUpdate(
+    const updatedNote = await NoteModel.findByIdAndUpdate(
       noteId,
       { title, subject },
       { new: true }
     );
 
-    if (!note) {
+    if (!updatedNote) {
       return res.status(404).json({ error: "Note not found" });
     }
 
@@ -168,10 +163,9 @@ const updateNote = async (req, res) => {
       await postedNote.save();
     }
 
-    res.json({ message: "Note updated successfully", note });
+    res.json({ message: "Note updated successfully", note: updatedNote });
   } catch (error) {
-    console.error("Error updating note:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return handleInternalError(res, error, "Error updating note:");
   }
 };
 
@@ -179,19 +173,7 @@ const deleteNote = async (req, res) => {
   try {
     const noteId = req.params.noteId;
 
-    if (!mongoose.Types.ObjectId.isValid(noteId)) {
-      return res.status(400).json({ error: "Invalid note ID" });
-    }
-
-    const note = await NoteModel.findById(noteId);
-
-    if (!note) {
-      return res.status(404).json({ error: "Note not found" });
-    }
-
-    if (note.postedBy.toString() !== req.user.id) {
-      return res.status(403).json({ error: "Unauthorized access" });
-    }
+    const note = await getNoteById(noteId, res);
 
     const postedNoteId = note.postedNote;
 
@@ -213,8 +195,7 @@ const deleteNote = async (req, res) => {
 
     res.json({ message: "Note deleted successfully" });
   } catch (error) {
-    console.error("Error deleting note:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return handleInternalError(res, error, "Error deleting note:");
   }
 };
 
@@ -234,20 +215,22 @@ const updateNoteFileReferences = async (req, res) => {
       });
     }
 
-    const note = await NoteModel.findByIdAndUpdate(
+    const updatedNote = await NoteModel.findByIdAndUpdate(
       noteId,
       { fileReference: { fileName, url } },
       { new: true }
     );
 
-    if (!note) {
+    if (!updatedNote) {
       return res.status(404).json({ error: "Note not found" });
     }
 
-    res.json({ message: "File references updated successfully", note });
+    res.json({
+      message: "File references updated successfully",
+      note: updatedNote,
+    });
   } catch (error) {
-    console.error("Error updating file references:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return handleInternalError(res, error, "Error updating file references:");
   }
 };
 
@@ -255,15 +238,7 @@ const deleteNoteFileReferences = async (req, res) => {
   try {
     const noteId = req.params.noteId;
 
-    if (!mongoose.Types.ObjectId.isValid(noteId)) {
-      return res.status(400).json({ error: "Invalid note ID" });
-    }
-
     const note = await NoteModel.findById(noteId);
-
-    if (!note) {
-      return res.status(404).json({ error: "Note not found" });
-    }
 
     note.fileReference = undefined;
 
@@ -271,17 +246,14 @@ const deleteNoteFileReferences = async (req, res) => {
 
     res.json({ message: "File references deleted successfully" });
   } catch (error) {
-    console.error("Error deleting file references:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return handleInternalError(res, error, "Error deleting file references:");
   }
 };
 
 const searchNotes = async (req, res) => {
   try {
     const { searchInput } = req.query;
-    function escapeRegExp(string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }
+
     const escapedSearchInput = escapeRegExp(searchInput);
 
     const query = {
@@ -298,8 +270,7 @@ const searchNotes = async (req, res) => {
 
     return res.status(200).json({ notes });
   } catch (error) {
-    console.error("Error searching notes:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return handleInternalError(res, error, "Error searching notes:");
   }
 };
 
@@ -319,8 +290,7 @@ const getNotes = async (req, res) => {
 
     res.json({ notes: UserNotes.notes });
   } catch (error) {
-    console.error("Error fetching notes:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return handleInternalError(res, error, "Error fetching notes:");
   }
 };
 
@@ -328,10 +298,8 @@ const getNote = async (req, res) => {
   try {
     const { documentId } = req.query;
 
-    const note = await NoteModel.findById(documentId);
-    if (!note) {
-      return res.status(404).json({ message: "Note not found" });
-    }
+    const note = await getNoteById(documentId, res);
+
     const noteData = {
       title: note.title,
       subject: note.subject,
@@ -341,8 +309,7 @@ const getNote = async (req, res) => {
 
     res.json({ note: noteData });
   } catch (error) {
-    console.error("Error fetching notes:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return handleInternalError(res, error, "Error fetching notes:");
   }
 };
 
@@ -350,14 +317,6 @@ const viewNote = async (req, res) => {
   try {
     const { documentId } = req.query;
     const userId = req.user._id;
-
-    function isValidDocumentId(documentId) {
-      return mongoose.Types.ObjectId.isValid(documentId);
-    }
-
-    if (!isValidDocumentId(documentId)) {
-      return res.status(400).json({ error: "Invalid documentId format" });
-    }
 
     const note = await NoteModel.findById(documentId).populate({
       path: "postedBy",
@@ -371,6 +330,7 @@ const viewNote = async (req, res) => {
     const isOwner = note.postedBy._id.equals(userId);
 
     let isSaved = false;
+
     if (!isOwner) {
       const user = await UserModel.findById(userId);
       isSaved = user.savedNotes.some(
@@ -382,20 +342,16 @@ const viewNote = async (req, res) => {
 
     res.json({ note, isOwner, isSaved });
   } catch (error) {
-    console.error("Error fetching note:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return handleInternalError(res, error, "Error fetching note:");
   }
 };
 
 const saveNote = async (req, res) => {
   const userId = req.user._id;
   const noteId = req.params.documentId;
-  
+
   try {
-    const originalNote = await NoteModel.findById(noteId);
-    if (!originalNote) {
-      return res.status(404).json({ error: "Note not found" });
-    }
+    const originalNote = await getNoteById(noteId, res);
 
     const newNote = new NoteModel({
       postedBy: originalNote.postedBy,
@@ -420,7 +376,7 @@ const saveNote = async (req, res) => {
     res.status(201).json(savedNewNote);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -429,15 +385,6 @@ const deleteSavedNote = async (req, res) => {
   const noteId = req.params.documentId;
 
   try {
-    if (!mongoose.Types.ObjectId.isValid(noteId)) {
-      return res.status(400).json({ error: "Invalid note ID" });
-    }
-
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
     const savedNoteEntry = user.savedNotes.find(
       (entry) =>
         entry.savedNote.toString() === noteId ||
