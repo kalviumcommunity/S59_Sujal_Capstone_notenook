@@ -6,7 +6,7 @@ const notificationSchema = new Schema({
   read: { type: Boolean, default: false },
   category: { type: String, enum: ["friends", "post"], required: true },
   relatedUser: { type: Schema.Types.ObjectId, ref: "User" },
-  relatedPost: { type: Schema.Types.ObjectId, ref: "PostedNote" },
+  relatedPost: { type: Schema.Types.ObjectId, ref: "Note" },
   createdAt: { type: Date, default: Date.now },
 });
 
