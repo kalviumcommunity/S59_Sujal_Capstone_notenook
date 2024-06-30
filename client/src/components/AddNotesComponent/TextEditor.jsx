@@ -62,6 +62,10 @@ function TextEditor() {
       quill.enable();
     });
 
+    socket.on("authorization-error", (error) => {
+      setLoadingError(error);
+    });
+
     socket.on("document-fetch-error", (errorMessage) => {
       setLoadingError(errorMessage);
     });
