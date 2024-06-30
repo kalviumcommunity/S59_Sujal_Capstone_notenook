@@ -3,7 +3,6 @@ import pic from "../../assets/pic.png";
 import formatDate from "../../Functions/FormatDate";
 
 const NoteNotification = ({ notification }) => {
-  console.log(notification);
   return (
     <div className="notification">
       <Link to={`/notenook/viewUser/${notification.relatedUser?._id}`}>
