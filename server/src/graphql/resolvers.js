@@ -3,6 +3,7 @@ const { CommentModel } = require("../models/CommentModel");
 const { AuthenticationError } = require("apollo-server-express");
 
 const { PubSub } = require("graphql-subscriptions");
+const { addNotification } = require("../functions/AddNofitications");
 
 const pubsub = new PubSub();
 
@@ -50,13 +51,25 @@ const resolvers = {
 
         const savedComment = await newComment.save();
 
-        await NoteModel.findByIdAndUpdate(noteId, {
-          $push: { comments: savedComment._id },
-        });
+        const note = await NoteModel.findByIdAndUpdate(
+          noteId,
+          {
+            $push: { comments: savedComment._id },
+          },
+          { new: true }
+        ).populate("postedBy", "_id");
 
         const populatedComment = await CommentModel.findById(savedComment._id)
           .populate("postedBy", "_id username")
           .exec();
+
+        await addNotification(
+          note.postedBy._id,
+          `Commented: ${comment}`,
+          "post",
+          user._id,
+          noteId
+        );
 
         pubsub.publish(`COMMENT_ADDED_${noteId}`, {
           commentAdded: populatedComment,
