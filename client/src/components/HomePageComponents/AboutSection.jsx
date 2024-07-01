@@ -76,7 +76,7 @@ function AboutSection() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center px-8 mt-8">
+    <div className="flex flex-col items-center justify-center px-8 mt-44 xl:mt-8">
       <h1 className="text-3xl font-bold mb-8 text-center">About Note Nook</h1>
       <motion.div
         ref={ref}

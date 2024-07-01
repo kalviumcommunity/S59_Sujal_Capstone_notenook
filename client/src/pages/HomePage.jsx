@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import "../css/HomePage.css";
 
 import { Separator } from "@radix-ui/react-separator";
@@ -8,8 +9,17 @@ import HomeNavBar from "../components/HomePageComponents/HomeNavBar";
 import AboutSection from "../components/HomePageComponents/AboutSection";
 import HowToGetStarted from "../components/HomePageComponents/HowToGetStarted";
 import HomePageFooter from "../components/HomePageComponents/HomePageFooter";
+import HomePageLoader from "../components/HomePageComponents/HomePageLoader";
+
+import { UserContext } from "../context/userContext";
 
 function HomePage() {
+  const { isFetchingSession } = useContext(UserContext);
+
+  if (isFetchingSession) {
+    return <HomePageLoader />;
+  }
+
   return (
     <div className="overflow-x-hidden pb-24">
       <HomeNavBar />
