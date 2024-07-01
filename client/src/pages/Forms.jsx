@@ -5,7 +5,7 @@ import RegistrationForm from "../components/UserForms/RegistrationForm";
 import LoginForm from "../components/UserForms/LoginForm";
 import OTPVerificationForm from "../components/UserForms/OTPVerificationForm"; 
 
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.svg";
 
 function Forms() {
   const [userData, setUserData] = useState(null);

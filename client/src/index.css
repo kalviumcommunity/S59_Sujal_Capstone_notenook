@@ -8,16 +8,16 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 20 14.3% 4.1%;
+    --card: 20 14% 4%;
+    --card-foreground: 0 0% 100%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 14.3% 4.1%;
     --primary: 47.9 95.8% 53.1%;
     --primary-foreground: 26 83.3% 14.1%;
-    --secondary: 60 4.8% 95.9%;
+    --secondary: #3c310b;
     --secondary-foreground: 24 9.8% 10%;
     --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%;
+    --muted-foreground: 25 5.3% 75%;
     --accent: 60 4.8% 95.9%;
     --accent-foreground: 24 9.8% 10%;
     --destructive: 0 84.2% 60.2%;
@@ -77,12 +77,28 @@ body {
   height: -webkit-fill-available;
 }
 
-.min-height-50 {
-  min-height: 50vh;
+::-webkit-scrollbar {
+  width: 5px;
 }
 
-.min-height-60 {
-  min-height: 60vh;
+::-webkit-scrollbar-track {
+  background: #ffffff00;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(69, 100%, 23%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #eeff00;
+}
+
+.sideImgContainer,
+.sideImg2Container {
+  background: linear-gradient(45deg, #e5ff0005, rgba(251, 255, 0, 0.726));
+  box-shadow: 0 6px 20px 0 rgba(229, 255, 0, 0.19),
+    0 4px 8px 0 rgba(251, 255, 0, 0.5);
 }
 
 .button {
@@ -121,23 +137,6 @@ body {
 .updatedDate {
   font-size: 0.75rem;
   color: #888;
-}
-
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: #ffffff00;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #3dadf827;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #21a2ff81;
 }
 
 .searchBarContainer {
