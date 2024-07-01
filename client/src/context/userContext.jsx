@@ -8,6 +8,8 @@ const UserContext = createContext();
 
 function UserProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [isFetchingSession, setIsFetchingSession] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,10 +26,13 @@ function UserProvider({ children }) {
             },
           }
         );
-        console.log(response);
+
         if (response.status === 200) {
+          setIsUserLoggedIn(true);
+
           if (response.data.newToken) {
             document.cookie = `token=${response.data.newToken}; path=/`;
+
             navigate("/");
           }
         } else {
@@ -36,6 +41,8 @@ function UserProvider({ children }) {
       } catch (error) {
         console.error("Error fetching session:", error);
         navigate("/");
+      } finally {
+        setIsFetchingSession(false)
       }
     };
 
@@ -43,7 +50,15 @@ function UserProvider({ children }) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider
+      value={{
+        user,
+        isUserLoggedIn,
+        setIsUserLoggedIn,
+        setUser,
+        isFetchingSession,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

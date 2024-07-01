@@ -5,14 +5,14 @@ import RegistrationForm from "../components/UserForms/RegistrationForm";
 import LoginForm from "../components/UserForms/LoginForm";
 import OTPVerificationForm from "../components/UserForms/OTPVerificationForm"; 
 
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/logo.svg";
 
 function Forms() {
   const [userData, setUserData] = useState(null);
 
   return (
     <div className="overflow-x-hidden">
-      <div className="flex w-screen justify-between items-center py-4 pl-4 pr-8">
+      <div className="flex w-screen justify-between items-center py-4 p-8">
         <Link to="/">
           <img src={logo} alt="" className="logo h-16 md:h-20 " />
         </Link>

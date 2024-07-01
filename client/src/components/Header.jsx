@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { UserContext } from "../context/userContext";
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/logo.svg";
 import pic from "../assets/pic.png";
 import "../css/Header.css";
 import Notifications from "./NotificationComponents/Notifications";

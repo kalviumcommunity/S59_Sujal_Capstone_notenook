@@ -11,7 +11,7 @@ import googleLogo from "../../assets/googleLogo.png";
 function LoginForm({ setUserData }) {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const { setUser } = useContext(UserContext);
+  const { setUser, setIsUserLoggedIn } = useContext(UserContext);
 
   const {
     register,
@@ -28,7 +28,7 @@ function LoginForm({ setUserData }) {
 
       document.cookie = `token=${res.data.token}; path=/`;
       setUser(res.data.user);
-
+      setIsUserLoggedIn(true);
       navigate("/");
     } catch (error) {
       if (error.response?.status === 403) {
