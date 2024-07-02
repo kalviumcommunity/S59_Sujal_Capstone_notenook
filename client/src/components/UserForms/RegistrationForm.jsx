@@ -1,37 +1,90 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import "../../css/Forms.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import googleLogo from "../../assets/googleLogo.png";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CardContent,
+  CardHeader,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+
+import FormLoader from "./FormLoader";
+import SuccessAlert from "./SuccessAlert";
+import googleLogo from "../../assets/googleLogo.svg";
+
+const formSchema = z
+  .object({
+    username: z
+      .string()
+      .min(3, "Username must be at least 3 characters")
+      .max(30, "Username must be less than 30 characters")
+      .regex(
+        /^[a-zA-Z0-9_-]{3,30}$/,
+        "Can contain only letters, numbers, underscores, and dashes"
+      ),
+    fullname: z.string().min(1, "Enter Full name"),
+    email: z.string().email("Invalid email").min(1, "Enter e-mail"),
+    password: z
+      .string()
+      .min(10, "Password must be at least 10 characters")
+      .regex(
+        /^(?=.*[!@#$%^&*])/,
+        "Password must contain at least one special character"
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 function RegistrationForm({ setUserData }) {
-  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      fullname: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
   const handleFormSubmit = async (data) => {
+    setIsLoading(true);
     try {
       const res = await axios.post(
         import.meta.env.VITE_REACT_APP_USER_REGISTRATION_URL,
         data
       );
       setUserData(res.data);
-      alert("Registration successful!");
-      navigate("/forms/verification");
+      setSuccess(true);
     } catch (error) {
+      console.log(error)
       const errorMessage =
         error.response?.data.message ||
         "Registration failed. Please try again later.";
       setErrorMessage(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -40,127 +93,126 @@ function RegistrationForm({ setUserData }) {
   };
 
   return (
-    <div className="formDiv mb-24 xl:mb-0">
-      <h1>Register Now!</h1>
+    <div className="relative flex flex-col">
+      <SuccessAlert success={success} path={"OTP verification"} />
+      {isLoading && <FormLoader action={"Registering..."} />}
+      <CardHeader className="text-center">
+        <h2 className="text-2xl font-bold">Register</h2>
+        <CardDescription>Register your account to get Started</CardDescription>
+        {errorMessage && (
+          <h2 className="text-lg font-bold text-red-500">{errorMessage}</h2>
+        )}
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleFormSubmit)}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="text-black" />
+                  </FormControl>
+                  <FormDescription>Choose your username.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-      <form
-        onSubmit={handleSubmit(handleFormSubmit)}
-        className="grid form mb-8 xl:mb-0"
-      >
-        {/* username field  */}
-        <div className="field">
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            {...register("username", {
-              required: "Enter username",
-              minLength: {
-                value: 3,
-                message: "username Must be longer than 3 characters",
-              },
-              maxLength: {
-                value: 30,
-                message: "username must be shorter than 30 characters",
-              },
-              pattern: {
-                value: /^[a-zA-Z0-9_-]{3,30}$/,
-                message:
-                  "Can contain only letters, numbers, underscores, and dashes",
-              },
-            })}
-          />
-          <p className="error">{errors.username?.message}</p>
+            <FormField
+              control={form.control}
+              name="fullname"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full name</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="text-black" />
+                  </FormControl>
+                  <FormDescription>Enter your full name.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="md:col-span-2">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="text-black" />
+                    </FormControl>
+                    <FormDescription>Enter your email.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="password" className="text-black" />
+                  </FormControl>
+                  <FormDescription>Enter your password.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="password" className="text-black" />
+                  </FormControl>
+                  <FormDescription>Confirm your password.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="w-full md:col-span-2">
+              Submit
+            </Button>
+          </form>
+        </Form>
+        <div className="relative flex items-center justify-center mt-4">
+          <hr className="absolute left-0 w-1/3 border-t border-gray-300" />
+          <span className="text-gray-300">or</span>
+          <hr className="absolute right-0 w-1/3 border-t border-gray-300" />
         </div>
-
-        {/* last name field  */}
-        <div className="field">
-          <label htmlFor="fullname">Full Name:</label>
-          <input
-            type="text"
-            id="fullname"
-            name="fullname"
-            {...register("fullname", {
-              required: "Enter Full name",
-            })}
-          />
-          <p className="error">{errors.fullname?.message}</p>
+        <div className="flex items-center justify-center mt-4">
+          <Button
+            variant="ghost"
+            className="flex gap-4 py-6"
+            onClick={handleGoogleLogin}
+          >
+            <img src={googleLogo} alt="Google Logo" className="h-10" />
+            <span>Continue with Google</span>
+          </Button>
         </div>
-
-        <div className="field span2">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            {...register("email", {
-              required: "Enter e-mail",
-              pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
-            })}
-          />
-          <p className="error">{errors.email?.message}</p>
-        </div>
-
-        <div className="field">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            {...register("password", {
-              required: "Enter Password",
-              minLength: {
-                value: 10,
-                message: "Passowrd Must be longer than 10 characters",
-              },
-              pattern: {
-                value: /^(?=.*[!@#$%^&*])/,
-                message: "Password must contain at least one special character",
-              },
-            })}
-          />
-          <p className="error">{errors.password?.message}</p>
-        </div>
-
-        <div className="field">
-          <label htmlFor="confirm_password">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            {...register("confirmPassword", {
-              required: "Confirm Your Password",
-              validate: (val) => {
-                return val === watch("password") || "Passwords Don't match";
-              },
-            })}
-          />
-          <p className="error">{errors.confirmPassword?.message}</p>
-        </div>
-        {errorMessage && <p className="error text-center span2">{errorMessage}</p>}
-
-        <button type="submit" className="span2 button">
-          Register
-        </button>
-      </form>
-      <div className="googleLoginButton">
-        or
-        <button className="button" onClick={handleGoogleLogin}>
-          <img src={googleLogo} alt="googleLogo" />
-          Continue With Google
-        </button>
-      </div>
-      <br />
-      <p className="text-center mt-0 xl:mt-4">
-        Already have an account?{" "}
-        {
-          <Link to={"/forms/login"}>
-            {" "}
-            <span className="text-blue-900">Login</span>{" "}
+      </CardContent>
+      <CardFooter className="self-center">
+        Don't have an account?{" "}
+        <Button variant="link">
+          <Link to="/forms/login">
+            <span>Login</span>
           </Link>
-        }
-      </p>
+        </Button>
+      </CardFooter>
     </div>
   );
 }

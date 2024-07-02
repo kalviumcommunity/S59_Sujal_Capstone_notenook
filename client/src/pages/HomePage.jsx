@@ -21,7 +21,7 @@ function HomePage() {
   }
 
   return (
-    <div className="overflow-x-hidden pb-24">
+    <div className="overflow-x-hidden pb-16">
       <HomeNavBar />
       <div className="flex flex-col xl:flex-row gap-12 px-4 xl:px-20 xl:pb-40 pt-20 xl:pt-0 items-center justify-between min-h-[90vh]">
         <WelcomeText />

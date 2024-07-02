@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios"; 
-
+import axios from "axios";
+import { useContext } from "react";
+import { UserContext } from "../../context/userContext";
 import pic from "../../assets/pic.png";
 
 function UserInfo({ userInfo }) {
   const [logoutConfirmation, setLogoutConfirmation] = useState(false);
   const navigate = useNavigate();
+  const { setIsUserLoggedIn } = useContext(UserContext);
 
   const handleLogout = async () => {
     try {
@@ -15,6 +17,7 @@ function UserInfo({ userInfo }) {
       });
       document.cookie =
         "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      setIsUserLoggedIn(false);
       navigate("/forms/login");
     } catch (error) {
       console.error("Error logging out:", error);

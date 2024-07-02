@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardTitle, CardHeader } from "../ui/card";
+import { CardContent, CardTitle, CardHeader } from "../ui/card";
 import { SiTheregister } from "react-icons/si";
 import { MdDashboard } from "react-icons/md";
 import { IoCreate } from "react-icons/io5";

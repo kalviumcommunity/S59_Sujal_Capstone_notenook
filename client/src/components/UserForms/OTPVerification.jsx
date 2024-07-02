@@ -32,9 +32,7 @@ const formSchema = z.object({
 function OTPVerificationForm({ userData }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isResending, setIsResending] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [resendSuccess, setResendSuccess] = useState(false);
 
   const handleFormSubmit = async (data) => {
     setIsLoading(true);
@@ -60,43 +58,16 @@ function OTPVerificationForm({ userData }) {
     }
   };
 
-  const handleResendOTP = async () => {
-    setIsResending(true);
-    setErrorMessage("");
-    setResendSuccess(false);
-    try {
-      const res = await axios.post(
-        import.meta.env.VITE_REACT_APP_RESEND_OTP_URL,
-        {
-          email: userData.email,
-        }
-      );
-      if (res.status === 200) {
-        setResendSuccess(true);
-      } else {
-        setErrorMessage(res.message);
-      }
-    } catch (error) {
-      const errorMessage =
-        error.response?.data.message || "Failed to resend OTP";
-      setErrorMessage(errorMessage);
-    } finally {
-      setIsResending(false);
-    }
-  };
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       otp: "",
     },
   });
-
   return (
     <div className="relative flex flex-col items-center">
-      <SuccessAlert success={success} path={"Login"} />
+      <SuccessAlert success={success} path={"Dashboard"} />
       {isLoading && <FormLoader action={"Verifying OTP..."} />}
-      {isResending && <FormLoader action={"Resending OTP..."} />}
       <CardHeader className="text-center">
         <h2 className="text-2xl font-bold">OTP Verification</h2>
         <CardDescription>
@@ -104,11 +75,6 @@ function OTPVerificationForm({ userData }) {
         </CardDescription>
         {errorMessage && (
           <h2 className="text-lg font-bold text-red-500">{errorMessage}</h2>
-        )}
-        {resendSuccess && (
-          <h2 className="text-lg font-bold text-green-500">
-            OTP sent successfully
-          </h2>
         )}
       </CardHeader>
       <CardContent>
@@ -147,10 +113,7 @@ function OTPVerificationForm({ userData }) {
               )}
             />
             <div className="flex span2 justify-center gap-16">
-              <div
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-secondary-foreground hover:bg-primary/90 h-10 px-4 py-2 cursor-pointer hover:bg-neutral-900"
-                onClick={handleResendOTP}
-              >
+              <div className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-secondary-foreground hover:bg-primary/90 h-10 px-4 py-2 cursor-pointer hover:bg-neutral-900">
                 Resend OTP
               </div>
               <Button type="submit">Verify OTP</Button>
