@@ -1,45 +1,43 @@
 import { useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
-
+import { Button } from "../components/ui/button";
 import RegistrationForm from "../components/UserForms/RegistrationForm";
 import LoginForm from "../components/UserForms/LoginForm";
-import OTPVerificationForm from "../components/UserForms/OTPVerificationForm"; 
-
-import logo from "../assets/logo.svg";
+import OTPVerificationForm from "../components/UserForms/OTPVerificationForm";
+import LoginSideImg from "../components/UserForms/LoginSideImg";
+import RegisterSideImg from "../components/UserForms/RegisterSideImg";
+import OTPSideImg from "../components/UserForms/OTPSideImage";
+import logo from "../assets/logo.png";
 
 function Forms() {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({ email: "test@gmail.com" });
 
   return (
     <div className="overflow-x-hidden">
-      <div className="flex w-screen justify-between items-center py-4 p-8">
+      <div className="flex w-screen justify-between items-center p-8 min-h-[10vh]">
         <Link to="/">
           <img src={logo} alt="" className="logo h-16 md:h-20 " />
         </Link>
 
         <div className="flex justify-between items-center">
           <Link to={"/"}>
-            <button className="button" role="button">
-              Home
-            </button>
+            <Button>Home</Button>
           </Link>
         </div>
       </div>
-
-      <div className="min-height-60 flex flex-col xl:flex-row px-8 items-center justify-center xl:justify-around">
-        <div className="min-height-50 flex flex-col items-center justify-center text-center">
-          <h1 className="text-3xl xl:text-5xl font-bold mb-6">
-            Welcome to notenook!
-          </h1>
-          <h1 className="text-2xl xl:text-4xl font-bold my-4">
-            Share Notes, Connect, and Grow.
-          </h1>
-          <h2 className="text-lg md:text-xl my-4">
-            Organize your thoughts, connect with others, and learn together.
-          </h2>
+      <div className="min-h-[70vh] xl:mt-0 flex flex-col md:flex-row px-8 gap-10 justify-center md:justify-around">
+        <div className="order-2 xl:order-1 hidden xl:block">
+          <Routes>
+            <Route path="/registration" element={<RegisterSideImg />} />
+            <Route path="/login" element={<LoginSideImg />} />
+            <Route
+              path="/verification"
+              element={<OTPSideImg userData={userData} />}
+            />
+          </Routes>
         </div>
 
-        <div>
+        <div className="xl:mt-0 order-1 xl:order-2 w-[500px] max-w-[90vw] self-center">
           <Routes>
             <Route
               path="/registration"

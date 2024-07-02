@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../../context/userContext";
 import { Button } from "../ui/button";
 
-import logo from "../../assets/logo.svg";
+import logo from "../../assets/logo.png";
 
 function HomeNavBar() {
   const { isUserLoggedIn } = useContext(UserContext);
