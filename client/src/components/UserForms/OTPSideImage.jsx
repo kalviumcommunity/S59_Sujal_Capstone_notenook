@@ -27,9 +27,9 @@ function OTPSideImg({ userData }) {
         alt="sideImg"
         className="sideImg relative w-[500px] max-w-[60vw] rounded-[5%]"
       />
-      <Card className="absolute w-96 bottom-4 translate-y-1/2 xl:translate-y-0 xl:-right-8 left-1/2 -translate-x-1/2 xl:translate-x-0">
+      <Card className="absolute bg-[#0C0A09] w-96 bottom-4 translate-y-1/2 xl:translate-y-0 xl:-right-8 left-1/2 -translate-x-1/2 xl:translate-x-0">
         <CardHeader>
-          <CardTitle>Check your mail!</CardTitle>
+          <CardTitle className="text-white">Check your mail!</CardTitle>
           <CardDescription>
             The otp has been mailed to {userData?.email}.
           </CardDescription>

@@ -8,16 +8,16 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
-    --card: 20 14% 4%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 14.3% 4.1%;
     --primary: 47.9 95.8% 53.1%;
     --primary-foreground: 26 83.3% 14.1%;
-    --secondary: #3c310b;
+    --secondary: 60 4.8% 95.9%;
     --secondary-foreground: 24 9.8% 10%;
     --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 75%;
+    --muted-foreground: 25 5.3% 44.7%;
     --accent: 60 4.8% 95.9%;
     --accent-foreground: 24 9.8% 10%;
     --destructive: 0 84.2% 60.2%;
@@ -25,7 +25,7 @@
     --border: 20 5.9% 90%;
     --input: 20 5.9% 90%;
     --ring: 20 14.3% 4.1%;
-    --radius: 0.5rem;
+    --radius: 1rem;
   }
 
   .dark {
@@ -92,97 +92,4 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #eeff00;
-}
-
-.sideImgContainer,
-.sideImg2Container {
-  background: linear-gradient(45deg, #e5ff0005, rgba(251, 255, 0, 0.726));
-  box-shadow: 0 6px 20px 0 rgba(229, 255, 0, 0.19),
-    0 4px 8px 0 rgba(251, 255, 0, 0.5);
-}
-
-.button {
-  align-items: center;
-  background-color: #157ce3;
-  border: 0;
-  border-radius: 100px;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  justify-content: center;
-  overflow: hidden;
-  padding: 8px 15px;
-  text-align: center;
-  touch-action: manipulation;
-  transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s,
-    box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s,
-    color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
-  user-select: none;
-  -webkit-user-select: none;
-  vertical-align: middle;
-}
-
-.button:hover {
-  background-color: #16437e;
-  color: #ffffff;
-}
-
-.button:disabled {
-  background: #09223b;
-  color: rgb(255, 255, 255, 0.7);
-  cursor: not-allowed;
-}
-
-.updatedDate {
-  font-size: 0.75rem;
-  color: #888;
-}
-
-.searchBarContainer {
-  display: flex;
-  background-color: #c6fffc;
-  max-width: 500px;
-  width: 80vw;
-  padding: 0.25rem;
-  border-radius: 34px;
-}
-
-.searchBar {
-  width: 90%;
-  background-color: #c6fffc;
-  outline: none;
-  border-radius: 34px;
-  padding: 0 1rem;
-}
-
-.searchIconContainer {
-  width: 10%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #c6fffc;
-  border-radius: 34px;
-  transition: transform 0.5s ease-in-out;
-  cursor: pointer;
-}
-
-.searchIconContainer:hover {
-  transform: scale(1.1);
-}
-
-.heading {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-@media (max-width: 640px) {
-  .heading {
-    font-size: 1rem;
-  }
-
-  ::-webkit-scrollbar {
-    width: 0px;
-  }
 }

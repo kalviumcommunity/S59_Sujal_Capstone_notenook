@@ -4,3 +4,5 @@ function isOwner(userId, postedById) {
 
   return userIdString === postedByIdString;
 }
+
+module.exports = { isOwner };

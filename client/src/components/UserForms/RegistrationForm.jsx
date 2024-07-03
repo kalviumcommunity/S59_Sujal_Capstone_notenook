@@ -23,7 +23,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 
-import FormLoader from "./FormLoader";
+import FormLoader from "../Loaders/FormLoader";
 import SuccessAlert from "./SuccessAlert";
 import googleLogo from "../../assets/googleLogo.svg";
 

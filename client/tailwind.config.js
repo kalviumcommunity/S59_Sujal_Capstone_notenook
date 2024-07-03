@@ -12,10 +12,6 @@ module.exports = {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-        desktop: "1700px",
-      },
     },
     extend: {
       colors: {
@@ -116,6 +112,9 @@ module.exports = {
         "slide-out-to-top": "slide-out-to-top 0.2s ease-out",
         "zoom-in": "zoom-in 0.2s ease-in",
         "zoom-out": "zoom-out 0.2s ease-out",
+      },
+      screens: {
+        sm: "425px",
       },
     },
   },

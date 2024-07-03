@@ -91,10 +91,10 @@ function AboutSection() {
             variants={itemVariants}
             className="max-w-xs p-4 shadow-lg"
           >
-            <Card className="text-center">
+            <Card className="text-center bg-[#0C0A09]">
               <CardHeader className="flex flex-col items-center">
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <CardTitle className="text-xl font-semibold">
+                <div className="text-4xl mb-4 text-white">{feature.icon}</div>
+                <CardTitle className="text-xl font-semibold text-white">
                   {feature.title}
                 </CardTitle>
               </CardHeader>

@@ -9,7 +9,7 @@ import HomeNavBar from "../components/HomePageComponents/HomeNavBar";
 import AboutSection from "../components/HomePageComponents/AboutSection";
 import HowToGetStarted from "../components/HomePageComponents/HowToGetStarted";
 import HomePageFooter from "../components/HomePageComponents/HomePageFooter";
-import HomePageLoader from "../components/HomePageComponents/HomePageLoader";
+import HomePageLoader from "../components/Loaders/HomePageLoader";
 
 import { UserContext } from "../context/userContext";
 

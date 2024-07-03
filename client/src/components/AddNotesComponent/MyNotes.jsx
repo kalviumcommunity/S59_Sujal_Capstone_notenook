@@ -3,7 +3,7 @@ import { useState } from "react";
 import NewNoteForm from "./NewNoteForm";
 import MyNoteList from "./MyNoteList";
 import SavedList from "./SavedList.jsx";
-import ReviewList from "./ReviewList";
+import ReviewList from "../NoteLists/ReviewList";
 
 function MyNotes() {
   const [postNewNote, setPostNewNote] = useState(false);

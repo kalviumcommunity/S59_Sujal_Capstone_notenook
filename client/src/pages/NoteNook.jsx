@@ -1,13 +1,13 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import { DeviceWidthProvider } from "../context/deviceWidthContext";
 import { NotesProvider } from "../context/notesContext";
 import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 
-import Header from "../components/Header";
+import Header from "../components/HeaderComponents/Header";
 import NavBar from "../components/NavBar";
-import DashBoard from "./NoteNookPages/DashBoard";
+import DashBoard from "../components/DashBoardComponents/DashBoard";
 import SearchNotes from "./NoteNookPages/SearchNotes";
 import SearchUsers from "./NoteNookPages/SearchUsers";
 import AddNotes from "./NoteNookPages/AddNotes";
@@ -16,12 +16,13 @@ import UserProfile from "./NoteNookPages/UserProfile";
 import NotificationPage from "./NoteNookPages/NotificationPage";
 import ViewUser from "./NoteNookPages/ViewUser";
 import ChatPage from "./NoteNookPages/ChatPage";
+import Loader from "../components/Loaders/Loader";
 
 import { UserContext } from "../context/userContext";
 import axios from "axios";
-import "../css/NoteNook.css";
 
 function NoteNook() {
+  const [isFetchingUserData, setIsFetchingUserData] = useState(true);
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   useEffect(() => {
@@ -47,6 +48,8 @@ function NoteNook() {
             "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           navigate("/");
         }
+      } finally {
+        setIsFetchingUserData(false);
       }
     };
 
@@ -59,12 +62,17 @@ function NoteNook() {
   }, []);
 
   return (
-    <div>
+    <div className="relative">
+      {isFetchingUserData && (
+        <div className="fixed top-0 left-0 w-screen h-screen  z-50">
+          <Loader action={"Loading Data..."} />
+        </div>
+      )}
       <NavBar />
       <Header />
       <DeviceWidthProvider>
         <NotesProvider>
-          <div className="noteNook">
+          <div className="noteNook css fixed top-24 overflow-y-scroll left-24 rounded-tl-md bg-muted/5 p-4">
             <Routes>
               <Route path="/dashboard" element={<DashBoard />} />
               <Route path="/notes" element={<SearchNotes />} />

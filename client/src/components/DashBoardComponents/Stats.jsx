@@ -1,36 +1,36 @@
-import React from "react";
-import PeopleIcon from "@mui/icons-material/People";
-import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useContext } from "react";
+
+import { FaNoteSticky } from "react-icons/fa6";
+import { FaUserFriends } from "react-icons/fa";
+
+import { Card, CardTitle } from "../ui/card";
+
 import { UserContext } from "../../context/userContext";
 
 function Stats() {
   const { user } = useContext(UserContext);
 
   return (
-    <div className="stats dashBoardComponent">
-      <h1 className="heading">Stats</h1>
+    <div className="rounded-lg bg-[#09090B] p-6">
+      <h1 className="text-xl font-bold mb-4 text-neutral-400">Stats</h1>
+      <div className="flex gap-4">
+        <Card className="statDiv relative w-full p-4 bg-[#0C0A09] text-white border-neutral-600 border-[0.25px]">
+          <CardTitle className="text-sm lg:text-lg">
+            No. of Connections
+          </CardTitle>
+          <FaUserFriends className="text-yellow-500 absolute bottom-4 right-4 text-base" />
+          <p className="text-base lg:text-lg font-semibold">
+            {user?.numberOfConnections || 0}
+          </p>
+        </Card>
 
-      <div className="flex gap-10">
-        <div className="statDiv">
-          <p>No. of Connections</p>
-          <div>
-            <div className="iconDiv connectionsStat">
-              <PeopleIcon style={{ color: "white" }} fontSize="small" />
-            </div>
-            <span className="statNumber">{user?.numberOfConnections || 0}</span>
-          </div>
-        </div>
-
-        <div className="statDiv">
-          <p>No. of Notes</p>
-          <div>
-            <div className="iconDiv notesStat">
-              <EventNoteIcon style={{ color: "white" }} fontSize="small" />
-            </div>
-            <span className="statNumber">{user?.numberOfNotes || 0}</span>
-          </div>
-        </div>
+        <Card className="statDiv relative w-full p-4 bg-[#0C0A09] text-white border-neutral-600 border-[0.25px]">
+          <CardTitle className="text-sm lg:text-lg">No. of Notes</CardTitle>
+          <FaNoteSticky className="text-yellow-500 absolute bottom-4 right-4 text-base" />
+          <p className="text-base lg:text-lg font-semibold">
+            {user?.numberOfNotes || 0}
+          </p>
+        </Card>
       </div>
     </div>
   );

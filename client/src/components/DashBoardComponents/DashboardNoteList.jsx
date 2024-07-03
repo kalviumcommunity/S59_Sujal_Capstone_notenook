@@ -1,0 +1,23 @@
+import { useContext } from "react";
+
+import DashBoardNote from "../NoteCards/DashboardNote";
+
+import { NotesContext } from "../../context/notesContext";
+
+function DashboardNoteList() {
+  const { notes } = useContext(NotesContext);
+
+  return (
+    <div className="noteList h-full overflow-y-hidden p-4 rounded-lg bg-[#09090B] relative row-span-4">
+      {!notes.length && <p className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] text-sm text-neutral-300 text-center">Your Notes Appear here</p>}
+      <h1 className="text-xl font-bold mb-4 text-neutral-400">My Notes</h1>
+
+      <div className="h-[94%] max-w-[90vw] overflow-y-scroll px-2 grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]  auto-rows-min gap-2 min-h-[300px]">
+        {notes.length !== 0 &&
+          notes.map((note) => <DashBoardNote note={note} key={note._id} />)}
+      </div>
+    </div>
+  );
+}
+
+export default DashboardNoteList;
