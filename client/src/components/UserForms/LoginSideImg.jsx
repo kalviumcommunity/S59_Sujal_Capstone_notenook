@@ -35,9 +35,9 @@ function LoginSideImg() {
         alt="sideImg"
         className="sideImg relative w-[500px] max-w-[60vw] rounded-[5%]"
       />
-      <Card className="absolute w-96 -bottom-12 translate-y-1/2 xl:translate-y-0 xl:-right-8 left-1/2 -translate-x-1/2 xl:translate-x-0">
+      <Card className="absolute bg-[#0C0A09] w-96 -bottom-12 translate-y-1/2 xl:translate-y-0 xl:-right-8 left-1/2 -translate-x-1/2 xl:translate-x-0">
         <CardHeader>
-          <CardTitle>Login and Get started!</CardTitle>
+          <CardTitle className="text-white">Login and Get started!</CardTitle>
           <CardDescription>
             Don't have an account? Lets register!
           </CardDescription>

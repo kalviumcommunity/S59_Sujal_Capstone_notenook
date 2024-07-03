@@ -39,9 +39,9 @@ function SideImage() {
         alt="sideImg"
         className="sideImg relative w-[500px] max-w-[70vw] rounded-[50%]"
       />
-      <Card className="absolute w-72 bottom-0 translate-y-1/2 xl:translate-y-0 xl:-left-8 left-1/2 -translate-x-1/2 xl:translate-x-0">
+      <Card className="absolute bg-[#0C0A09] w-72 bottom-0 translate-y-1/2 xl:translate-y-0 xl:-left-8 left-1/2 -translate-x-1/2 xl:translate-x-0">
         <CardHeader>
-          <CardTitle>Get Learning</CardTitle>
+          <CardTitle className="text-white">Get Learning</CardTitle>
           <CardDescription>Make notes, share, grow</CardDescription>
         </CardHeader>
         <CardContent>

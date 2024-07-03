@@ -25,7 +25,7 @@ import {
 
 import { UserContext } from "../../context/userContext";
 import SuccessAlert from "./SuccessAlert";
-import FormLoader from "./FormLoader";
+import FormLoader from "../Loaders/FormLoader";
 import googleLogo from "../../assets/googleLogo.svg";
 
 const formSchema = z.object({

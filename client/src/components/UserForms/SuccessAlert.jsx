@@ -43,7 +43,7 @@ function SuccessAlert({ success, path }) {
 
   return (
     <AlertDialog open={success}>
-      <AlertDialogContent className="w-[500px] max-w-[90vw] rounded-md bg-card border-none">
+      <AlertDialogContent className="w-[500px] max-w-[90vw] rounded-md bg-[#0C0A09] border-none">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>

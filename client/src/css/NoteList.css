@@ -17,12 +17,6 @@
   justify-content: center;
 }
 
-.noteList {
-  padding: 1rem;
-  border-radius: 5px;
-  background-color: #e1ffe2;
-}
-
 .myNote .lable,
 .note .lable {
   color: #575757;

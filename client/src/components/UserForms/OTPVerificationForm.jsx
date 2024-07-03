@@ -21,7 +21,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import SuccessAlert from "./SuccessAlert";
-import FormLoader from "./FormLoader";
+import FormLoader from "../Loaders/FormLoader";
 
 const formSchema = z.object({
   otp: z.string().min(4, {
@@ -37,6 +37,7 @@ function OTPVerificationForm({ userData }) {
   const [resendSuccess, setResendSuccess] = useState(false);
 
   const handleFormSubmit = async (data) => {
+    setResendSuccess(false);
     setIsLoading(true);
     try {
       const res = await axios.post(

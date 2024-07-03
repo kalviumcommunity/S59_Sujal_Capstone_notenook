@@ -1,0 +1,176 @@
+.noteNook {
+  height: calc(100vh - 6rem);
+  width: calc(100vw - 6rem);
+}
+
+.dashBoardPage {
+  height: calc(100vh - 8rem);
+}
+
+.dashBoard {
+  height: calc(100vh - 8rem);
+}
+
+.dashBoardPage ::-webkit-scrollbar-thumb {
+  visibility: hidden;
+}
+
+.dashBoardPage :hover::-webkit-scrollbar-thumb {
+  visibility: visible;
+}
+
+@media (min-height: 760px) and (min-width: 768px) {
+  .navBar.css {
+    top: 100px;
+    padding: 0;
+    bottom: auto;
+    padding-top: 100px;
+    flex-direction: row;
+    width: 6rem;
+  }
+
+  .navButtons.css {
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+  }
+
+  .navButton {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 768px), (max-height: 760px) {
+  .noteNook.css {
+    top: 5rem;
+    left: 0px;
+    border-radius: 0px;
+    height: calc(100vh - 9rem);
+    width: 100vw;
+    padding: 1rem;
+  }
+}
+
+.sideImgContainer,
+.sideImg2Container {
+  background: linear-gradient(45deg, #e5ff0005, rgba(251, 255, 0, 0.726));
+  box-shadow: 0 6px 20px 0 rgba(229, 255, 0, 0.19),
+    0 4px 8px 0 rgba(251, 255, 0, 0.5);
+}
+
+/*PROBABLY GONNA REMOVE*/
+
+.profileContent .connectionUsername {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 300px;
+  max-width: 40vw;
+  overflow: hidden;
+}
+
+.button.viewProfile {
+  background-color: #03b4ab;
+  font-size: 12px;
+}
+
+.button.viewProfile:hover {
+  background-color: #00817b;
+}
+
+.profileContent .myNotes {
+  display: block;
+  height: auto;
+  overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .connectionList {
+    width: 95%;
+  }
+}
+
+.button {
+  align-items: center;
+  background-color: #157ce3;
+  border: 0;
+  border-radius: 100px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  justify-content: center;
+  overflow: hidden;
+  padding: 8px 15px;
+  text-align: center;
+  touch-action: manipulation;
+  transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s,
+    box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s,
+    color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+}
+
+.button:hover {
+  background-color: #16437e;
+  color: #ffffff;
+}
+
+.button:disabled {
+  background: #09223b;
+  color: rgb(255, 255, 255, 0.7);
+  cursor: not-allowed;
+}
+
+.updatedDate {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.searchBarContainer {
+  display: flex;
+  background-color: #c6fffc;
+  max-width: 500px;
+  width: 80vw;
+  padding: 0.25rem;
+  border-radius: 34px;
+}
+
+.searchBar {
+  width: 90%;
+  background-color: #c6fffc;
+  outline: none;
+  border-radius: 34px;
+  padding: 0 1rem;
+}
+
+.searchIconContainer {
+  width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #c6fffc;
+  border-radius: 34px;
+  transition: transform 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.searchIconContainer:hover {
+  transform: scale(1.1);
+}
+
+.heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .heading {
+    font-size: 1rem;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+}
