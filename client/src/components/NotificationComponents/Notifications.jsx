@@ -1,12 +1,12 @@
-import { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import CircularProgress from "@mui/material/CircularProgress";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import CircularProgress from "@mui/material/CircularProgress";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import { UserContext } from "../../context/userContext";
 import FriendNotification from "./FriendNotification";
 import NoteNotification from "./NoteNotification";
-import { UserContext } from "../../context/userContext";
-import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 function Notifications() {
   const { user, setUser } = useContext(UserContext);
@@ -53,7 +53,7 @@ function Notifications() {
   };
 
   useEffect(() => {
-    if (!user.notifications) {
+    if (!user?.notifications) {
       fetchNotifications();
     } else {
       setFriendNotifications(user.notifications.userNotifications);

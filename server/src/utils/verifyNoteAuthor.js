@@ -6,3 +6,4 @@ function isOwner(userId, postedById) {
 }
 
 module.exports = { isOwner };
+
