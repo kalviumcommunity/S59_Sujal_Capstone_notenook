@@ -77,19 +77,8 @@ body {
   height: -webkit-fill-available;
 }
 
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: #ffffff00;
-}
-
-::-webkit-scrollbar-thumb {
-  background: hsl(69, 100%, 23%);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #eeff00;
+@media (max-width: 640px) {
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
 }

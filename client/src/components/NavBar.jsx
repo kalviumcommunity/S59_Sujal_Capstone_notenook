@@ -20,7 +20,7 @@ const getClassNames = (isActive, baseClasses, activeClasses, hoverClasses) => {
 const NavBar = () => {
   return (
     <TooltipProvider>
-      <div className="navBar css fixed bottom-0 w-screen flex justify-center items-center p-2 z-10 h-14 md:h-auto">
+      <div className="navBar bg-[#09090b] css fixed bottom-0 w-screen flex justify-center items-center p-2 z-10 h-14 md:h-auto">
         <div className="navButtons css flex w-full flex-row justify-evenly items-center">
           <Tooltip>
             <TooltipTrigger>

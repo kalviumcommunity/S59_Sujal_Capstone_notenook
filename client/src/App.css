@@ -4,11 +4,11 @@
 }
 
 .dashBoardPage {
-  height: calc(100vh - 8rem);
+  height: calc(100vh - 8.5rem);
 }
 
 .dashBoard {
-  height: calc(100vh - 8rem);
+  height: calc(100vh - 8.5rem);
 }
 
 .dashBoardPage ::-webkit-scrollbar-thumb {
@@ -49,6 +49,9 @@
     width: 100vw;
     padding: 1rem;
   }
+  .dashBoard {
+    padding-bottom: 3.5rem;
+  }
 }
 
 .sideImgContainer,
@@ -56,6 +59,23 @@
   background: linear-gradient(45deg, #e5ff0005, rgba(251, 255, 0, 0.726));
   box-shadow: 0 6px 20px 0 rgba(229, 255, 0, 0.19),
     0 4px 8px 0 rgba(251, 255, 0, 0.5);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff00;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(69, 100%, 23%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #eeff00;
 }
 
 /*PROBABLY GONNA REMOVE*/
@@ -163,14 +183,4 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
-}
-
-@media (max-width: 640px) {
-  .heading {
-    font-size: 1rem;
-  }
-
-  ::-webkit-scrollbar {
-    width: 0px;
-  }
 }
