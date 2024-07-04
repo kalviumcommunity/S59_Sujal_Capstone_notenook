@@ -18,7 +18,7 @@ function HeaderProfile() {
       >
         <Avatar>
           <AvatarImage src={pic} />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>P</AvatarFallback>
         </Avatar>
         <p className="text-sm md:text-base w-[70px] overflow-hidden whitespace-nowrap text-ellipsis">
           {user?.username}

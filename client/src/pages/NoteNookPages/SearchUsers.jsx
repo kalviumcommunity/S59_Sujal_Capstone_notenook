@@ -1,25 +1,36 @@
 import { useState, useContext } from "react";
-
 import axios from "axios";
-import SearchIcon from "@mui/icons-material/Search";
+import { v4 as uuidv4 } from "uuid";
+
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+
+import { IoIosSearch } from "react-icons/io";
 
 import { DeviceWidthContext } from "../../context/deviceWidthContext";
+
 import Connections from "../../components/Connections";
 import UserResult from "../../components/SearchUsersComponents/UserResult";
-
+import Loader from "../../components/Loaders/Loader";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-import "../../css/Search.css";
-
 
 function SearchUsers() {
-  const width = useContext(DeviceWidthContext);
+  const [searchResults, setSearchResults] = useState(null);
+  const [error, setError] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchingUsers, setSearchingUsers] = useState(false);
+
+  const width = useContext(DeviceWidthContext);
 
   const handleSearch = async () => {
-    const token = extractTokenFromCookie();
-    if (token) {
-      try {
+    if (searchInput === "") {
+      return;
+    }
+    setSearchResults(null);
+    setSearchingUsers(true);
+    try {
+      const token = extractTokenFromCookie();
+      if (token) {
         const response = await axios.get(
           `${
             import.meta.env.VITE_REACT_APP_SEARCH_USERS_ENDPOINT
@@ -33,48 +44,64 @@ function SearchUsers() {
         );
 
         setSearchResults(response.data.users);
-      } catch (error) {
-        console.error("Error searching users:", error);
+        setError(null);
       }
+    } catch (error) {
+      console.error("Error searching notes:", error);
+      setError("An error occurred while searching notes. Please try again.");
+    } finally {
+      setSearchingUsers(false);
     }
   };
 
-  const handleInputChange = (e) => {
-    setSearchInput(e.target.value);
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
       handleSearch();
     }
   };
 
   return (
-    <div className="searchUsersPage">
-      <div className="searchUser">
-        <div className="searchBarContainer">
-          <input
-            className="searchBar"
-            type="search"
+    <div className="searchNotesPage page css scrollHidden grid grid-cols-1 lg:grid-cols-[1fr_325px] gap-4">
+      <div className="searchNote page css flex flex-col items-center gap-6">
+        <div className="flex w-full max-w-sm items-center space-x-2 min-h-fit h-[5%]">
+          <Input
+            type="text"
+            placeholder="Search for notes..."
+            className="text-black"
             value={searchInput}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyPress}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
-          <div className="searchIconContainer" onClick={handleSearch}>
-            <SearchIcon
-              className="searchIcon"
-              fontSize="large"
-              style={{ color: "#0099ff" }}
-            />
-          </div>
+          <Button type="button" onClick={handleSearch}>
+            <IoIosSearch className="text-2xl" />
+          </Button>
         </div>
-        <div className="searchUsersResultContainer">
-          {searchResults.map((user) => (
-            <UserResult user={user} key={user._id}/>
-          ))}
+
+        <div className="p-4 relative w-full max-w-[90vw] h-[95%] overflow-y-scroll grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,400px))] justify-center gap-10 gap-y-0 auto-rows-min">
+          {searchingUsers && <Loader action={"Searching For Users..."} />}
+          {error && !searchingUsers && (
+            <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-base text-red-500 font-bold text-centeror">
+              {error}
+            </p>
+          )}
+          {searchResults && searchResults.length === 0 && (
+            <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-sm text-neutral-300 text-center">
+              No Users found
+            </p>
+          )}
+          {!searchResults && !error && !searchingUsers && (
+            <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-sm text-neutral-300 text-center z-0">
+              Search Users to form Connections
+            </p>
+          )}
+          {searchResults &&
+            searchResults.map((result) => {
+              return <UserResult key={uuidv4()} user={result} />;
+            })}
         </div>
       </div>
-      {width >= 1200 && <Connections />}
+      {width > 1024 && <Connections />}
     </div>
   );
 }

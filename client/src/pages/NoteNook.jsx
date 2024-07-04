@@ -7,7 +7,7 @@ import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 
 import Header from "../components/HeaderComponents/Header";
 import NavBar from "../components/NavBar";
-import DashBoard from "../components/DashBoardComponents/DashBoard";
+import DashBoard from "./NoteNookPages/DashBoard";
 import SearchNotes from "./NoteNookPages/SearchNotes";
 import SearchUsers from "./NoteNookPages/SearchUsers";
 import AddNotes from "./NoteNookPages/AddNotes";
@@ -62,9 +62,9 @@ function NoteNook() {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="fixed top-0 left-0 h-screen w-screen overflow-hidden">
       {isFetchingUserData && (
-        <div className="fixed top-0 left-0 w-screen h-screen  z-50">
+        <div className="fixed top-0 left-0 w-screen h-screen z-50 bg-[#09090b]">
           <Loader action={"Loading Data..."} />
         </div>
       )}

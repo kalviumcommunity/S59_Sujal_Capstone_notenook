@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 
 import formatDate from "../../Functions/FormatDate";
 
-function DashBoardNote({ note }) {
+function Note({ note }) {
   return (
     <Card className="mb-2 bg-[#0C0A09] text-white border-neutral-600 border-[0.25px]">
       <CardHeader className="p-4">
@@ -33,4 +33,4 @@ function DashBoardNote({ note }) {
   );
 }
 
-export default DashBoardNote;
+export default Note;

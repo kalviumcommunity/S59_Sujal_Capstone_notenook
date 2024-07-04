@@ -67,14 +67,10 @@
   font-family: poppins;
 }
 
-html {
-  height: -webkit-fill-available;
-}
-
 body {
   background-color: #09090b;
+  position: relative;
   color: white;
-  height: -webkit-fill-available;
 }
 
 @media (max-width: 640px) {

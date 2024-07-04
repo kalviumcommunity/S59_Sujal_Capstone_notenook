@@ -4,11 +4,11 @@ import Note from "../NoteCards/Note";
 
 import { NotesContext } from "../../context/notesContext";
 
-function DashboardNoteList() {
+function NoteList() {
   const { notes } = useContext(NotesContext);
 
   return (
-    <div className="noteList h-full overflow-y-hidden p-4 rounded-lg bg-[#09090B] relative row-span-4">
+    <div className="noteList h-full overflow-y-hidden p-4 rounded-lg bg-[#09090B] relative">
       {!notes.length && (
         <p className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] text-sm text-neutral-300 text-center">
           Your Notes Appear here
@@ -24,4 +24,4 @@ function DashboardNoteList() {
   );
 }
 
-export default DashboardNoteList;
+export default NoteList;

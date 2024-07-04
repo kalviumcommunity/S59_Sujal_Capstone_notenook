@@ -3,19 +3,21 @@
   width: calc(100vw - 6rem);
 }
 
-.dashBoardPage {
-  height: calc(100vh - 8.5rem);
+.dashBoardPage,
+.searchNotesPage {
+  height: calc(100vh - 8rem);
 }
 
-.dashBoard {
-  height: calc(100vh - 8.5rem);
+.dashBoard,
+.searchNote {
+  height: calc(100vh - 8rem);
 }
 
-.dashBoardPage ::-webkit-scrollbar-thumb {
+.scrollHidden ::-webkit-scrollbar-thumb {
   visibility: hidden;
 }
 
-.dashBoardPage :hover::-webkit-scrollbar-thumb {
+.scrollHidden :hover::-webkit-scrollbar-thumb {
   visibility: visible;
 }
 
@@ -34,10 +36,6 @@
     gap: 50px;
     align-items: center;
   }
-
-  .navButton {
-    padding: 0.5rem;
-  }
 }
 
 @media (max-width: 768px), (max-height: 760px) {
@@ -49,8 +47,8 @@
     width: 100vw;
     padding: 1rem;
   }
-  .dashBoard {
-    padding-bottom: 3.5rem;
+  .page {
+    height: calc(100vh - 11rem);
   }
 }
 

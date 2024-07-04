@@ -1,6 +1,6 @@
 function Loader({ action }) {
   return (
-    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-[#09090b]">
+    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
       <style>
         {`
           .custom-loader {

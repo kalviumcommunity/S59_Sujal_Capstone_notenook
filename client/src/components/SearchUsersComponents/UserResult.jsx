@@ -1,23 +1,38 @@
-import pic from "../../assets/pic.png";
 import { Link } from "react-router-dom";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import pic from "../../assets/pic.png";
+
 function UserResult({ user }) {
   return (
-    <div className="searchUserResult">
-      <div className="userResult">
-        <Link to={`/notenook/viewUser/${user._id}`}>
-          <div className="userInfo">
-            <img src={pic} alt={`${user.username}'s profile picture`} />
-            <div className="userDetail">
-              <p className="username">{user.username}</p>
-              <p className="fullname">{user.fullname}</p>
-            </div>
+    <Card className="mb-4 bg-[#0C0A09] text-white border-neutral-600 border-[0.25px] rounded-lg overflow-hidden shadow-lg">
+      <CardHeader className="p-4 pb-0">
+        <Link
+          to={`/notenook/viewUser/${user._id}`}
+          className="flex items-center space-x-4"
+        >
+          <Avatar className="w-12 h-12">
+            <AvatarImage src={pic} alt={`${user.username}'s avatar`} />
+            <AvatarFallback>{user.username.substring(0, 2)}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <p className="font-semibold">{user.username}</p>
+            <p className="text-sm text-neutral-400">{user.fullname}</p>
           </div>
         </Link>
-        <Link to={`/notenook/viewUser/${user._id}`} className="addFriend">
-          <button className="addFriend button">View Profile</button>
-        </Link>
-      </div>
-    </div>
+      </CardHeader>
+      <CardContent className="p-4">
+        <div className="flex justify-end">
+          <Link to={`/notenook/viewUser/${user._id}`}>
+            <Button className="text-xs">
+              View Profile
+            </Button>
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
