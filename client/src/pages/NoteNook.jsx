@@ -62,7 +62,7 @@ function NoteNook() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 h-screen w-screen overflow-hidden">
+    <div className="viewport fixed top-0 left-0 h-screen w-screen overflow-hidden">
       {isFetchingUserData && (
         <div className="fixed top-0 left-0 w-screen h-screen z-50 bg-[#09090b]">
           <Loader action={"Loading Data..."} />

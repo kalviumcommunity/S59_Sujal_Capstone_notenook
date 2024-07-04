@@ -77,4 +77,7 @@ body {
   ::-webkit-scrollbar {
     width: 0px;
   }
+  .viewport::-webkit-scrollbar{
+    width: 10px;
+  }
 }
