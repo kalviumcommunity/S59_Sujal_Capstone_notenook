@@ -17,6 +17,7 @@ import NotificationPage from "./NoteNookPages/NotificationPage";
 import ViewUser from "./NoteNookPages/ViewUser";
 import ChatPage from "./NoteNookPages/ChatPage";
 import Loader from "../components/Loaders/Loader";
+import PhoneNavBar from "../components/PhoneNavBar";
 
 import { UserContext } from "../context/userContext";
 import axios from "axios";
@@ -69,6 +70,7 @@ function NoteNook() {
         </div>
       )}
       <NavBar />
+      <PhoneNavBar />
       <Header />
       <DeviceWidthProvider>
         <NotesProvider>

@@ -21,8 +21,17 @@
   visibility: visible;
 }
 
+.navBar.css {
+  display: none;
+}
+
+.phoneNavBar {
+  display: flex;
+}
+
 @media (min-height: 760px) and (min-width: 768px) {
   .navBar.css {
+    display: block;
     top: 100px;
     padding: 0;
     bottom: auto;
@@ -36,6 +45,10 @@
     gap: 50px;
     align-items: center;
   }
+
+  .phoneNavBar {
+    display: none;
+  }
 }
 
 @media (max-width: 768px), (max-height: 760px) {
@@ -43,12 +56,8 @@
     top: 5rem;
     left: 0px;
     border-radius: 0px;
-    height: calc(100vh - 9rem);
     width: 100vw;
     padding: 1rem;
-  }
-  .page {
-    height: calc(100vh - 11rem);
   }
 }
 
