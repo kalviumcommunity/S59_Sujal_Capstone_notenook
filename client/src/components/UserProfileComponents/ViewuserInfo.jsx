@@ -179,8 +179,6 @@ function ViewUserInfo({ userInfo, setUserInfo }) {
           </>
         )}
       </div>
-
-      <br />
     </div>
   );
 }
