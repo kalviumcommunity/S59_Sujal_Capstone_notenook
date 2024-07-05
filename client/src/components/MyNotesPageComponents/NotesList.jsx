@@ -15,7 +15,7 @@ function NotesList() {
       <div className="h-32">
         <div className="flex w-full justify-between p-4">
           <h1 className="heading">My Notes</h1>
-          <Link to="/createNote">
+          <Link to="createNote">
             <Button>
               New Note{" "}
               <span>

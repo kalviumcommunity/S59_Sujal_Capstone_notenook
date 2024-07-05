@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import { Button } from "../components/ui/button";
-import RegistrationForm from "../components/UserForms/RegistrationForm";
-import LoginForm from "../components/UserForms/LoginForm";
-import OTPVerificationForm from "../components/UserForms/OTPVerificationForm";
-import LoginSideImg from "../components/UserForms/LoginSideImg";
-import RegisterSideImg from "../components/UserForms/RegisterSideImg";
-import OTPSideImg from "../components/UserForms/OTPSideImage";
+import RegistrationForm from "../components/Forms/RegistrationForm";
+import LoginForm from "../components/Forms/LoginForm";
+import OTPVerificationForm from "../components/Forms/OTPVerificationForm";
+import LoginSideImg from "../components/SideImages/LoginSideImg";
+import RegisterSideImg from "../components/SideImages/RegisterSideImg";
+import OTPSideImg from "../components/SideImages/OTPSideImage";
 import logo from "../assets/logo.png";
 
 function Forms() {

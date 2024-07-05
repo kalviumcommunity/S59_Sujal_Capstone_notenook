@@ -65,6 +65,10 @@
     0 4px 8px 0 rgba(251, 255, 0, 0.5);
 }
 
+.createNoteSideImg {
+  box-shadow: 0 0 20px 5px #EEA942;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }
