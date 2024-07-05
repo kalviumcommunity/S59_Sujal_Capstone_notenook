@@ -506,6 +506,38 @@ const getSavedNotes = async (req, res) => {
   }
 };
 
+const getPostedNotes = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await UserModel.findById(userId).populate({
+      path: "postedNotes",
+      select: "_id title subject",
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const savedNotes = user.savedNotes.map((entry) => ({
+      _id: entry._id,
+      originalNote: entry.originalNote,
+      savedNote: {
+        _id: entry.savedNote._id,
+        title: entry.savedNote.title,
+        subject: entry.savedNote.subject,
+        markedForReview: entry.savedNote.markedForReview,
+        createdAt: entry.savedNote.createdAt,
+      },
+    }));
+
+    res.status(200).json({ savedNotes });
+  } catch (error) {
+    console.error("Error fetching saved notes:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 const markNoteForReview = async (req, res) => {
   const userId = req.user._id;
   const { documentId } = req.params;
@@ -579,6 +611,7 @@ module.exports = {
   saveNote,
   deleteSavedNote,
   getSavedNotes,
+  getPostedNotes,
   markNoteForReview,
   unmarkNoteForReview,
 };

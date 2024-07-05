@@ -7,6 +7,7 @@ const NotesContext = createContext();
 function NotesProvider({ children }) {
   const [notes, setNotes] = useState([]);
   const [savedNotes, setSavedNotes] = useState([]);
+  const [postedNotes, setPostedNotes] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -53,10 +54,32 @@ function NotesProvider({ children }) {
       }
     };
 
+    const fetchPostedNotes = async (token) => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `${import.meta.env.VITE_REACT_APP_GET_POSTED_NOTES_ENDPOINT}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setPostedNotes(response.data.postedNotes);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching notes:", error);
+        setError("Failed to fetch posted notes. Please try again.");
+        setLoading(false);
+      }
+    };
+
     const token = extractTokenFromCookie();
     if (token) {
       fetchNotes(token);
       fetchSavedNotes(token);
+      fetchPostedNotes(token);
     }
   }, []);
 
@@ -100,6 +123,30 @@ function NotesProvider({ children }) {
       );
 
       setSavedNotes(savedNotes.filter((note) => note.savedNote._id !== noteId));
+    } catch (error) {
+      console.error("Error deleting saved note:", error);
+      setError("Failed to delete saved note. Please try again.");
+    }
+  };
+
+  const handleDeletePostedNote = async (noteId) => {
+    try {
+      const token = extractTokenFromCookie();
+      if (!token) return;
+
+      await axios.delete(
+        `${
+          import.meta.env.VITE_REACT_APP_DELETE_POSTED_NOTE_ENDPOINT
+        }/${noteId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setPostedNotes(postedNotes.filter((note) => note.postenote._id !== noteId));
     } catch (error) {
       console.error("Error deleting saved note:", error);
       setError("Failed to delete saved note. Please try again.");

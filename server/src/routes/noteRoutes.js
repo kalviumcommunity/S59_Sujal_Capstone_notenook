@@ -40,6 +40,8 @@ router.delete("/deleteSavedNote/:documentId", noteControllers.deleteSavedNote);
 
 router.get("/getSavedNotes", noteControllers.getSavedNotes);
 
+router.get("/getPostedNotes", noteControllers.getPostedNotes);
+
 router.patch(
   "/markNoteForReview/:documentId",
   noteControllers.markNoteForReview

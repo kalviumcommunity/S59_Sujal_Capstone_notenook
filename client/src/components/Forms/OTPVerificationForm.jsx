@@ -20,7 +20,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import SuccessAlert from "./SuccessAlert";
+import SuccessAlert from "../SuccessAlert";
 import FormLoader from "../Loaders/FormLoader";
 
 const formSchema = z.object({

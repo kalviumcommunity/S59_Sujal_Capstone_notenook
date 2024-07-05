@@ -5,9 +5,9 @@ import NotesList from "../../components/MyNotesPageComponents/NotesList";
 import CreateNote from "../../components/MyNotesPageComponents/CreateNote";
 import "../../css/AddNotes.css";
 
-function MyNotes() {
+function MyNotesPage() {
   return (
-    <div className="myNotesPage scrollHidden relative">
+    <div className="scrollHidden relative">
       <div className="page">
         <Routes>
           <Route path="/" element={<NotesList />} />
@@ -19,4 +19,4 @@ function MyNotes() {
   );
 }
 
-export default MyNotes;
+export default MyNotesPage;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FriendsList from "./FriendsList";
-import PostedNotesList from "./PostedNotesList";
+import MyPostedNotesList from "../NoteLists/MyPostedNotesList";
 import "../../css/Tabs.css";
 import "../../css/ProfileContent.css";
 
@@ -29,7 +29,7 @@ function ViewUserProfileContent({ userInfo }) {
       </div>
       <div className="tab-content">
         {activeTab === "Posted" && (
-          <PostedNotesList postedNotes={userInfo?.postedNotes} />
+          <MyPostedNotesList postedNotes={userInfo?.postedNotes} />
         )}
         {activeTab === "Friends" && <FriendsList friends={userInfo?.friends} />}
       </div>

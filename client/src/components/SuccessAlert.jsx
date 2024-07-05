@@ -27,8 +27,14 @@ function SuccessAlert({ success, path }) {
       case "Login":
         return {
           title: "OTP verified Successfully!!",
-          description: "Please logged in.",
+          description: "Please log in.",
           to: "/forms/login",
+        };
+      case "Profile":
+        return {
+          title: "Update Successful!!",
+          description: "Your details have been updated Succefully",
+          to: "/notenook/profile",
         };
       default:
         return {

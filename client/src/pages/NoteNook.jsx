@@ -10,11 +10,12 @@ import NavBar from "../components/NavBar";
 import DashBoard from "./NoteNookPages/DashBoard";
 import SearchNotesPage from "./NoteNookPages/SearchNotesPage";
 import SearchUsersPage from "./NoteNookPages/SearchUsersPage";
-import MyNotes from "./NoteNookPages/MyNotesPage";
+import MyNotesPage from "./NoteNookPages/MyNotesPage";
 import ViewNote from "./NoteNookPages/ViewNote";
-import UserProfile from "./NoteNookPages/UserProfile";
+import UserProfilePage from "./NoteNookPages/UserProfilePage";
+import EditUserDetailsPage from "./NoteNookPages/EditUserDetailsPage";
 import NotificationPage from "./NoteNookPages/NotificationPage";
-import ViewUser from "./NoteNookPages/ViewUser";
+import ViewUserPage from "./NoteNookPages/ViewUserPage";
 import ChatPage from "./NoteNookPages/ChatPage";
 import Loader from "../components/Loaders/Loader";
 import PhoneNavBar from "../components/PhoneNavBar";
@@ -78,13 +79,14 @@ function NoteNook() {
             <Routes>
               <Route path="/dashboard" element={<DashBoard />} />
               <Route path="/notes" element={<SearchNotesPage />} />
-              <Route path="/myNotes/*" element={<MyNotes />} />
+              <Route path="/myNotes/*" element={<MyNotesPage />} />
               <Route path="/friends" element={<SearchUsersPage />} />
               <Route path="/chatPage/*" element={<ChatPage />} />
+              <Route path="/profile/*" element={<UserProfilePage />} />
+              <Route path="/profile/edit" element={<EditUserDetailsPage />} />
+              <Route path="/viewUser/:userId" element={<ViewUserPage />} />
               <Route path="/viewNote/:documentId" element={<ViewNote />} />
-              <Route path="/profile/*" element={<UserProfile />} />
               <Route path="/notifications" element={<NotificationPage />} />
-              <Route path="/viewUser/:userId" element={<ViewUser />} />
             </Routes>
           </div>
         </NotesProvider>

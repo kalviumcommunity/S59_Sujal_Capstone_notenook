@@ -5,7 +5,7 @@ import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import ViewUserInfo from "../../components/UserProfileComponents/ViewuserInfo";
 import ViewUserProfileContent from "../../components/UserProfileComponents/ViewUserProfileContent";
 
-function ViewUser() {
+function ViewUserPage() {
   const [userInfo, setUserInfo] = useState(null);
 
   const { userId } = useParams();
@@ -44,4 +44,4 @@ function ViewUser() {
   );
 }
 
-export default ViewUser;
+export default ViewUserPage;

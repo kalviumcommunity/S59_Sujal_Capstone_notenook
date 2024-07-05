@@ -1,16 +1,29 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { useContext } from "react";
+
+import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "../ui/card";
+
 import { UserContext } from "../../context/userContext";
+
+import FormLoader from "../Loaders/FormLoader";
+
 import pic from "../../assets/pic.png";
 
-function UserInfo({ userInfo }) {
-  const [logoutConfirmation, setLogoutConfirmation] = useState(false);
+function UserInfo() {
   const navigate = useNavigate();
-  const { setIsUserLoggedIn } = useContext(UserContext);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { user, setIsUserLoggedIn } = useContext(UserContext);
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     try {
       await axios.get(import.meta.env.VITE_APP_LOGOUT_ENDPOINT, {
         withCredentials: true,
@@ -21,64 +34,60 @@ function UserInfo({ userInfo }) {
       navigate("/forms/login");
     } catch (error) {
       console.error("Error logging out:", error);
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
   return (
-    <div className="userInfoComponent relative">
-      <br />
-      {userInfo && (
-        <div className="user-info">
-          <div className="user-details">
-            <div className="flex items-center">
-              <img src={pic} alt="Profile" className="profile-pic" />
-              <div className="user-text">
-                <Link to={""}>
-                  <div className="username-container">
-                    <h2 className="username">{userInfo.username}</h2>
-                    <p className="fullname">{userInfo.fullname}</p>
-                  </div>
-                </Link>
-                <div className="user-stats">
-                  <p className="notes">
-                    Notes: <span>{userInfo.numberOfNotes}</span>
-                  </p>
-                  <p className="connections">
-                    Connections: <span>{userInfo.numberOfConnections}</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Link to={"edit"}>
-              <button className="edit button">Edit</button>
-            </Link>
-          </div>
-          <br />
-          <button
-            className="logout button"
-            onClick={() => setLogoutConfirmation(true)}
-          >
-            Log Out
-          </button>
-          <br />
+    <div className="relative flex flex-col mx-auto">
+      {isLoggingOut && <FormLoader action={"Logging out..."} />}
+      <div className="flex items-center mb-4">
+        <Avatar className="h-16 w-16 mr-4">
+          <AvatarImage src={pic} alt="User avatar" />
+          <AvatarFallback>P</AvatarFallback>
+        </Avatar>
+        <div>
+          <Link to="/notenook/profile">
+            <CardHeader className="pb-0">
+              <CardTitle className="text-lg font-semibold">
+                {user?.username}
+              </CardTitle>
+              <CardDescription className="text-sm text-gray-300">
+                {user?.fullname}
+              </CardDescription>
+            </CardHeader>
+          </Link>
+          <CardContent className="mt-2 flex gap-10 text-xs">
+            <p>
+              Notes:{" "}
+              <span className="font-semibold text-yellow-500 text-sm">
+                {user?.numberOfNotes}
+              </span>
+            </p>
+            <p>
+              Connections:{" "}
+              <span className="font-semibold text-yellow-500 text-sm">
+                {user?.numberOfConnections}
+              </span>
+            </p>
+          </CardContent>
         </div>
-      )}
-      {logoutConfirmation && (
-        <div className="confirmation-popup">
-          <p className="heading">Are you sure you want to log out?</p>
-          <div className="flex gap-10">
-            <button onClick={handleLogout} className="button yes-button">
-              Yes
-            </button>
-            <button
-              onClick={() => setLogoutConfirmation(false)}
-              className="button cancel-button"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+      </div>
+      <div className="flex gap-4 mt-4 self-end">
+        <Link to="/notenook/profile/edit">
+          <Button variant="secondary" className="text-xs h-fit">
+            Edit
+          </Button>
+        </Link>
+        <Button
+          variant="destructive"
+          className="text-xs h-fit bg-red-600 hover:bg-red-700"
+          onClick={handleLogout}
+        >
+          Log Out
+        </Button>
+      </div>
     </div>
   );
 }

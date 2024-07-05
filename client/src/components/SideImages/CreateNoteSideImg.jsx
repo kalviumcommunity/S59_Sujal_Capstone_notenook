@@ -28,7 +28,7 @@ function CreateNoteSideImg() {
         alt="sideImg"
         className="createNoteSideImg relative max-w-[50vw] max-h-[50vh] rounded-[5%] aspect-square"
       />
-      <Card className="absolute bg-[#0C0A09] w-96 -bottom-4 translate-y-1/2 xl:translate-y-0 xl:-right-2 left-1/2 -translate-x-1/2 xl:translate-x-0">
+      <Card className="absolute bg-[#0C0A09] w-80 -bottom-4 translate-y-1/2 xl:translate-y-0 xl:-right-2 left-1/2 -translate-x-1/2 xl:translate-x-0">
         <CardHeader>
           <CardTitle className="text-white">Create a New Note!</CardTitle>
           <CardDescription>Fill in the details to get started</CardDescription>

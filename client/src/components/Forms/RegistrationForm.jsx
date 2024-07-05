@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 
 import FormLoader from "../Loaders/FormLoader";
-import SuccessAlert from "./SuccessAlert";
+import SuccessAlert from "../SuccessAlert";
 import googleLogo from "../../assets/googleLogo.svg";
 
 const formSchema = z

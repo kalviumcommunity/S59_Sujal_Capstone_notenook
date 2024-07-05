@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 
 import { UserContext } from "../../context/userContext";
-import SuccessAlert from "./SuccessAlert";
+import SuccessAlert from "../SuccessAlert";
 import FormLoader from "../Loaders/FormLoader";
 import googleLogo from "../../assets/googleLogo.svg";
 
