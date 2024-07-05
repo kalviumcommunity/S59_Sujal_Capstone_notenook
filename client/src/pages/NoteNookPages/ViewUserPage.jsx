@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-import ViewUserInfo from "../../components/UserProfileComponents/ViewUserInfo";
+import ViewUserInfo from "../../components/UserProfileComponents/ViewuserInfo";
 import ViewUserProfileContent from "../../components/UserProfileComponents/ViewUserProfileContent";
 import FormLoader from "../../components/Loaders/ActionLoader";
 
