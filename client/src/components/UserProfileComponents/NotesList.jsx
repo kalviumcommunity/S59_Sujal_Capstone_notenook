@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
 
-import MyNote from "../AddNotesComponent/MyNote";
+import MyNote from "../NoteCards/MyNote";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import "../../css/NoteList.css";
 

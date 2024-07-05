@@ -36,7 +36,7 @@ function PostedNote({ note }) {
         <Link to={`/notenook/viewNote/${note._id}`}>
           <button className="view button">View</button>
         </Link>
-        <Link to={`/notenook/postNotes/writeNote/${note.note}`}>
+        <Link to={`/notenook/myNotes/writeNote/${note.note}`}>
           <button className="viewOriginal button">Original Note</button>
         </Link>
       </div>

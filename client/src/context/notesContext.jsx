@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 
@@ -221,6 +221,7 @@ function NotesProvider({ children }) {
     savedNotes,
     loading,
     error,
+    setError,
     handleDeleteNote,
     handleDeleteSavedNote,
     handleMarkForReview,

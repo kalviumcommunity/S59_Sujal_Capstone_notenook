@@ -10,7 +10,14 @@ import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CircularProgress from "@mui/material/CircularProgress";
 
-function MyReviewNote({ note, handleMarkForReview, handleUnmarkForReview }) {
+import DeleteAlert from "../MyNotesPageComponents/DeleteAlert";
+
+function MyNote({
+  note,
+  confirmDelete,
+  handleMarkForReview,
+  handleUnmarkForReview,
+}) {
   const [loading, setLoading] = useState(false);
 
   const handleMark = async () => {
@@ -28,12 +35,14 @@ function MyReviewNote({ note, handleMarkForReview, handleUnmarkForReview }) {
   return (
     <Card className="mb-2 bg-[#0C0A09] text-white border-neutral-600 border-[0.25px]">
       <CardHeader className="p-4">
-        <CardTitle className="font-bold text-xl">
-          <span>Title:</span> {note.title}
-        </CardTitle>
-        <p className="text-sm">
-          <span>Subject:</span> {note.subject}
-        </p>
+        <Link to={`/notenook/viewNote/${note._id}`}>
+          <CardTitle className="font-bold text-xl">
+            <span>Title:</span> {note.title}
+          </CardTitle>
+          <p className="text-sm">
+            <span>Subject:</span> {note.subject}
+          </p>
+        </Link>
         <p className="text-xs">Posted {formatDate(note.updatedAt)}</p>
       </CardHeader>
 
@@ -51,14 +60,16 @@ function MyReviewNote({ note, handleMarkForReview, handleUnmarkForReview }) {
             Update
           </Button>{" "}
         </Link>
-        <Link to={`/notenook/viewNote/${note._id}`}>
-          <Button variant="secondary" className="text-xs h-fit">
-            View
-          </Button>{" "}
-        </Link>
+        <Button
+          onClick={() => confirmDelete(note._id)}
+          variant="destructive"
+          className="text-xs h-fit w-fit"
+        >
+          Delete
+        </Button>
       </CardContent>
     </Card>
   );
 }
 
-export default MyReviewNote;
+export default MyNote;

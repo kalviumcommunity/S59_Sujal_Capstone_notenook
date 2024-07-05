@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import "../css/HomePage.css";
 
 import { Separator } from "@radix-ui/react-separator";
 

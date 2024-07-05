@@ -9,16 +9,16 @@ import { IoIosSearch } from "react-icons/io";
 
 import { DeviceWidthContext } from "../../context/deviceWidthContext";
 
-import NoteList from "../../components/NoteLists/NoteList";
-import NoteResult from "../../components/NoteCards/NoteResult";
+import Connections from "../../components/Connections";
+import UserResult from "../../components/SearchUsersComponents/UserResult";
 import Loader from "../../components/Loaders/Loader";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
-function SearchNotes() {
+function SearchUsersPage() {
   const [searchResults, setSearchResults] = useState(null);
   const [error, setError] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [searchingNotes, setSearchingNotes] = useState(false);
+  const [searchingUsers, setSearchingUsers] = useState(false);
 
   const width = useContext(DeviceWidthContext);
 
@@ -27,13 +27,13 @@ function SearchNotes() {
       return;
     }
     setSearchResults(null);
-    setSearchingNotes(true);
+    setSearchingUsers(true);
     try {
       const token = extractTokenFromCookie();
       if (token) {
         const response = await axios.get(
           `${
-            import.meta.env.VITE_REACT_APP_SEARCH_NOTE_ENDPOINT
+            import.meta.env.VITE_REACT_APP_SEARCH_USERS_ENDPOINT
           }?searchInput=${searchInput}`,
           {
             headers: {
@@ -43,14 +43,14 @@ function SearchNotes() {
           }
         );
 
-        setSearchResults(response.data.notes);
+        setSearchResults(response.data.users);
         setError(null);
       }
     } catch (error) {
       console.error("Error searching notes:", error);
       setError("An error occurred while searching notes. Please try again.");
     } finally {
-      setSearchingNotes(false);
+      setSearchingUsers(false);
     }
   };
 
@@ -79,31 +79,31 @@ function SearchNotes() {
         </div>
 
         <div className="p-4 relative w-full max-w-[90vw] h-[95%] overflow-y-scroll grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,400px))] justify-center gap-10 gap-y-0 auto-rows-min">
-          {searchingNotes && <Loader action={"Searching For Notes..."} />}
-          {error && !searchingNotes && (
+          {searchingUsers && <Loader action={"Searching For Users..."} />}
+          {error && !searchingUsers && (
             <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-base text-red-500 font-bold text-centeror">
               {error}
             </p>
           )}
           {searchResults && searchResults.length === 0 && (
             <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-sm text-neutral-300 text-center">
-              No results found
+              No Users found
             </p>
           )}
-          {!searchResults && !error && !searchingNotes && (
+          {!searchResults && !error && !searchingUsers && (
             <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-sm text-neutral-300 text-center z-0">
-              Search notes based on Title or Subject
+              Search Users to form Connections
             </p>
           )}
           {searchResults &&
             searchResults.map((result) => {
-              return <NoteResult key={uuidv4()} result={result} />;
+              return <UserResult key={uuidv4()} user={result} />;
             })}
         </div>
       </div>
-      {width > 1024 && <NoteList />}
+      {width > 1024 && <Connections />}
     </div>
   );
 }
 
-export default SearchNotes;
+export default SearchUsersPage;

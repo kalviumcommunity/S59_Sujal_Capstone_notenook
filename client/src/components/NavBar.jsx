@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 import { MdDashboard } from "react-icons/md";
 import { FaNoteSticky } from "react-icons/fa6";
-import { IoAddCircle } from "react-icons/io5";
+import { FaSearch } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
 import { IoChatbubbles } from "react-icons/io5";
 
@@ -54,16 +54,16 @@ const NavBar = () => {
                   )
                 }
               >
-                <FaNoteSticky className="text-xl" />
+                <FaSearch className="text-xl" />
               </NavLink>
             </TooltipTrigger>
-            <TooltipContent>Notes</TooltipContent>
+            <TooltipContent>Search</TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger>
               <NavLink
-                to="/notenook/postNotes"
+                to="/notenook/myNotes"
                 className={({ isActive }) =>
                   getClassNames(
                     isActive,
@@ -73,10 +73,10 @@ const NavBar = () => {
                   )
                 }
               >
-                <IoAddCircle className="text-xl" />
+                <FaNoteSticky className="text-xl" />
               </NavLink>
             </TooltipTrigger>
-            <TooltipContent>Post Notes</TooltipContent>
+            <TooltipContent>My Notes</TooltipContent>
           </Tooltip>
 
           <Tooltip>

@@ -19,12 +19,12 @@ function Note({ note }) {
       </CardHeader>
       <CardContent className="p-4 flex justify-end gap-5">
         <Link to={`/notenook/postNotes/writeNote/${note._id}`}>
-          <Button variants="primary" className="text-xs">
+          <Button variants="primary" className="text-xs h-fit">
             Update
           </Button>
         </Link>
         <Link to={`/notenook/viewNote/${note._id}`}>
-          <Button variant="secondary" className="text-xs">
+          <Button variant="secondary" className="text-xs h-fit">
             View
           </Button>
         </Link>

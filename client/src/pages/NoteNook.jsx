@@ -8,9 +8,9 @@ import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 import Header from "../components/HeaderComponents/Header";
 import NavBar from "../components/NavBar";
 import DashBoard from "./NoteNookPages/DashBoard";
-import SearchNotes from "./NoteNookPages/SearchNotes";
-import SearchUsers from "./NoteNookPages/SearchUsers";
-import AddNotes from "./NoteNookPages/AddNotes";
+import SearchNotesPage from "./NoteNookPages/SearchNotesPage";
+import SearchUsersPage from "./NoteNookPages/SearchUsersPage";
+import MyNotes from "./NoteNookPages/MyNotesPage";
 import ViewNote from "./NoteNookPages/ViewNote";
 import UserProfile from "./NoteNookPages/UserProfile";
 import NotificationPage from "./NoteNookPages/NotificationPage";
@@ -63,7 +63,7 @@ function NoteNook() {
   }, []);
 
   return (
-    <div className="viewport fixed top-0 left-0 h-screen w-screen overflow-hidden">
+    <div className="h-screen w-screen">
       {isFetchingUserData && (
         <div className="fixed top-0 left-0 w-screen h-screen z-50 bg-[#09090b]">
           <Loader action={"Loading Data..."} />
@@ -77,14 +77,14 @@ function NoteNook() {
           <div className="noteNook css fixed top-24 overflow-y-scroll left-24 rounded-tl-md bg-muted/5 p-4">
             <Routes>
               <Route path="/dashboard" element={<DashBoard />} />
-              <Route path="/notes" element={<SearchNotes />} />
-              <Route path="/friends" element={<SearchUsers />} />
-              <Route path="/postNotes/*" element={<AddNotes />} />
+              <Route path="/notes" element={<SearchNotesPage />} />
+              <Route path="/myNotes/*" element={<MyNotes />} />
+              <Route path="/friends" element={<SearchUsersPage />} />
+              <Route path="/chatPage/*" element={<ChatPage />} />
               <Route path="/viewNote/:documentId" element={<ViewNote />} />
               <Route path="/profile/*" element={<UserProfile />} />
               <Route path="/notifications" element={<NotificationPage />} />
               <Route path="/viewUser/:userId" element={<ViewUser />} />
-              <Route path="/chatPage/*" element={<ChatPage />} />
             </Routes>
           </div>
         </NotesProvider>

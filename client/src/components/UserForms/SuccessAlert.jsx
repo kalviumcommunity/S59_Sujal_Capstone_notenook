@@ -48,10 +48,10 @@ function SuccessAlert({ success, path }) {
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <Link to={to}>
-            <AlertDialogAction>{path}</AlertDialogAction>
-          </Link>
+        <AlertDialogFooter className=" w-full">
+          <AlertDialogAction>
+            <Link to={to}>{path}</Link>
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

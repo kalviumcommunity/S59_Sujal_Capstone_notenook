@@ -36,7 +36,7 @@ function NewNoteForm({ handleClick }) {
 
         const newNote = response.data.note;
         updateNotes(newNote);
-        navigate(`/notenook/postNotes/writeNote/${response.data.note._id}`);
+        navigate(`/notenook/myNotes/writeNote/${response.data.note._id}`);
       } else {
         console.log("Token cookie not found.");
       }

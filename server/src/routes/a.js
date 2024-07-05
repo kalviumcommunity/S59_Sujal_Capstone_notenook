@@ -390,10 +390,7 @@ const saveNote = async (req, res) => {
   const noteId = req.params.documentId;
 
   try {
-    const postedNote = await PostedNoteModel.findById(noteId).select("note");
-
-    const originalNote = await NoteModel.findById(postedNote.note);
-
+    const originalNote = await NoteModel.findById(noteId);
     if (!originalNote) {
       return res.status(404).json({ error: "Note not found" });
     }

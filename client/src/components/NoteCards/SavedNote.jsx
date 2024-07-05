@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
-
 import formatDate from "../../Functions/FormatDate";
-
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CircularProgress from "@mui/material/CircularProgress";
+import { FaExternalLinkSquareAlt } from "react-icons/fa";
 
-function MySavedReviewNote({
+function SavedNote({
   savedNote,
   originalNoteId,
+  confirmDelete,
   handleMarkForReview,
   handleUnmarkForReview,
 }) {
@@ -31,17 +30,23 @@ function MySavedReviewNote({
   };
 
   return (
-    <Card className="mb-2 bg-[#0C0A09] text-white border-neutral-600 border-[0.25px]">
-      <CardHeader className="p-4">
-        <CardTitle className="font-bold text-xl">
-          <span>Title:</span> {savedNote.title}
-        </CardTitle>
-        <p className="text-sm">
-          <span>Subject:</span> {savedNote.subject}
-        </p>
-        <p className="text-xs">Posted {formatDate(savedNote.updatedAt)}</p>
+    <Card className="mb-2 bg-[#0C0A09] text-white border-neutral-600 border-[0.25px] relative">
+      <Link to={`/notenook/viewNote/${originalNoteId}`}>
+        <FaExternalLinkSquareAlt className="text-xl absolute right-4 top-4 text-yellow-400" />
+      </Link>
+      <CardHeader className="p-4 w-[calc(100%-2.5rem)]">
+        <Link to={`/notenook/viewNote/${savedNote._id}`}>
+          <CardTitle className="font-bold text-xl">
+            <span>Title:</span> {savedNote.title}
+          </CardTitle>
+          <p className="text-sm">
+            <span>Subject:</span> {savedNote.subject}
+          </p>
+        </Link>
+        <p className="text-xs">Saved {formatDate(savedNote.createdAt)}</p>
       </CardHeader>
-      <CardContent className="p-4 flex justify-end gap-5 items-center">
+
+      <CardContent className="p-4 flex gap-1 justify-between sm:justify-end sm:gap-5 items-center">
         {loading ? (
           <CircularProgress size={24} />
         ) : savedNote.markedForReview ? (
@@ -50,20 +55,21 @@ function MySavedReviewNote({
           <BookmarkAddIcon className="text-neutral-500" onClick={handleMark} />
         )}
 
-        <Link to={`/notenook/viewNote/${savedNote._id}`}>
+        <Link to={`/notenook/myNotes/writeNote/${savedNote._id}`}>
           <Button variants="primary" className="text-xs h-fit">
-            View
-          </Button>
-        </Link>
-
-        <Link to={`/notenook/viewNote/${originalNoteId}`}>
-          <Button variant="secondary" className="text-xs h-fit">
-            Original note
+            Update
           </Button>{" "}
         </Link>
+        <Button
+          onClick={() => confirmDelete(savedNote._id)}
+          variant="destructive"
+          className="text-xs h-fit"
+        >
+          Delete
+        </Button>
       </CardContent>
     </Card>
   );
 }
 
-export default MySavedReviewNote;
+export default SavedNote;
