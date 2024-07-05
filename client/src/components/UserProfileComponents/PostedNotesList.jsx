@@ -2,7 +2,7 @@ import formatDate from "../../Functions/FormatDate";
 import { Link } from "react-router-dom";
 import "../../css/NoteList.css";
 import Note from "../Note";
-
+import MyPostedNote from "../NoteCards/MyPostedNote";
 function PostedNotesList({ postedNotes, isMyProfile }) {
   let Post;
   if (!isMyProfile) {
@@ -14,7 +14,9 @@ function PostedNotesList({ postedNotes, isMyProfile }) {
     <div className="myNoteList">
       <div className="myNotes">
         {postedNotes &&
-          postedNotes.map((note) => <Post key={note._id} note={note} />)}
+          postedNotes.map((note) => (
+            <MyPostedNote key={note._id} note={note} />
+          ))}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FriendsList from "./FriendsList";
-import NotesList from "./NotesList";
+import MyNoteList from "../NoteLists/MyNoteList";
 import PostedNotesList from "./PostedNotesList";
 import "../../css/Tabs.css";
 import "../../css/ProfileContent.css";
@@ -35,7 +35,7 @@ const ProfileContent = ({ userInfo }) => {
         </div>
       </div>
       <div className="tab-content">
-        {activeTab === "Notes" && <NotesList notes={userInfo?.notes} />}
+        {activeTab === "Notes" && <MyNoteList notes={userInfo?.notes} />}
         {activeTab === "Posted" && (
           <PostedNotesList
             postedNotes={userInfo?.postedNotes}
