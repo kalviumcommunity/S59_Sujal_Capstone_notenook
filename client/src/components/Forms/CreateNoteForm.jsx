@@ -16,13 +16,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  CardContent,
-  CardHeader,
-  CardDescription,
-} from "@/components/ui/card";
+import { CardContent, CardHeader, CardDescription } from "@/components/ui/card";
 
-import FormLoader from "../Loaders/FormLoader";
+import ActionLoader from "../Loaders/ActionLoader";
 
 import { NotesContext } from "../../context/notesContext";
 
@@ -81,7 +77,7 @@ function CreateNoteForm() {
 
   return (
     <div className="relative flex flex-col">
-      {isLoading && <FormLoader action={"Creating note..."} />}
+      {isLoading && <ActionLoader action={"Creating note..."} />}
       <CardHeader className="text-center">
         <h2 className="text-2xl font-bold">Create a Note</h2>
         <CardDescription>Enter the note title and subject</CardDescription>

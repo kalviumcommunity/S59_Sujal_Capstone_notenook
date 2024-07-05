@@ -136,7 +136,7 @@ function NotesProvider({ children }) {
 
       await axios.delete(
         `${
-          import.meta.env.VITE_REACT_APP_DELETE_POSTED_NOTE_ENDPOINT
+          import.meta.env.VITE_REACT_APP_DELETE_POSTEDNOTE_ENDPOINT
         }/${noteId}`,
         {
           headers: {
@@ -146,7 +146,7 @@ function NotesProvider({ children }) {
         }
       );
 
-      setPostedNotes(postedNotes.filter((note) => note.postenote._id !== noteId));
+      setPostedNotes(postedNotes.filter((note) => note.note !== noteId));
     } catch (error) {
       console.error("Error deleting saved note:", error);
       setError("Failed to delete saved note. Please try again.");
@@ -266,11 +266,13 @@ function NotesProvider({ children }) {
   const value = {
     notes,
     savedNotes,
+    postedNotes,
     loading,
     error,
     setError,
     handleDeleteNote,
     handleDeleteSavedNote,
+    handleDeletePostedNote,
     handleMarkForReview,
     handleMarkSavedNoteForReview,
     handleUnmarkForReview,

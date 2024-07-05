@@ -8,6 +8,7 @@ import { IoCreate } from "react-icons/io5";
 import MyNoteList from "../NoteLists/MyNoteList.jsx";
 import SavedList from "../NoteLists/SavedList.jsx";
 import ReviewList from "../NoteLists/ReviewList.jsx";
+import MyPostedNotesList from "../NoteLists/MyPostedNotesList.jsx";
 
 function NotesList() {
   return (
@@ -26,6 +27,7 @@ function NotesList() {
         </div>
         <TabsList style={{ backgroundColor: "#09090b" }}>
           <TabsTrigger value="myNotes">My Notes</TabsTrigger>
+          <TabsTrigger value="posted">Posted</TabsTrigger>
           <TabsTrigger value="saved">Saved</TabsTrigger>
           <TabsTrigger value="review">Review</TabsTrigger>
         </TabsList>
@@ -33,6 +35,9 @@ function NotesList() {
       <div className="h-[calc(100%-8rem)] overflow-y-scroll">
         <TabsContent value="myNotes">
           <MyNoteList />
+        </TabsContent>
+        <TabsContent value="posted">
+          <MyPostedNotesList />
         </TabsContent>
         <TabsContent value="saved">
           <SavedList />

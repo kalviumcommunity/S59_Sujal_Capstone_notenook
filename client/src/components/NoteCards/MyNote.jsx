@@ -10,8 +10,6 @@ import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import DeleteAlert from "../MyNotesPageComponents/DeleteAlert";
-
 function MyNote({
   note,
   confirmDelete,
@@ -43,7 +41,7 @@ function MyNote({
             <span>Subject:</span> {note.subject}
           </p>
         </Link>
-        <p className="text-xs">Posted {formatDate(note.updatedAt)}</p>
+        <p className="text-xs">Updated {formatDate(note.updatedAt)}</p>
       </CardHeader>
 
       <CardContent className="p-4 flex justify-end gap-5 items-center">

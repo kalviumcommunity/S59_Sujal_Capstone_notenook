@@ -41,7 +41,7 @@ function UserProfilePage() {
   }, []);
 
   return (
-    <div className="userProfilePage page w-[700px] max-w-[90vw] m-auto">
+    <div className="userProfilePage page lg:w-[900px] max-w-[90vw] m-auto">
       <UserInfo userInfo={userInfo} />
 
       <Tabs defaultValue="notes" className="w-full flex flex-col mt-4">

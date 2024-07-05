@@ -1,10 +1,23 @@
-import { useParams } from "react-router-dom";
-import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import { useContext, useState } from "react";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import axios from "axios";
+
+import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "../ui/card";
+
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import SendingLoader from "../Loaders/SendingLoader";
 import pic from "../../assets/pic.png";
 
 function ViewUserInfo({ userInfo, setUserInfo }) {
   const { userId } = useParams();
+  const [isSending, setIsSending] = useState(false);
 
   const handleFriendRequest = async (action) => {
     const token = extractTokenFromCookie();
@@ -51,6 +64,7 @@ function ViewUserInfo({ userInfo, setUserInfo }) {
     }
 
     try {
+      setIsSending(true);
       const response = await axios({
         method: method,
         url: apiURI,
@@ -72,82 +86,101 @@ function ViewUserInfo({ userInfo, setUserInfo }) {
       });
     } catch (error) {
       console.error(`Error handling friend request (${action}):`, error);
+    } finally {
+      setIsSending(false);
     }
   };
 
   return (
-    <div>
-      <div className="userInfoComponent relative">
-        <br />
-        {userInfo && (
-          <div className="user-info">
-            <div className="user-details">
-              <div className="flex items-center">
-                <img src={pic} alt="Profile" className="profile-pic" />
-                <div className="user-text">
-                  <div className="username-container">
-                    <h2 className="username">{userInfo.username}</h2>
-                    <p className="fullname">{userInfo.fullname}</p>
-                  </div>
-                  <div className="user-stats">
-                    <p className="notes">
-                      Notes: <span>{userInfo.numberOfNotes}</span>
-                    </p>
-                    <p className="connections">
-                      Connections: <span>{userInfo.numberOfConnections}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <br />
-            <div className="friendshipButtons">
-              {userInfo.friendshipStatus === "none" && (
-                <button
-                  className="addFriend button"
-                  onClick={() => handleFriendRequest("send")}
-                >
-                  Add Friend
-                </button>
-              )}
-              {userInfo.friendshipStatus === "pending" && (
-                <button
-                  className="addFriend button"
-                  onClick={() => handleFriendRequest("unsend")}
-                >
-                  Cancel Request
-                </button>
-              )}
-              {userInfo.friendshipStatus === "incoming" && (
-                <>
-                  <button
-                    className="acceptFriend button"
-                    onClick={() => handleFriendRequest("accept")}
-                  >
-                    Accept
-                  </button>
-                  <button
-                    className="rejectFriend button"
-                    onClick={() => handleFriendRequest("reject")}
-                  >
-                    Reject
-                  </button>
-                </>
-              )}
-              {userInfo.friendshipStatus === "friends" && (
-                <button
-                  className="removeFriend button"
-                  onClick={() => handleFriendRequest("remove")}
-                >
-                  Remove Friend
-                </button>
-              )}
-            </div>
+    <div className="relative flex flex-col mx-auto py-2">
+      <div className="flex items-center mb-4">
+        <Avatar className="h-16 w-16 mr-4">
+          <AvatarImage src={pic} alt="User avatar" />
+          <AvatarFallback>P</AvatarFallback>
+        </Avatar>
+        <div>
+          <Link to="/notenook/profile">
+            <CardHeader className="pb-0">
+              <CardTitle className="text-lg font-semibold">
+                {userInfo?.username}
+              </CardTitle>
+              <CardDescription className="text-sm text-gray-300">
+                {userInfo?.fullname}
+              </CardDescription>
+            </CardHeader>
+          </Link>
+          <CardContent className="mt-2 flex gap-10 text-xs">
+            <p>
+              Notes:{" "}
+              <span className="font-semibold text-yellow-500 text-sm">
+                {userInfo?.numberOfNotes}
+              </span>
+            </p>
+            <p>
+              Connections:{" "}
+              <span className="font-semibold text-yellow-500 text-sm">
+                {userInfo?.numberOfConnections}
+              </span>
+            </p>
+          </CardContent>
+        </div>
+      </div>
 
-            <br />
+      <div className="flex gap-4 mt-4 self-end">
+        {isSending ? (
+          <div className="w-36 flex justify-center">
+            <SendingLoader />
           </div>
+        ) : (
+          <>
+            {userInfo?.friendshipStatus === "none" && (
+              <Button
+                onClick={() => handleFriendRequest("send")}
+                className="text-xs h-fit"
+              >
+                Add Friend
+              </Button>
+            )}
+            {userInfo?.friendshipStatus === "pending" && (
+              <Button
+                onClick={() => handleFriendRequest("unsend")}
+                className="text-xs h-fit"
+                variant="destructive"
+              >
+                Cancel Request
+              </Button>
+            )}
+            {userInfo?.friendshipStatus === "incoming" && (
+              <>
+                <Button
+                  onClick={() => handleFriendRequest("accept")}
+                  className="text-xs h-fit"
+                >
+                  Accept
+                </Button>
+                <Button
+                  onClick={() => handleFriendRequest("reject")}
+                  className="text-xs h-fit"
+                  variant="destructive"
+                >
+                  Reject
+                </Button>
+              </>
+            )}
+            {userInfo?.friendshipStatus === "friends" && (
+              <Button
+                onClick={() => handleFriendRequest("remove")}
+                className="text-xs h-fit"
+                variant="destructive"
+              >
+                Remove Friend
+              </Button>
+            )}
+          </>
         )}
       </div>
+
+      <br />
     </div>
   );
 }

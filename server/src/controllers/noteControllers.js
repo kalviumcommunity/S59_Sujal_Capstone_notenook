@@ -96,51 +96,49 @@ const addPostedNote = async (req, res) => {
 };
 
 const deletePostedNote = async (req, res) => {
-  async (req, res) => {
-    const noteId = req.params.noteId;
+  const noteId = req.params.noteId;
 
-    try {
-      const note = await NoteModel.findById(noteId);
+  try {
+    const note = await NoteModel.findById(noteId);
 
-      if (!note) {
-        return res.status(404).json({ message: "Note not found" });
-      }
-
-      const postedNoteId = note.postedNote;
-
-      if (!postedNoteId) {
-        return res.status(400).json({ message: "Note not posted" });
-      }
-
-      const postedNote = await PostedNoteModel.findById(postedNoteId).select(
-        "postedBy"
-      );
-      if (!isOwner(req.user._id, postedNote.postedBy)) {
-        return unauthorizedUserError(res);
-      }
-
-      await PostedNoteModel.findByIdAndDelete(postedNoteId);
-
-      note.postedNote = undefined;
-      await note.save();
-
-      const user = await UserModel.findById(req.user.id);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      const index = user.postedNotes.indexOf(postedNoteId);
-      if (index !== -1) {
-        user.postedNotes.splice(index, 1);
-      }
-      await user.save();
-
-      res.status(204).json({ message: "Posted note deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting posted note:", error);
-      res.status(500).json({ message: "Internal server error" });
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
     }
-  };
+
+    const postedNoteId = note.postedNote;
+
+    if (!postedNoteId) {
+      return res.status(400).json({ message: "Note not posted" });
+    }
+
+    const postedNote = await PostedNoteModel.findById(postedNoteId).select(
+      "postedBy"
+    );
+    if (!isOwner(req.user._id, postedNote.postedBy)) {
+      return unauthorizedUserError(res);
+    }
+
+    await PostedNoteModel.findByIdAndDelete(postedNoteId);
+
+    note.postedNote = undefined;
+    await note.save();
+
+    const user = await UserModel.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const index = user.postedNotes.indexOf(postedNoteId);
+    if (index !== -1) {
+      user.postedNotes.splice(index, 1);
+    }
+    await user.save();
+
+    res.status(204).json({ message: "Posted note deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting posted note:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 const updateNote = async (req, res) => {
@@ -192,7 +190,9 @@ const deleteNote = async (req, res) => {
   try {
     const noteId = req.params.noteId;
 
-    const note = await NoteModel.findById(noteId).select("postedBy");
+    const note = await NoteModel.findById(noteId).select(
+      "postedBy postedNote markedForReview"
+    );
     if (!isOwner(req.user._id, note.postedBy)) {
       return unauthorizedUserError(res);
     }
@@ -315,7 +315,7 @@ const getNotes = async (req, res) => {
       .select("notes")
       .populate({
         path: "notes",
-        select: "title subject fileReference updatedAt markedForReview",
+        select: "title subject updatedAt markedForReview",
         options: { sort: { updatedAt: -1 } },
       });
 
@@ -512,26 +512,15 @@ const getPostedNotes = async (req, res) => {
   try {
     const user = await UserModel.findById(userId).populate({
       path: "postedNotes",
-      select: "_id title subject",
+      select: "_id title subject note createdAt",
     });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const savedNotes = user.savedNotes.map((entry) => ({
-      _id: entry._id,
-      originalNote: entry.originalNote,
-      savedNote: {
-        _id: entry.savedNote._id,
-        title: entry.savedNote.title,
-        subject: entry.savedNote.subject,
-        markedForReview: entry.savedNote.markedForReview,
-        createdAt: entry.savedNote.createdAt,
-      },
-    }));
-
-    res.status(200).json({ savedNotes });
+    const postedNotes = user.postedNotes;
+    res.status(200).json({ postedNotes });
   } catch (error) {
     console.error("Error fetching saved notes:", error);
     res.status(500).json({ error: "Internal server error" });

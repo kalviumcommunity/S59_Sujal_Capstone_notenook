@@ -1,39 +1,29 @@
-import React, { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import FriendsList from "./FriendsList";
-import MyPostedNotesList from "../NoteLists/MyPostedNotesList";
-import "../../css/Tabs.css";
-import "../../css/ProfileContent.css";
+import UserPostedNoteList from "../NoteLists/ViewUserPostedNoteList";
 
 function ViewUserProfileContent({ userInfo }) {
-  const [activeTab, setActiveTab] = useState("Posted");
-
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
-
   return (
-    <div className="profileContent">
-      <div className="tabs">
-        <div
-          className={`tab ${activeTab === "Posted" ? "active" : ""}`}
-          onClick={() => handleTabClick("Posted")}
-        >
-          Posted
-        </div>
-        <div
-          className={`tab ${activeTab === "Friends" ? "active" : ""}`}
-          onClick={() => handleTabClick("Friends")}
-        >
-          Friends
-        </div>
-      </div>
-      <div className="tab-content">
-        {activeTab === "Posted" && (
-          <MyPostedNotesList postedNotes={userInfo?.postedNotes} />
-        )}
-        {activeTab === "Friends" && <FriendsList friends={userInfo?.friends} />}
-      </div>
-    </div>
+    <Tabs defaultValue="notes" className="w-full flex flex-col mt-4">
+      <TabsList
+        style={{
+          backgroundColor: "#09090b",
+          alignSelf: "flex-start",
+          width: "100%",
+          justifyContent: "start",
+        }}
+      >
+        <TabsTrigger value="notes">Posted Notes</TabsTrigger>
+        <TabsTrigger value="friends">Friends</TabsTrigger>
+      </TabsList>
+      <TabsContent value="notes">
+        <UserPostedNoteList postedNotes={userInfo?.postedNotes} />
+      </TabsContent>
+      <TabsContent value="friends">
+        <FriendsList friends={userInfo?.friends} />
+      </TabsContent>
+    </Tabs>
   );
 }
 

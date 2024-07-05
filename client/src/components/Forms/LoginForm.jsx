@@ -25,7 +25,7 @@ import {
 
 import { UserContext } from "../../context/userContext";
 import SuccessAlert from "../SuccessAlert";
-import FormLoader from "../Loaders/FormLoader";
+import ActionLoader from "../Loaders/ActionLoader";
 import googleLogo from "../../assets/googleLogo.svg";
 
 const formSchema = z.object({
@@ -91,7 +91,7 @@ function LoginForm({ setUserData }) {
   return (
     <div className="relative flex flex-col">
       <SuccessAlert success={success} path={"Dashboard"} />
-      {isLoading && <FormLoader action={"Logging in..."} />}
+      {isLoading && <ActionLoader action={"Logging in..."} />}
       <CardHeader className="text-center">
         <h2 className="text-2xl font-bold">Login</h2>
         <CardDescription>Sign in to your account</CardDescription>

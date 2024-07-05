@@ -13,7 +13,7 @@ import {
 
 import { UserContext } from "../../context/userContext";
 
-import FormLoader from "../Loaders/FormLoader";
+import ActionLoader from "../Loaders/ActionLoader";
 
 import pic from "../../assets/pic.png";
 
@@ -40,8 +40,8 @@ function UserInfo() {
   };
 
   return (
-    <div className="relative flex flex-col mx-auto">
-      {isLoggingOut && <FormLoader action={"Logging out..."} />}
+    <div className="relative flex flex-col mx-auto py-2">
+      {isLoggingOut && <ActionLoader action={"Logging out..."} />}
       <div className="flex items-center mb-4">
         <Avatar className="h-16 w-16 mr-4">
           <AvatarImage src={pic} alt="User avatar" />

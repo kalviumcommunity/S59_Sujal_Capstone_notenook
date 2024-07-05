@@ -5,10 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import pic from "../../assets/pic.png";
 
-function UserResult({ user }) {
+function Friend({ user }) {
   return (
-    <Card className="mb-4 bg-[#0C0A09] text-white border-neutral-600 border-[0.25px] rounded-lg overflow-hidden shadow-lg">
-      <CardHeader className="p-4 pb-0">
+    <Card className="mb-4 bg-[#0C0A09] flex justify-between items-center text-white border-neutral-600 border-[0.25px] rounded-lg overflow-hidden shadow-lg">
+      <CardHeader className="p-2">
         <Link
           to={`/notenook/viewUser/${user._id}`}
           className="flex items-center space-x-4"
@@ -19,7 +19,6 @@ function UserResult({ user }) {
           </Avatar>
           <div className="flex flex-col">
             <p className="font-semibold">{user.username}</p>
-            <p className="text-sm text-neutral-400">{user.fullname}</p>
           </div>
         </Link>
       </CardHeader>
@@ -34,4 +33,4 @@ function UserResult({ user }) {
   );
 }
 
-export default UserResult;
+export default Friend;

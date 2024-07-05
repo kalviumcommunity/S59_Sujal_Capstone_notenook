@@ -1,36 +1,13 @@
-import { Link } from "react-router-dom";
-import SmsIcon from "@mui/icons-material/Sms";
-
-import "../../css/Connections.css";
-import pic from "../../assets/pic.png";
+import Friend from "./Friend";
 
 function FriendsList({ friends }) {
   return (
-    <div className="p-4 profileFriendList">
+    <div className="p-4 relative w-full max-w-[90vw] h-[95%] overflow-y-scroll grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,400px))] justify-center gap-10 gap-y-0 auto-rows-min">
       {!friends && <p className="placeHolder">Your Friendlist appears here</p>}
 
-      <div className="connectionList">
-        {friends &&
-          friends.map((friend, i) => <Friend key={i} friend={friend} />)}
-      </div>
+      {friends && friends.map((user) => <Friend key={user._id} user={user} />)}
     </div>
   );
 }
 
-function Friend({ friend }) {
-  return (
-    <div className="connection">
-      <Link to={`/notenook/viewUser/${friend._id}`}>
-        <div className="connectionInfo">
-          <img className="connectionPic" src={pic} alt="" />
-          <p className="connectionUsername">{friend.username}</p>
-        </div>
-      </Link>
-
-      <Link to={`/notenook/viewUser/${friend._id}`}>
-        <button className="button viewProfile">Profile</button>
-      </Link>
-    </div>
-  );
-}
 export default FriendsList;

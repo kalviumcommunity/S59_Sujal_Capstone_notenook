@@ -21,7 +21,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import SuccessAlert from "../SuccessAlert";
-import FormLoader from "../Loaders/FormLoader";
+import ActionLoader from "../Loaders/ActionLoader";
 
 const formSchema = z.object({
   otp: z.string().min(4, {
@@ -96,8 +96,8 @@ function OTPVerificationForm({ userData }) {
   return (
     <div className="relative flex flex-col items-center">
       <SuccessAlert success={success} path={"Login"} />
-      {isLoading && <FormLoader action={"Verifying OTP..."} />}
-      {isResending && <FormLoader action={"Resending OTP..."} />}
+      {isLoading && <ActionLoader action={"Verifying OTP..."} />}
+      {isResending && <ActionLoader action={"Resending OTP..."} />}
       <CardHeader className="text-center">
         <h2 className="text-2xl font-bold">OTP Verification</h2>
         <CardDescription>

@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CardContent, CardHeader, CardDescription } from "@/components/ui/card";
 
-import FormLoader from "../Loaders/FormLoader";
+import ActionLoader from "../Loaders/ActionLoader";
 import SuccessAlert from "../SuccessAlert";
 
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
@@ -95,7 +95,7 @@ function UpdateUserForm({ username, fullname }) {
   return (
     <div className="relative flex flex-col">
       {success && <SuccessAlert success={success} path={"Profile"} />}
-      {isLoading && <FormLoader action={"Updating..."} />}
+      {isLoading && <ActionLoader action={"Updating..."} />}
 
       <CardHeader className="text-center">
         <h2 className="text-2xl font-bold">Update Details</h2>

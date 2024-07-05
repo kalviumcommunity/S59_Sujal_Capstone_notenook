@@ -23,7 +23,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 
-import FormLoader from "../Loaders/FormLoader";
+import ActionLoader from "../Loaders/ActionLoader";
 import SuccessAlert from "../SuccessAlert";
 import googleLogo from "../../assets/googleLogo.svg";
 
@@ -95,7 +95,7 @@ function RegistrationForm({ setUserData }) {
   return (
     <div className="relative flex flex-col">
       <SuccessAlert success={success} path={"OTP verification"} />
-      {isLoading && <FormLoader action={"Registering..."} />}
+      {isLoading && <ActionLoader action={"Registering..."} />}
       <CardHeader className="text-center">
         <h2 className="text-2xl font-bold">Register</h2>
         <CardDescription>Register your account to get Started</CardDescription>
