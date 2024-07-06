@@ -21,6 +21,7 @@ function ViewNotePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState(null);
+  const [tab, setTab] = useState("post");
 
   useEffect(() => {
     const fetchDefaultValues = async () => {
@@ -166,14 +167,18 @@ function ViewNotePage() {
               rel="noopener noreferrer"
             >
               <Button className="text-xs h-fit" variant="secondary">
-                 PDF <FaExternalLinkAlt className="ml-2"/>
+                PDF <FaExternalLinkAlt className="ml-2" />
               </Button>
             </a>
           )}
         </div>
       </div>
 
-      <Tabs defaultValue="post" className="flex flex-col mt-4 h-[calc(100%-166px)] min-h-[200px]">
+      <Tabs
+        value={tab}
+        onValueChange={setTab}
+        className="flex flex-col mt-4 h-[calc(100%-166px)] min-h-[200px]"
+      >
         <TabsList
           style={{
             backgroundColor: "#09090b",
@@ -187,7 +192,7 @@ function ViewNotePage() {
           <ViewWindow note={note} />
         </TabsContent>
         <TabsContent value="comments">
-          <WrappedCommentsWindow />
+          <WrappedCommentsWindow setTab={setTab} />
         </TabsContent>
       </Tabs>
     </div>

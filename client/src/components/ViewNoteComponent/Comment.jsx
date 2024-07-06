@@ -1,21 +1,36 @@
-import pic from "../../assets/pic.png";
-import formatDate from "../../Functions/FormatDate";
 import { Link } from "react-router-dom";
+
+import { Card, CardHeader, CardContent } from "../ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+
+import formatDate from "../../Functions/FormatDate";
+import pic from "../../assets/pic.png";
+
 function Comment({ comment }) {
   return (
-    <div className="comment">
-      <img src={pic} alt="User Avatar" className="avatar" />
-      <div className="comment-content">
-        <Link to={`/notenook/viewUser/${comment.postedBy._id}`}>
-          <p className="commentedBy">
-            <strong>{comment.postedBy.username}</strong>
-          </p>
-        </Link>
-        <p className="commentedAt">
-          Commented at: {formatDate(comment.updatedAt)}
-        </p>
-        <p>{comment.comment}</p>
-      </div>
+    <div className="flex gap-4 items-center w-full mb-4">
+      <Avatar>
+        <AvatarImage src={pic} alt="User Avatar" />
+        <AvatarFallback>{comment.postedBy.username[0]}</AvatarFallback>
+      </Avatar>
+      <Card className="bg-[#0C0A09] text-white w-full border-neutral-600 border-[0.25px]">
+        <CardHeader className="flex items-center flex-row p-2">
+          <div className="ml-4">
+            <Link
+              to={`/notenook/viewUser/${comment.postedBy._id}`}
+              className="font-bold"
+            >
+              {comment.postedBy.username}
+            </Link>
+            <p className="text-gray-400 text-xs">
+              Commented at: {formatDate(comment.updatedAt)}
+            </p>
+          </div>
+        </CardHeader>
+        <CardContent className="pb-2 ">
+          <p>{comment.comment}</p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

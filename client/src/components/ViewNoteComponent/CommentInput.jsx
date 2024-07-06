@@ -61,7 +61,7 @@ const CommentInput = ({ handleCommentPosted }) => {
     <div className="flex gap-1 ml-[70px] mr-2">
       <Textarea
         value={messageInput}
-        className="text-black"
+        className="text-black resize-none"
         onChange={(e) => setMessageInput(e.target.value)}
         placeholder="Type your comment here..."
         disabled={isLoading}

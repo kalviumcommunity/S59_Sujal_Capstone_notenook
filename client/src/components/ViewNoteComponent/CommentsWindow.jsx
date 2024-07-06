@@ -2,6 +2,8 @@ import { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, gql, useSubscription } from "@apollo/client";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import Comment from "./Comment";
 import MyComment from "./MyComment";
 import CommentInput from "./CommentInput";
@@ -10,6 +12,7 @@ import ActionLoader from "../Loaders/ActionLoader";
 import { UserContext } from "../../context/userContext";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import "../../css/Comments.css";
+import { Button } from "../ui/button";
 
 const GET_COMMENTS_BY_NOTE_ID = gql`
   query GetCommentsByNoteId($noteId: ID!) {
@@ -57,10 +60,9 @@ const COMMENT_DELETED = gql`
   }
 `;
 
-function CommentsWindow() {
+function CommentsWindow({ setTab }) {
   const { user } = useContext(UserContext);
   const { documentId: noteId } = useParams();
-  const [showMyComments, setShowMyComments] = useState(false);
 
   const { loading, error, data, refetch } = useQuery(GET_COMMENTS_BY_NOTE_ID, {
     variables: { noteId },
@@ -101,16 +103,10 @@ function CommentsWindow() {
   });
 
   useEffect(() => {
-    if (addedCommentData) {
+    if (addedCommentData || deletedCommentData) {
       refetch();
     }
-  }, [addedCommentData, refetch]);
-
-  useEffect(() => {
-    if (deletedCommentData) {
-      refetch();
-    }
-  }, [deletedCommentData, refetch]);
+  }, [addedCommentData, deletedCommentData, refetch]);
 
   if (loading) {
     return <ActionLoader action={"Loading comments..."} />;
@@ -119,13 +115,12 @@ function CommentsWindow() {
   if (error) {
     return (
       <p className="text-red-500 text-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]">
-        {error}
+        {error.message}
       </p>
     );
   }
 
   const comments = data.getCommentsByNoteId;
-
   const myComments = comments.filter(
     (comment) => comment.postedBy?._id === user?._id
   );
@@ -142,21 +137,37 @@ function CommentsWindow() {
     refetch();
   };
 
-  const toggleCommentsView = () => {
-    setShowMyComments(!showMyComments);
-  };
-
   return (
-    <div className="flex page commentWindow flex-col w-full justify-between items-center absolute top-0 backdrop-blur-sm">
+    <Tabs
+      defaultValue="all"
+      className="flex page commentWindow flex-col w-full justify-between items-center absolute top-0 backdrop-blur-sm"
+    >
       <div className="flex justify-between items-center h-[75px] w-[500px] max-w-[95vw] mb-2">
-        <h2 className="heading">Comments</h2>
-        <button className="button" onClick={toggleCommentsView}>
-          {showMyComments ? "Show All Comments" : "Show My Comment"}
-        </button>
+        <Button
+          onClick={() => {
+            setTab("post");
+          }}
+        >
+          Close
+        </Button>
+        <TabsList
+          style={{
+            backgroundColor: "#09090b",
+            alignSelf: "flex-start",
+          }}
+        >
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="my">My</TabsTrigger>
+        </TabsList>
       </div>
-      <div className="comments h-calc(100%-170px) overflow-y-scroll w-[500px] max-w-[90vw] rounded-md">
-        {showMyComments ? (
-          myComments.length > 0 ? (
+      <div className="comments h-[calc(100%-170px)] justify-stretch overflow-y-scroll w-[500px] max-w-[90vw] rounded-md flex flex-col">
+        <TabsContent value="all">
+          {comments.map((comment) => (
+            <Comment key={comment._id} comment={comment} />
+          ))}
+        </TabsContent>
+        <TabsContent value="my">
+          {myComments.length > 0 ? (
             myComments.map((comment) => (
               <MyComment
                 key={comment._id}
@@ -165,13 +176,9 @@ function CommentsWindow() {
               />
             ))
           ) : (
-            <p>No comments from you yet.</p>
-          )
-        ) : (
-          comments.map((comment) => (
-            <Comment key={comment._id} comment={comment} />
-          ))
-        )}
+            <p>No comments found.</p>
+          )}
+        </TabsContent>
       </div>
       <div className="w-[500px] max-w-[95vw] h-[75px] mt-2">
         <CommentInput
@@ -179,7 +186,7 @@ function CommentsWindow() {
           handleCommentPosted={handleCommentPosted}
         />
       </div>
-    </div>
+    </Tabs>
   );
 }
 

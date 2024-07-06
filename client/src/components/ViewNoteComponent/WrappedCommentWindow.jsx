@@ -35,10 +35,10 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function WrappedCommentsWindow() {
+function WrappedCommentsWindow({ setTab }) {
   return (
     <ApolloProvider client={client}>
-      <CommentsWindow />
+      <CommentsWindow setTab={setTab} />
     </ApolloProvider>
   );
 }
