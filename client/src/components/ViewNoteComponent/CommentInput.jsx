@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import SendIcon from "@mui/icons-material/Send";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useMutation, gql } from "@apollo/client";
 
+import { Textarea } from "@/components/ui/textarea";
+import { IoSend } from "react-icons/io5";
+import SendingLoader from "../Loaders/SendingLoader";
+
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-import "../../css/ChatComponent.css";
+import { Button } from "../ui/button";
 
 const POST_COMMENT = gql`
   mutation PostComment($noteId: ID!, $comment: String!) {
@@ -56,22 +58,27 @@ const CommentInput = ({ handleCommentPosted }) => {
   };
 
   return (
-    <div className="commentInputContainer">
-      <input
-        type="text"
-        className="commentInput"
+    <div className="flex gap-1 ml-[70px] mr-2">
+      <Textarea
         value={messageInput}
+        className="text-black"
         onChange={(e) => setMessageInput(e.target.value)}
-        placeholder="Type your message here..."
+        placeholder="Type your comment here..."
         disabled={isLoading}
       />
       <div className="flex items-center justify-center">
         {isLoading ? (
-          <CircularProgress size={20} />
+          <div className="h-[50px] aspect-square flex items-center justify-center">
+            <SendingLoader />
+          </div>
         ) : (
-          <button onClick={handleSendMessage} className="commentSendButton">
-            <SendIcon fontSize="small" />
-          </button>
+          <Button
+            variant="ghost"
+            onClick={handleSendMessage}
+            className="h-[50px] aspect-square rounded-full"
+          >
+            <IoSend className="text-xl" />
+          </Button>
         )}
       </div>
     </div>

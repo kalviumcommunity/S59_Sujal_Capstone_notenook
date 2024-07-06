@@ -8,7 +8,7 @@ import {
 } from "../ui/card";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { FaRegStickyNote, FaUserFriends, FaRegEdit } from "react-icons/fa";
+import { FaRegStickyNote, FaRegEdit } from "react-icons/fa";
 
 import { CgProfile } from "react-icons/cg";
 import { IoChatbubbleOutline } from "react-icons/io5";

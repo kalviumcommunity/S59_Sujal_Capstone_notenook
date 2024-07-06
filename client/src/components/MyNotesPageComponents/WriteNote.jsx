@@ -3,9 +3,8 @@ import { DeviceWidthContext } from "../../context/deviceWidthContext";
 import TextEditor from "./TextEditor";
 import NoteDetailsForm from "./NoteDetailsForm";
 import AiChat from "../AIChatComponents/AiChat";
-import "../../css/Tabs.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import "../../css/AddNotes.css";
 const WriteNote = () => {
   const [activeTab, setActiveTab] = useState("AiChat");
   const [showTools, setShowTools] = useState(false);
@@ -76,9 +75,7 @@ const Tools = ({ activeTab, handleTabClick, toggleTools, width }) => {
           </div>
         </div>
       </div>
-      <div
-        className={`aiChat ${activeTab === "AiChat" ? "active" : "hidden"}`}
-      >
+      <div className={`aiChat ${activeTab === "AiChat" ? "active" : "hidden"}`}>
         <AiChat />
       </div>
       <div

@@ -9,7 +9,7 @@ function MyPostedNote({ note, confirmDelete }) {
   return (
     <Card className="mb-2 bg-[#0C0A09] text-white border-neutral-600 border-[0.25px]">
       <CardHeader className="p-4">
-        <Link to={`/notenook/viewNote/${note._id}`}>
+        <Link to={`/notenook/viewNote/${note.note}`}>
           <CardTitle className="font-bold text-xl">
             <span>Title:</span> {note.title}
           </CardTitle>

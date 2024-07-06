@@ -85,7 +85,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #eeff00;
 }
-
+.comments::-webkit-scrollbar {
+  width: 0px;
+}
 /*PROBABLY GONNA REMOVE*/
 
 .profileContent .connectionUsername {

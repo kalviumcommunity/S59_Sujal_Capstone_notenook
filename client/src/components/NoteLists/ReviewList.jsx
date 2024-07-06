@@ -37,7 +37,7 @@ function ReviewList() {
         </TabsList>
         <TabsContent value="Normal">
           <div className="grid reviewList min-h-20 grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-rows-min gap-2">
-            {!filteredSavedNotes.length && (
+            {!filteredNotes.length && (
               <p className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] text-sm text-neutral-300 text-center">
                 Your Review List Appears here
               </p>

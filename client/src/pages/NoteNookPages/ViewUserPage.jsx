@@ -4,7 +4,7 @@ import axios from "axios";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import ViewUserInfo from "../../components/UserProfileComponents/ViewuserInfo";
 import ViewUserProfileContent from "../../components/UserProfileComponents/ViewUserProfileContent";
-import FormLoader from "../../components/Loaders/ActionLoader";
+import ActionLoader from "../../components/Loaders/ActionLoader";
 
 function ViewUserPage() {
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,7 @@ function ViewUserPage() {
 
   return (
     <div className="userProfilePage page lg:w-[900px] max-w-[90vw] m-auto">
-      {loading && <FormLoader action="Fetching User Data..." />}
+      {loading && <ActionLoader action="Fetching User Data..." />}
       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
       {!loading && userInfo && (
         <>

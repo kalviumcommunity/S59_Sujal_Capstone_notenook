@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IoNotificationsCircleOutline } from "react-icons/io5";
 import Notifications from "../NotificationComponents/Notifications";
-import "../../css/Notifications.css";
-import "../../css/Tabs.css";
 
 const HeaderNotifications = () => {
   const [showNotifications, setShowNotifications] = useState(false);

@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import WriteNote from "../../components/MyNotesPageComponents/WriteNote";
 import NotesList from "../../components/MyNotesPageComponents/NotesList";
 import CreateNote from "../../components/MyNotesPageComponents/CreateNote";
-import "../../css/AddNotes.css";
 
 function MyNotesPage() {
   return (

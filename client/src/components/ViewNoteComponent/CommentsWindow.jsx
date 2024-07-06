@@ -5,6 +5,8 @@ import { useQuery, useMutation, gql, useSubscription } from "@apollo/client";
 import Comment from "./Comment";
 import MyComment from "./MyComment";
 import CommentInput from "./CommentInput";
+import ActionLoader from "../Loaders/ActionLoader";
+
 import { UserContext } from "../../context/userContext";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import "../../css/Comments.css";
@@ -111,11 +113,15 @@ function CommentsWindow() {
   }, [deletedCommentData, refetch]);
 
   if (loading) {
-    return <p>Loading comments...</p>;
+    return <ActionLoader action={"Loading comments..."} />;
   }
 
   if (error) {
-    return <p>Error loading comments: {error.message}</p>;
+    return (
+      <p className="text-red-500 text-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]">
+        {error}
+      </p>
+    );
   }
 
   const comments = data.getCommentsByNoteId;
@@ -141,14 +147,14 @@ function CommentsWindow() {
   };
 
   return (
-    <>
-      <div className="flex w-full justify-between items-center">
+    <div className="flex page commentWindow flex-col w-full justify-between items-center absolute top-0 backdrop-blur-sm">
+      <div className="flex justify-between items-center h-[75px] w-[500px] max-w-[95vw] mb-2">
         <h2 className="heading">Comments</h2>
         <button className="button" onClick={toggleCommentsView}>
           {showMyComments ? "Show All Comments" : "Show My Comment"}
         </button>
       </div>
-      <div className="comments">
+      <div className="comments h-calc(100%-170px) overflow-y-scroll w-[500px] max-w-[90vw] rounded-md">
         {showMyComments ? (
           myComments.length > 0 ? (
             myComments.map((comment) => (
@@ -167,8 +173,13 @@ function CommentsWindow() {
           ))
         )}
       </div>
-      <CommentInput noteId={noteId} handleCommentPosted={handleCommentPosted} />
-    </>
+      <div className="w-[500px] max-w-[95vw] h-[75px] mt-2">
+        <CommentInput
+          noteId={noteId}
+          handleCommentPosted={handleCommentPosted}
+        />
+      </div>
+    </div>
   );
 }
 

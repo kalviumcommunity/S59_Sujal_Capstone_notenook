@@ -351,11 +351,14 @@ const getNote = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 const viewNote = async (req, res) => {
   try {
     const { documentId } = req.query;
     const userId = req.user._id;
+
+    if (!documentId) {
+      return res.status(400).json({ error: "Document ID is required" });
+    }
 
     const note = await NoteModel.findById(documentId).populate({
       path: "postedBy",
@@ -372,6 +375,9 @@ const viewNote = async (req, res) => {
 
     if (!isOwner) {
       const user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
       isSaved = user.savedNotes.some(
         (entry) =>
           entry.originalNote.equals(documentId) ||
@@ -381,18 +387,18 @@ const viewNote = async (req, res) => {
 
     res.json({ note, isOwner, isSaved });
   } catch (error) {
-    return handleInternalError(res, error, "Error fetching note:");
+    console.error("Error fetching note:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 const saveNote = async (req, res) => {
   const userId = req.user._id;
   const noteId = req.params.documentId;
 
   try {
-    const postedNote = await PostedNoteModel.findById(noteId).select("note");
-
-    const originalNote = await NoteModel.findById(postedNote.note);
+    const originalNote = await NoteModel.findById(noteId);
 
     if (!originalNote) {
       return res.status(404).json({ error: "Note not found" });

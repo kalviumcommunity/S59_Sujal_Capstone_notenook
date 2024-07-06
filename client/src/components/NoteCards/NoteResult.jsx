@@ -32,7 +32,7 @@ function NoteResult({ result }) {
         </p>
         <p className="text-xs text-neutral-400">Posted {formatDate(result.updatedAt)}</p>
         <div className="flex justify-end gap-5">
-          <Link to={`/notenook/viewNote/${result._id}`}>
+          <Link to={`/notenook/viewNote/${result.note}`}>
             <Button variant="secondary" className="text-xs">
               View
             </Button>
