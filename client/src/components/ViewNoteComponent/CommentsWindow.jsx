@@ -1,8 +1,9 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, gql, useSubscription } from "@apollo/client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "../ui/button";
 
 import Comment from "./Comment";
 import MyComment from "./MyComment";
@@ -11,8 +12,6 @@ import ActionLoader from "../Loaders/ActionLoader";
 
 import { UserContext } from "../../context/userContext";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-import "../../css/Comments.css";
-import { Button } from "../ui/button";
 
 const GET_COMMENTS_BY_NOTE_ID = gql`
   query GetCommentsByNoteId($noteId: ID!) {
