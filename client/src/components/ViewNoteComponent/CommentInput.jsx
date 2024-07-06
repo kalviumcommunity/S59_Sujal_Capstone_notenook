@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "../ui/button";
+
 import { IoSend } from "react-icons/io5";
+
 import SendingLoader from "../Loaders/SendingLoader";
 
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-import { Button } from "../ui/button";
 
 const POST_COMMENT = gql`
   mutation PostComment($noteId: ID!, $comment: String!) {
@@ -58,7 +60,7 @@ const CommentInput = ({ handleCommentPosted }) => {
   };
 
   return (
-    <div className="flex gap-1 ml-[70px] mr-2">
+    <div className="flex gap-1 ml-[55px] mr-2 mt-4">
       <Textarea
         value={messageInput}
         className="text-black resize-none"

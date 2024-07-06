@@ -32,7 +32,7 @@ function ViewWindow({ note }) {
   }, []);
 
   return (
-    <article className="viewWindow">
+    <article className="viewWindow pb-16">
       <section className="editorSection">
         <div className="editorContainer" ref={wrapperRef}>
           <div id="editor"></div>

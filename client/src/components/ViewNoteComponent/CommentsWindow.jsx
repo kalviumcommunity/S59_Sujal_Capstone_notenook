@@ -139,27 +139,27 @@ function CommentsWindow({ setTab }) {
   return (
     <Tabs
       defaultValue="all"
-      className="flex page commentWindow flex-col w-full justify-between items-center absolute top-0 backdrop-blur-sm"
+      className="flex page commentWindow flex-col w-full justify-between items-center absolute pb-0 left-0 top-0 backdrop-blur-sm"
     >
       <div className="flex justify-between items-center h-[75px] w-[500px] max-w-[95vw] mb-2">
         <Button
           onClick={() => {
             setTab("post");
           }}
+          className="text-xs h-fit"
         >
           Close
         </Button>
         <TabsList
           style={{
             backgroundColor: "#09090b",
-            alignSelf: "flex-start",
           }}
         >
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="my">My</TabsTrigger>
         </TabsList>
       </div>
-      <div className="comments h-[calc(100%-170px)] justify-stretch overflow-y-scroll w-[500px] max-w-[90vw] rounded-md flex flex-col">
+      <div className="comments h-[calc(100%-150px)] justify-stretch overflow-y-scroll w-[500px] max-w-[90vw] rounded-md flex flex-col">
         <TabsContent value="all">
           {comments.map((comment) => (
             <Comment key={comment._id} comment={comment} />
