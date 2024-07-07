@@ -1,9 +1,21 @@
 import { useState, useRef } from "react";
-import { storage } from "../../firebase";
-import { deleteObject } from "firebase/storage";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+
+import { storage } from "../../firebase";
+import {
+  deleteObject,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
+
+import ErrorAlert from "./ErrorAlert";
+import ActionLoader from "../Loaders/ActionLoader";
+
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 function PDFUploader({
@@ -14,125 +26,110 @@ function PDFUploader({
   setFileUrl,
 }) {
   const [file, setFile] = useState(null);
+  const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const MAX_FILE_SIZE = 10 * 1024 * 1024;
   const fileInputRef = useRef(null);
+
+  const isValidFile = (file) => {
+    if (file && file.type === "application/pdf") {
+      if (file.size > MAX_FILE_SIZE) {
+        setError(
+          "File size exceeds the maximum limit (10MB). Please upload a smaller file."
+        );
+        setShowError(true);
+        return false;
+      }
+      return true;
+    } else {
+      setError("Please select a PDF file.");
+      setShowError(true);
+      return false;
+    }
+  };
 
   const handleRemoveFile = async () => {
     if (fileUrl) {
       const token = extractTokenFromCookie();
-      if (!token) {
-        return;
-      }
+      if (!token) return;
 
+      setIsDeleting(true);
       try {
-        const storageRef = ref(storage, fileUrl);
-        await deleteObject(storageRef);
-        const res = await axios.delete(
-          `${import.meta.env.VITE_REACT_APP_DELETE_PDF_ENDPOINT}/${documentId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        await deleteFileFromStorage(fileUrl, token);
         setFileUrl("");
-
-        alert("File removed successfully");
       } catch (error) {
+        setError("Failed to remove file");
+        setShowError(true);
         console.log(error);
-        alert("Failed to remove file");
+      } finally {
+        setIsDeleting(false);
       }
     }
 
-    setFileName("");
-    setFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    resetFileInput();
   };
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    if (selectedFile && selectedFile.type === "application/pdf") {
-      if (selectedFile.size > MAX_FILE_SIZE) {
-        alert(
-          "File size exceeds the maximum limit (10MB). Please upload a smaller file."
-        );
-        return;
-      }
+    if (isValidFile(selectedFile)) {
       setFileName(selectedFile.name);
       setFile(selectedFile);
-    } else {
-      alert("Please select a PDF file.");
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
     }
   };
 
   const uploadFile = async () => {
-    if (!file) {
-      return;
-    }
-    const token = extractTokenFromCookie();
-    if (!token) {
-      return;
-    }
-    try {
-      const pdfRef = ref(storage, `pdfs/${file.name + uuidv4()}`);
-      const response = await uploadBytes(pdfRef, file);
-      const url = await getDownloadURL(response.ref);
-      setFileUrl(url); 
-      alert("Upload successful");
+    if (!file) return;
 
-      const res = await axios.patch(
-        import.meta.env.VITE_REACT_APP_UPDATE_PDF_ENDPOINT,
-        {
-          noteId: documentId,
-          fileName: file.name,
-          url: url,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    const token = extractTokenFromCookie();
+    if (!token) return;
+
+    setIsUploading(true);
+    try {
+      const url = await uploadFileToStorage(file);
+      setFileUrl(url);
+      await updateFileInDatabase(url, token);
     } catch (error) {
+      setError("Upload failed");
+      setShowError(true);
       console.log(error);
-      alert("Upload failed");
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  return (
-    <div className="pdfUploader self-center">
-      <div className="flex w-full justify-around items-center mb-4">
-        <div className="file-input-container">
-          <input
-            ref={fileInputRef}
-            type="file"
-            id="fileInput"
-            className="file-input"
-            aria-describedby="fileInputLabel"
-            accept=".pdf"
-            multiple={false}
-            onChange={handleFileChange}
-          />
+  const deleteFileFromStorage = async (fileUrl, token) => {
+    const storageRef = ref(storage, fileUrl);
+    await deleteObject(storageRef);
+    await axios.delete(
+      `${import.meta.env.VITE_REACT_APP_DELETE_PDF_ENDPOINT}/${documentId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  };
 
-          <label
-            htmlFor="fileInput"
-            className="file-input-label button"
-            role="button"
-            id="fileInputLabel"
-          >
-            Upload Pdf
-          </label>
-        </div>
-        <button className="button" onClick={uploadFile}>
-          Update
-        </button>
-      </div>
-      <div className="file-name-container" title={fileName || "No file chosen"}>
+  const uploadFileToStorage = async (file) => {
+    const pdfRef = ref(storage, `pdfs/${file.name + uuidv4()}`);
+    const response = await uploadBytes(pdfRef, file);
+    return await getDownloadURL(response.ref);
+  };
+
+  const updateFileInDatabase = async (url, token) => {
+    await axios.patch(
+      import.meta.env.VITE_REACT_APP_UPDATE_PDF_ENDPOINT,
+      { noteId: documentId, fileName: file.name, url: url },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+  };
+
+  return (
+    <div className="self-center mt-4">
+      <div
+        className="w-full text-black bg-white text-center text-sm p-4 rounded-md"
+        title={fileName || "No file chosen"}
+      >
         {fileUrl ? (
           <a
             href={fileUrl}
@@ -140,23 +137,45 @@ function PDFUploader({
             rel="noopener noreferrer"
             className="file-name text-blue-600 block text-sm"
           >
-            {fileName || "No file"}
+            {fileName}
           </a>
         ) : (
-          <p className="file-name">{fileName || "No file"}</p>
+          <p className="text-black w-full whitespace-nowrap overflow-hidden text-ellipsis">
+            {fileName || "No file"}
+          </p>
         )}
-        {fileName ? (
-          <button
-            type="button"
-            className="ml-2 text-red-500 button delete mt-4"
-            onClick={handleRemoveFile}
-          >
+        {fileName && (
+          <button className="ml-2 text-red-500 mt-4" onClick={handleRemoveFile}>
             {fileUrl ? "Delete File" : "Remove file"}
           </button>
-        ) : (
-          "Uploaded"
         )}
       </div>
+
+      <div className="flex w-full justify-end my-4 gap-6">
+        <div className="w-[7.5rem]">
+          <Input
+            ref={fileInputRef}
+            type="file"
+            aria-describedby="fileInputLabel"
+            accept=".pdf"
+            multiple={false}
+            onChange={handleFileChange}
+          />
+        </div>
+        <Button className="button" variant="secondary" onClick={uploadFile}>
+          Update
+        </Button>
+      </div>
+
+      {isUploading && <ActionLoader action={"Uploading pdf..."} />}
+      {isDeleting && <ActionLoader action={"Deleting pdf..."} />}
+
+      <ErrorAlert
+        error={error}
+        showError={showError}
+        setError={setError}
+        setShowError={setShowError}
+      />
     </div>
   );
 }

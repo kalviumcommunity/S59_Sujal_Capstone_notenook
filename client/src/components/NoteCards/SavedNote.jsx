@@ -55,10 +55,10 @@ function SavedNote({
           <BookmarkAddIcon className="text-neutral-500" onClick={handleMark} />
         )}
 
-        <Link to={`/notenook/myNotes/writeNote/${savedNote._id}`}>
+        <Link to={`/notenook/viewNote/${savedNote._id}`}>
           <Button variants="primary" className="text-xs h-fit">
-            Update
-          </Button>{" "}
+            View
+          </Button>
         </Link>
         <Button
           onClick={() => confirmDelete(savedNote._id)}

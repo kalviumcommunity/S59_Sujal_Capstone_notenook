@@ -3,69 +3,69 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Card } from "../ui/card";
+
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-
 import PDFUploader from "./PDFUploader";
-import { NIL } from "uuid";
+import ErrorAlert from "./ErrorAlert";
+import ActionLoader from "../Loaders/ActionLoader";
 
-function NoteDetailsForm() {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm();
+const formSchema = z.object({
+  title: z.string().min(3, { message: "Enter title." }),
+  subject: z.string().min(3, { message: "Enter subject" }),
+});
 
+function NoteDetailsForm({ note, setNote }) {
   const [fileName, setFileName] = useState("");
   const [fileUrl, setFileUrl] = useState("");
-  const [note, setNote] = useState(null);
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isPosting, setIsPosting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
   const { documentId } = useParams();
-  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: note.title,
+      subject: note.subject,
+    },
+  });
 
   useEffect(() => {
-    const fetchDefaultValues = async () => {
-      const token = extractTokenFromCookie();
-      try {
-        if (token) {
-          const response = await axios.get(
-            `${
-              import.meta.env.VITE_REACT_APP_GET_USER_NOTE_ENDPOINT
-            }?documentId=${documentId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const note = response.data.note;
-          setNote(note);
-          if (note.fileReference) {
-            setFileName(note.fileReference.fileName);
-            setFileUrl(note.fileReference.url);
-          }
-          setValue("noteTitle", response.data.note.title);
-          setValue("subject", response.data.note.subject);
-        }
-      } catch (error) {
-        console.error("Error fetching default values:", error);
-      }
-    };
+    if (note.fileReference) {
+      setFileName(note.fileReference.fileName);
+      setFileUrl(note.fileReference.url);
+    }
+  }, [note]);
 
-    fetchDefaultValues();
-  }, [setValue, useParams]);
-
-  const onSubmit = async (data) => {
+  const handleFormSubmit = async (data) => {
+    setIsUpdating(true);
     try {
       const formData = {
         noteId: documentId,
-        title: data.noteTitle,
+        title: data.title,
         subject: data.subject,
       };
 
       const token = extractTokenFromCookie();
       if (token) {
-        const response = await axios.patch(
+        await axios.patch(
           import.meta.env.VITE_REACT_APP_UPDATE_NOTE_ENDPOINT,
           formData,
           {
@@ -74,12 +74,18 @@ function NoteDetailsForm() {
             },
           }
         );
-
-        setUnsavedChanges(false);
-        setShowConfirmation(false);
+        setNote({
+          ...note,
+          title: data.title,
+          subject: data.subject,
+        });
       }
     } catch (error) {
+      setError("Error submitting note details");
+      setShowError(true);
       console.error("Error submitting note details:", error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -88,6 +94,7 @@ function NoteDetailsForm() {
     if (!token || !note) {
       return;
     }
+    setIsPosting(true);
     try {
       const formData = {
         noteId: documentId,
@@ -105,12 +112,14 @@ function NoteDetailsForm() {
         }
       );
       if (response.status === 201) {
-        alert("Posted Successfully");
-        setUnsavedChanges(false);
         setNote({ ...note, postedNote: true });
       }
     } catch (error) {
+      setError("Error posting note");
+      setShowError(true);
       console.error("Error posting note:", error);
+    } finally {
+      setIsPosting(false);
     }
   };
 
@@ -119,11 +128,12 @@ function NoteDetailsForm() {
     if (!token || !note) {
       return;
     }
+    setIsDeleting(true);
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_REACT_APP_DELETE_POSTEDNOTE_ENDPOINT}/${
-          documentId
-        }`, 
+        `${
+          import.meta.env.VITE_REACT_APP_DELETE_POSTEDNOTE_ENDPOINT
+        }/${documentId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -131,101 +141,37 @@ function NoteDetailsForm() {
         }
       );
       if (response.status === 204) {
-        alert("Posted note Deleted Successfully");
         setNote({ ...note, postedNote: false });
       }
     } catch (error) {
-      console.error("Error posting note:", error);
+      setError("Error deleting posted note");
+      setShowError(true);
+      console.error("Error deleting posted note:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  const handleInputChange = () => {
-    setUnsavedChanges(true);
-  };
-
   return (
-    <>
-      <div className="postNoteForm">
-        <div className="flex items-center justify-around postDiv">
-          <p className="w-3/4 font-bold text-gray-500">
-            Upload the note so that everyone can view it
-          </p>
+    <Card className="bg-[#0C0A09] text-white border-neutral-600 border-[0.25px] w-[500px] max-w-[100%] m-auto p-4 flex flex-col gap-6 items-center relative">
+      <div className="flex w-[90%] flex-col justify-around postDiv gap-4 mt-4">
+        <p className="font-bold">
+          Upload the note so that everyone can view it
+        </p>
+        <div className="self-end">
           {note?.postedNote ? (
-            <button
-              type="button"
-              className="button delete"
-              onClick={deletePostedNote}
-              title={"Remove the post?"}
-            >
+            <Button variant="destructive" onClick={deletePostedNote}>
               Unpost
-            </button>
+            </Button>
           ) : (
-            <button
-              type="button"
-              className="button post"
-              onClick={postNote}
-              disabled={unsavedChanges}
-              title={unsavedChanges ? "Save the updates first" : null}
-            >
+            <Button onClick={postNote} variant="secondary">
               Post{" "}
-            </button>
+            </Button>
           )}
         </div>
-        <form className="noteDetails" onSubmit={handleSubmit(onSubmit)}>
-          <div className="field">
-            <label htmlFor="noteTitle">Note Title:</label>
-            <input
-              type="text"
-              name="noteTitle"
-              id="noteTitle"
-              {...register("noteTitle", {
-                required: "Note title is required",
-              })}
-              onChange={handleInputChange}
-            />
-            <p className="error">{errors.noteTitle?.message}</p>
-          </div>
-
-          <div className="field">
-            <label htmlFor="subject">Subject:</label>
-            <input
-              type="text"
-              name="subject"
-              id="subject"
-              {...register("subject", {
-                required: "Subject is required",
-              })}
-              onChange={handleInputChange}
-            />
-            <p className="error">{errors.subject?.message}</p>
-          </div>
-
-          <div
-            onClick={() => setShowConfirmation(true)}
-            className="button post"
-          >
-            Update details
-          </div>
-          {showConfirmation && (
-            <div className="confirmation-popup">
-              <p className="heading text-center">
-                Are you sure you want to update the note?
-              </p>
-              <div className="flex gap-10">
-                <button type="submit" className="button yes-button">
-                  Yes
-                </button>
-                <div
-                  onClick={() => setShowConfirmation(false)}
-                  className="button cancel-button"
-                >
-                  Cancel
-                </div>
-              </div>
-            </div>
-          )}
-        </form>
-
+      </div>
+      <div className="w-[90%]">
+        <p className="font-bold">Upload Pdf</p>
         <PDFUploader
           documentId={documentId}
           fileName={fileName}
@@ -234,7 +180,58 @@ function NoteDetailsForm() {
           setFileUrl={setFileUrl}
         />
       </div>
-    </>
+
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleFormSubmit)}
+          className="space-y-6 w-[90%] flex flex-col"
+        >
+          <p className="font-bold">Update Note Details</p>
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input {...field} className="text-black" />
+                </FormControl>
+                <FormDescription>Your Note Title.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Subject</FormLabel>
+                <FormControl>
+                  <Input {...field} className="text-black" />
+                </FormControl>
+                <FormDescription>Your Note Subject.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button className="self-end">Update details</Button>
+        </form>
+      </Form>
+
+      {isUpdating && <ActionLoader action={"Updating note..."} />}
+      {isPosting && <ActionLoader action={"Posting note..."} />}
+      {isDeleting && <ActionLoader action={"Deleting posted note..."} />}
+
+      <ErrorAlert
+        error={error}
+        showError={showError}
+        setError={setError}
+        setShowError={setShowError}
+      />
+    </Card>
   );
 }
 

@@ -1,89 +1,80 @@
-import { useState, useContext } from "react";
-import { DeviceWidthContext } from "../../context/deviceWidthContext";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import TextEditor from "./TextEditor";
 import NoteDetailsForm from "./NoteDetailsForm";
-import AiChat from "../AIChatComponents/AiChat";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import "../../css/AddNotes.css";
+
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import { set } from "react-hook-form";
+
 const WriteNote = () => {
-  const [activeTab, setActiveTab] = useState("AiChat");
-  const [showTools, setShowTools] = useState(false);
-  const width = useContext(DeviceWidthContext);
+  const [note, setNote] = useState(null);
+  const { documentId } = useParams();
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  useEffect(() => {
+    const fetchDefaultValues = async () => {
+      const token = extractTokenFromCookie();
+      try {
+        if (token) {
+          const response = await axios.get(
+            `${
+              import.meta.env.VITE_REACT_APP_GET_USER_NOTE_ENDPOINT
+            }?documentId=${documentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const note = response.data.note;
+          setNote(note);
+        }
+      } catch (error) {
+        console.error("Error fetching default values:", error);
+      }
+    };
 
-  const toggleTools = () => {
-    setShowTools(!showTools);
-  };
+    fetchDefaultValues();
+  }, []);
 
   return (
-    <div className="writeNote relative">
-      {width < 1024 && (
-        <button className="button toolsButton" onClick={toggleTools}>
-          {showTools ? "Hide Tools" : "Show Tools"}
-        </button>
-      )}
-      <div className="writeNoteComponents">
-        {width < 1024 && showTools && (
-          <div className="writeNotesTools fixed">
-            <Tools
-              activeTab={activeTab}
-              handleTabClick={handleTabClick}
-              toggleTools={toggleTools}
-              width={width}
-            />
-          </div>
-        )}
-        <TextEditor />
-        {width >= 1024 && (
-          <div className="writeNotesTools">
-            <Tools
-              activeTab={activeTab}
-              handleTabClick={handleTabClick}
-              width={width}
-            />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const Tools = ({ activeTab, handleTabClick, toggleTools, width }) => {
-  return (
-    <>
-      <div className="tabDiv">
-        {width < 1024 && (
-          <div className="back-arrow button" onClick={toggleTools}>
-            <ArrowBackIcon />
-          </div>
-        )}
-        <div className="tabs writeNoteTabs">
-          <div
-            className={`tab ${activeTab === "AiChat" ? "active" : ""}`}
-            onClick={() => handleTabClick("AiChat")}
-          >
-            AiChat
-          </div>
-          <div
-            className={`tab ${activeTab === "Post" ? "active" : ""}`}
-            onClick={() => handleTabClick("Post")}
-          >
-            Post
-          </div>
+    <Tabs
+      defaultValue="edit"
+      className="lg:w-[1000px] max-w-[95vw] m-auto flex flex-col "
+    >
+      <div className="mb-2 px-6">
+        <div className="text-xl font-semibold">
+          <span className="text-yellow-500 font-extrabold">Title: </span>
+          <span>{note?.title}</span>
+        </div>
+        <div className="text-lg font-semibold">
+          <span className="text-yellow-500 font-extrabold">Subject: </span>
+          <span>{note?.subject}</span>
         </div>
       </div>
-      <div className={`aiChat ${activeTab === "AiChat" ? "active" : "hidden"}`}>
-        <AiChat />
-      </div>
-      <div
-        className={`noteDetail ${activeTab === "Post" ? "active" : "hidden"}`}
+      <TabsList
+        style={{
+          backgroundColor: "#09090b",
+          alignSelf: "flex-end",
+          marginBottom: "2rem",
+        }}
       >
-        <NoteDetailsForm />
-      </div>
-    </>
+        <TabsTrigger value="edit">Edit</TabsTrigger>
+        <TabsTrigger value="post">Post</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="edit">
+        <TextEditor />
+      </TabsContent>
+      <TabsContent value="post">
+        <div className="pb-[50px]">
+          <NoteDetailsForm note={note} setNote={setNote} />
+        </div>
+      </TabsContent>
+    </Tabs>
   );
 };
 

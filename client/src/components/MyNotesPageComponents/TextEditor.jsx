@@ -5,41 +5,45 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
 import ToolBar from "./ToolBar";
-import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import ActionLoader from "../Loaders/ActionLoader";
+import ErrorAlert from "./ErrorAlert";
 
-import "../../css/TextEditor.css";
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 function TextEditor() {
   const { documentId } = useParams();
   const [socket, setSocket] = useState();
   const [quill, setQuill] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
   const [savingError, setSavingError] = useState(null);
 
   useEffect(() => {
     const token = extractTokenFromCookie();
     if (!token) {
+      setLoadingError("Authorization failed. Please login again.");
+      setIsLoading(false);
       return;
     }
+
     const socketConnection = io(
       import.meta.env.VITE_REACT_APP_TEXT_EDITOR_SOCKET,
       { auth: { token } }
     );
 
     setSocket(socketConnection);
+
     return () => {
       socketConnection.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    if (socket == null || quill == null) {
-      return;
-    }
+    if (socket == null || quill == null) return;
+
     const handler = (delta, oldDelta, source) => {
-      if (source !== "user") {
-        return;
-      }
+      if (source !== "user") return;
       socket.emit("send-changes", delta);
     };
 
@@ -51,23 +55,26 @@ function TextEditor() {
   }, [socket, quill]);
 
   useEffect(() => {
-    if (socket == null || quill == null) {
-      return;
-    }
+    if (socket == null || quill == null) return;
+
+    setIsLoading(true);
 
     socket.emit("get-document", documentId);
 
     socket.once("load-document", (document) => {
       quill.setContents(document);
       quill.enable();
+      setIsLoading(false);
     });
 
     socket.on("authorization-error", (error) => {
       setLoadingError(error);
+      setIsLoading(false);
     });
 
     socket.on("document-fetch-error", (errorMessage) => {
       setLoadingError(errorMessage);
+      setIsLoading(false);
     });
 
     socket.on("document-save-error", (errorMessage) => {
@@ -75,7 +82,9 @@ function TextEditor() {
     });
 
     const interval = setInterval(() => {
+      setIsSaving(true);
       socket.emit("save-document", quill.getContents());
+      setIsSaving(false);
     }, 2000);
 
     return () => {
@@ -101,11 +110,31 @@ function TextEditor() {
   }, []);
 
   return (
-    <div className="relative textEditor">
-      {loadingError && <div>Error loading document: {loadingError}</div>}
-      {savingError && <div>Error saving document: {savingError}</div>}
+    <div className="relative textEditor page">
+      {loadingError && (
+        <ErrorAlert
+          error={loadingError}
+          showError={true}
+          setError={setLoadingError}
+          setShowError={() => {}}
+        />
+      )}
+      {savingError && (
+        <ErrorAlert
+          error={savingError}
+          showError={true}
+          setError={setSavingError}
+          setShowError={() => {}}
+        />
+      )}
+      {isLoading && <ActionLoader action={"Loading document..."} />}
+      {isSaving && <ActionLoader action={"Saving document..."} />}
       <ToolBar />
-      <div id="textEditorContainer" ref={wrapperRef}>
+      <div
+        id="textEditorContainer"
+        className="h-[calc(100%-100px)] sm:h-[calc(100%-70px)] md:h-[calc(100%-30px)] w-full p-4"
+        ref={wrapperRef}
+      >
         <div id="editor"></div>
       </div>
     </div>

@@ -27,7 +27,7 @@ function ActionLoader({ action }) {
           }
         `}
       </style>
-      <div className="absolute top-0 left-0 w-full h-full bg-opacity-50 backdrop-filter backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="absolute top-0 left-0 w-full h-full bg-opacity-50 backdrop-filter backdrop-blur-sm flex items-center justify-center z-50 rounded-md">
         <div className="flex flex-col items-center space-y-4 p-8 rounded-[30px] bg-stone-950 bg-opacity-90">
           <div className="action-loader"></div>
           <div className="text-yellow-500 text-xl font-bold">{action}</div>

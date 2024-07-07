@@ -18,7 +18,7 @@ function PhoneNavBar() {
   const [expand, setExpand] = useState(false);
 
   return (
-    <div className="phoneNavBar fixed bottom-0 left-0 flex-col z-10">
+    <div className="phoneNavBar fixed bottom-0 left-0 flex-col z-10 w-[50px]">
       <div
         className={`w-[50px] h-[50px] bg-primary ml-2 mb-2 p-1.5 shadow-xl cursor-pointer rounded-full transition-transform duration-300 ${
           expand ? "rotate-180" : ""
