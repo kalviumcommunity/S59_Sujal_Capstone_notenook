@@ -132,7 +132,7 @@ function TextEditor() {
       <ToolBar />
       <div
         id="textEditorContainer"
-        className="h-[calc(100%-100px)] sm:h-[calc(100%-70px)] md:h-[calc(100%-30px)] w-full p-4"
+        className="h-[calc(100%-70px)] md:h-[calc(100%-30px)] w-full p-4"
         ref={wrapperRef}
       >
         <div id="editor"></div>

@@ -1,6 +1,6 @@
 function ToolBar() {
   return (
-    <div className="toolBarContainer h-[100px] sm:h-[70px] md:h-[30px]">
+    <div className="toolBarContainer h-[70px] md:h-[30px]">
       <div
         id="toolbar"
         className="relative flex flex-wrap items-center justify-center w-full h-fit gap-[2px]"
