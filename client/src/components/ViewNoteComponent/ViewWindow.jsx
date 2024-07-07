@@ -2,8 +2,6 @@ import { useEffect, useState, useCallback } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
-import "../../css/TextEditor.css";
-
 function ViewWindow({ note }) {
   const [quill, setQuill] = useState(null);
 
