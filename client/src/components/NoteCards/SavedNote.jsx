@@ -46,7 +46,7 @@ function SavedNote({
         <p className="text-xs">Saved {formatDate(savedNote.createdAt)}</p>
       </CardHeader>
 
-      <CardContent className="p-4 flex gap-1 justify-between sm:justify-end sm:gap-5 items-center">
+      <CardContent className="p-4 flex gap-1 justify-end sm:gap-5 items-center">
         {loading ? (
           <CircularProgress size={24} />
         ) : savedNote.markedForReview ? (

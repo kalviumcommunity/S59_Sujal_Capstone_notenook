@@ -1,14 +1,14 @@
 import { useContext, useState, useEffect } from "react";
-import axios from "axios";
-import { Route, Routes } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
+import axios from "axios";
 
 import { DeviceWidthContext } from "../../context/deviceWidthContext";
-import ChatSidebar from "../../components/ChatPageCompontents/ChatSidebar";
-import Chat from "../../components/ChatPageCompontents/Chat";
 
+import ActionLoader from "../../components/Loaders/ActionLoader";
+import ChatPageForDesktop from "../../components/ChatPageCompontents/ChatPageForDesktop";
+import ChatPageForPhones from "../../components/ChatPageCompontents/ChatPageForPhones";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-import "../../css/ChatPage.css";
 
 const ChatPage = () => {
   const width = useContext(DeviceWidthContext);
@@ -17,10 +17,14 @@ const ChatPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [topUser, setTopUser] = useState(null);
   const [chatSocket, setChatSocket] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
     const token = extractTokenFromCookie();
     if (!token) {
+      setError("No token found.");
       return;
     }
 
@@ -36,7 +40,9 @@ const ChatPage = () => {
         );
         setUsers(response.data.users);
         setFriends(response.data.friends);
+        setLoading(false);
       } catch (error) {
+        setError("Error fetching users for chat.");
         console.error("Error fetching users for chat:", error);
       }
     };
@@ -47,7 +53,7 @@ const ChatPage = () => {
   useEffect(() => {
     const token = extractTokenFromCookie();
     if (!token) {
-      console.error("No token found");
+      setError("No token found.");
       return;
     }
 
@@ -117,56 +123,34 @@ const ChatPage = () => {
     }
   }, [selectedUser]);
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-    <div className="chat-page">
+    <div className="page">
+      {loading && <ActionLoader action={"Loading Chats..."}/>}
       {width > 900 ? (
-        <>
-          <ChatSidebar
-            users={users}
-            selectedUser={selectedUser}
-            setSelectedUser={setSelectedUser}
-            topUser={topUser}
-            friends={friends}
-          />
-          <Routes>
-            <Route
-              path="/:userToChatId"
-              element={
-                <Chat
-                  selectedUser={selectedUser}
-                  setSelectedUser={setSelectedUser}
-                  setTopUser={setTopUser}
-                  chatSocket={chatSocket}
-                />
-              }
-            />
-          </Routes>
-        </>
+        <ChatPageForDesktop
+          users={users}
+          friends={friends}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          topUser={topUser}
+          setTopUser={setTopUser}
+          chatSocket={chatSocket}
+        />
       ) : (
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ChatSidebar
-                users={users}
-                selectedUser={selectedUser}
-                setSelectedUser={setSelectedUser}
-                friends={friends}
-              />
-            }
-          />
-          <Route
-            path="/:userToChatId"
-            element={
-              <Chat
-                selectedUser={selectedUser}
-                setSelectedUser={setSelectedUser}
-                setTopUser={setTopUser}
-                chatSocket={chatSocket}
-              />
-            }
-          />
-        </Routes>
+        <ChatPageForPhones
+          users={users}
+          friends={friends}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          topUser={topUser}
+          setTopUser={setTopUser}
+          chatSocket={chatSocket}
+          location={location}
+        />
       )}
     </div>
   );

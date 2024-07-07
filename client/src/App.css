@@ -94,7 +94,8 @@
   width: 0px;
 }
 
-.ql-editor::-webkit-scrollbar-thumb {
+.ql-editor::-webkit-scrollbar-thumb,
+.chatMessages::-webkit-scrollbar-thumb {
   width: 0px;
   background: hsl(0, 0%, 50%);
 }

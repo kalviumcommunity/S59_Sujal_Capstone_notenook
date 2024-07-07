@@ -67,7 +67,7 @@ function SearchUsersPage() {
         <div className="flex w-full max-w-sm items-center space-x-2 min-h-fit h-[5%]">
           <Input
             type="text"
-            placeholder="Search for notes..."
+            placeholder="Search for users..."
             className="text-black"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}

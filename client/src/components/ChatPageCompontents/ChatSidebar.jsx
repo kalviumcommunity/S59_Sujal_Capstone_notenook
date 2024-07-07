@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
-import UserToChat from "./UserToChat";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
+
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { IoIosSearch } from "react-icons/io";
+
+import UserToChat from "./UserToChat";
 
 const ChatSidebar = ({ users, selectedUser, friends, setSelectedUser }) => {
   const [searchInput, setSearchInput] = useState("");
@@ -59,24 +63,21 @@ const ChatSidebar = ({ users, selectedUser, friends, setSelectedUser }) => {
   }, [location]);
 
   return (
-    <div className="chat-sidebar">
-      <div className="friendSearchBarContainer">
-        <input
-          className="searchBar"
-          type="search"
+    <div className="bg-[#09090B] p-4 flex flex-col items-center h-full overflow-y-scroll rounded-md w-full">
+      <div className="flex w-full max-w-sm items-center space-x-2 min-h-fit h-[5%] mb-4">
+        <Input
+          type="text"
+          placeholder="Search for friends..."
+          className="text-black"
           value={searchInput}
           onChange={handleInputChange}
         />
-        <div className="searchIconContainer" onClick={handleSearch}>
-          <SearchIcon
-            className="searchIcon"
-            fontSize="large"
-            style={{ color: "#0099ff" }}
-          />
-        </div>
+        <Button type="button" variant="secondary" onClick={handleSearch}>
+          <IoIosSearch className="text-2xl" />
+        </Button>
       </div>
 
-      <ul className="chat-list">
+      <div className="w-full pb-[50px]">
         {filteredUsers.map((user) => (
           <UserToChat
             key={user._id}
@@ -85,7 +86,7 @@ const ChatSidebar = ({ users, selectedUser, friends, setSelectedUser }) => {
             onUserClick={handleUserClick}
           />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

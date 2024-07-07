@@ -1,5 +1,6 @@
-import React from "react";
 import pic from "../../assets/pic.png";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const UserToChat = ({ user, isSelected, onUserClick }) => {
   const handleClick = () => {
@@ -7,15 +8,20 @@ const UserToChat = ({ user, isSelected, onUserClick }) => {
   };
 
   return (
-    <li
-      className={`connection userToChat ${isSelected ? "selected" : ""}`}
+    <div
+      className={`connection flex w-full justify-between py-3 px-2 items-center rounded-md mb-3 hover:bg-[#0C0A09] ${
+        isSelected ? "bg-[#1f1a17]" : ""
+      }`}
       onClick={handleClick}
     >
-      <div className="connectionInfo">
-        <img className="connectionPic" src={pic} alt={user.username} />
+      <div className="connectionInfo w-[80%] flex items-center gap-4">
+        <Avatar>
+          <AvatarImage src={pic} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
         <p className="connectionUsername">{user.username}</p>
       </div>
-    </li>
+    </div>
   );
 };
 

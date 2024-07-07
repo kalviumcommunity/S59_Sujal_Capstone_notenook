@@ -1,11 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import axios from "axios";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import MessageInput from "./MessageInput";
 import Message from "./Message";
-import pic from "../../assets/pic.png";
 
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+
+import pic from "../../assets/pic.png";
 const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
   const [messages, setMessages] = useState([]);
   const lastMessageRef = useRef(null);
@@ -62,18 +66,21 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
   }, [messages]);
 
   return (
-    <div className="chat">
-      <div className="chat-user">
+    <div className="page flex flex-col justify-between relative">
+      <div className="connectionInfo w-full bg-[#0C0A09] h-fit p-4 rounded-md">
         <Link to={``}>
-          <div className="connection userToChat">
-            <div className="connectionInfo">
-              <img className="connectionPic" src={pic} alt="User" />
-              <p className="connectionUsername">{selectedUser?.username}</p>
-            </div>
+          <div className="flex items-center gap-4">
+            {" "}
+            <Avatar>
+              <AvatarImage src={pic} />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <p className="font-semibold">{selectedUser?.username}</p>
           </div>
         </Link>
       </div>
-      <div className="chat-messages">
+
+      <div className="h-[80%] chatMessages overflow-y-scroll mt-4 pr-4">
         {messages.map((msg, index) => (
           <div key={index} ref={lastMessageRef} className="flex flex-col">
             <Message
@@ -85,13 +92,15 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
           </div>
         ))}
       </div>
-      <MessageInput
-        userToChatId={userToChatId}
-        setMessages={setMessages}
-        messages={messages}
-        setTopUser={setTopUser}
-        selectedUser={selectedUser}
-      />
+      <div className="h-[10%]">
+        <MessageInput
+          userToChatId={userToChatId}
+          setMessages={setMessages}
+          messages={messages}
+          setTopUser={setTopUser}
+          selectedUser={selectedUser}
+        />
+      </div>
     </div>
   );
 };

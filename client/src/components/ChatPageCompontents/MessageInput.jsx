@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
+
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "../ui/button";
+
+import { IoSend } from "react-icons/io5";
+
+import SendingLoader from "../Loaders/SendingLoader";
+
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 const MessageInput = ({
@@ -20,7 +28,7 @@ const MessageInput = ({
       return;
     }
     try {
-      setIsLoading(true); 
+      setIsLoading(true);
       const response = await axios.post(
         `${
           import.meta.env.VITE_REACT_APP_SEND_MESSAGE_ENDPOINT
@@ -45,21 +53,28 @@ const MessageInput = ({
   };
 
   return (
-    <div className="chat-input-container">
-      <textarea
+    <div className="flex absolute -bottom-2 w-[calc(100%-55px)] gap-1 ml-[55px] min-[900px]:ml-0 min-[900px]:relative min-[900px]:w-full min-[900px]:bottom-0 mr-2 mt-4">
+      <Textarea
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
-        placeholder="Type a message"
-        className="chat-input"
-        disabled={isLoading} 
+        className="text-black resize-none"
+        disabled={isLoading}
       />
-      {isLoading ? (
-        <CircularProgress size={24} />
-      ) : (
-        <button onClick={sendMessage} className="chat-send-button">
-          <SendIcon />
-        </button>
-      )}
+      <div className="flex items-center justify-center">
+        {isLoading ? (
+          <div className="h-[50px] aspect-square flex items-center justify-center">
+            <SendingLoader />
+          </div>
+        ) : (
+          <Button
+            variant="ghost"
+            onClick={sendMessage}
+            className="h-[50px] aspect-square rounded-full"
+          >
+            <IoSend className="text-xl" />
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

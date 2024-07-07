@@ -1,6 +1,7 @@
-import React from "react";
 import { format, getYear } from "date-fns";
 import pic from "../../assets/pic.png";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Message = ({ message, createdAt, senderId, selectedUser }) => {
   const date = new Date(createdAt);
@@ -11,14 +12,34 @@ const Message = ({ message, createdAt, senderId, selectedUser }) => {
     getYear(date) === currentYear ? "MM/dd, h:mm a" : "MM/dd/yyyy, h:mm a";
 
   return (
-    <div className={`chat-message ${isReceived ? "received" : "sent"}`}>
-      {isReceived && <img className="message-pic" src={pic} alt="User" />}
+    <div
+      className={`flex items-end mb-6 max-w-[60%] ${
+        isReceived ? "self-start" : "self-end"
+      }`}
+    >
+      {isReceived && (
+        <Avatar className="h-[30px] w-[30px] mr-2">
+          <AvatarImage src={pic} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      )}
 
-      <div className="message-content">
+      <div
+        className={`px-3 py-2 rounded-sm relative ${
+          isReceived ? "bg-neutral-800" : "bg-neutral-950"
+        }`}
+      >
         <p>{message}</p>
-        <span>{format(date, formatString)}</span>
+        <span className="text-xs text-gray-500">
+          {format(date, formatString)}
+        </span>
       </div>
-      {isReceived ? null : <img className="message-pic" src={pic} alt="User" />}
+      {isReceived ? null : (
+        <Avatar className="h-[30px] w-[30px] ml-2">
+          <AvatarImage src={pic} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      )}
     </div>
   );
 };
