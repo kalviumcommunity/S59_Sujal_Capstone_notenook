@@ -4,32 +4,13 @@ import aiChatHead from "../../assets/AiChatHead.png";
 
 const AiChatHead = ({ setIsAiChatVisible, isAiChatVisible }) => {
   const chatHeadRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
 
-  const handleStartDrag = () => {
-    setIsDragging(true);
-  };
-
-  const handleStopDrag = () => {
-    setIsDragging(false);
-  };
-
-  const handleClick = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (!isDragging) {
-      setIsAiChatVisible(!isAiChatVisible);
-    }
+  const handleClick = () => {
+    setIsAiChatVisible(!isAiChatVisible);
   };
 
   return (
-    <Draggable
-      bounds="parent"
-      nodeRef={chatHeadRef}
-      onStart={handleStartDrag}
-      onStop={handleStopDrag}
-    >
+    <Draggable bounds="parent" nodeRef={chatHeadRef}>
       <div
         ref={chatHeadRef}
         className="absolute right-0 h-16 w-16 z-[100] rounded-[50%] cursor-pointer"
@@ -40,7 +21,6 @@ const AiChatHead = ({ setIsAiChatVisible, isAiChatVisible }) => {
           touchAction: "none",
         }}
         onClick={handleClick}
-        onTouchStart={handleClick}
       ></div>
     </Draggable>
   );
