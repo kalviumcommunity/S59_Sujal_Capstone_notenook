@@ -29,8 +29,8 @@ const FriendNotification = ({ notification }) => {
       </Link>
 
       <CardDescription className="mt-2 flex flex-col">
-        <div className="text-white">{notification.message}</div>
-        <div className="self-end mt-2">
+        <span className="text-white">{notification.message}</span>
+        <span className="self-end mt-2">
           <Link to={`/notenook/viewUser/${notification.relatedUser?._id}`}>
             <Button
               className="text-xs h-fit font-bold text-yellow-600"
@@ -39,7 +39,7 @@ const FriendNotification = ({ notification }) => {
               View Profile
             </Button>
           </Link>
-        </div>
+        </span>
       </CardDescription>
     </Card>
   );

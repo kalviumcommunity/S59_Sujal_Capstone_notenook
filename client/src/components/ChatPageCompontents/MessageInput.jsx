@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import SendIcon from "@mui/icons-material/Send";
-import CircularProgress from "@mui/material/CircularProgress";
+import { useState } from "react";
+
 import axios from "axios";
 
 import { Textarea } from "@/components/ui/textarea";

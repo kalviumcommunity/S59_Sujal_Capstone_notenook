@@ -52,6 +52,17 @@
   z-index: 10;
 }
 
+.popup-animation {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.popdown-animation {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
 @media (min-height: 600px) and (min-width: 768px) {
   .navBar.css {
     display: block;
@@ -94,12 +105,6 @@
   width: 0px;
 }
 
-.ql-editor::-webkit-scrollbar-thumb,
-.chatMessages::-webkit-scrollbar-thumb {
-  width: 0px;
-  background: hsl(0, 0%, 50%);
-}
-
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -109,10 +114,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(69, 100%, 23%);
+  background: hsl(0, 0%, 50%);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #eeff00;
+  background: hsl(0, 0%, 65%);
 }

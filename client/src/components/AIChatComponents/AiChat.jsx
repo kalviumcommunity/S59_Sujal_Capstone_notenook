@@ -3,9 +3,9 @@ import io from "socket.io-client";
 import Message from "./Message";
 import AiChatInput from "./AiChatInput";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-import "../../css/ChatComponent.css";
-
-const AiChat = () => {
+import SendingLoader from "../Loaders/SendingLoader";
+import { Button } from "../ui/button";
+const AiChat = ({ setIsAiChatVisible }) => {
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
@@ -68,23 +68,29 @@ const AiChat = () => {
   };
 
   return (
-    <div id="ai-chat">
-      <div id="ai-messages">
+    <div className="p-4 bg-gray-950 h-full w-[500px] max-w-[90vw] rounded-md flex flex-col justify-between">
+      <div className="flex w-full justify-between items-center">
+        <h1 className="font-bold h-[2rem]">AI Chat</h1>
+        <Button className="h-fit text-xs" onClick={() => {setIsAiChatVisible(false)}}>Close</Button>
+      </div>
+
+      <div className="h-[calc(100%-8rem)] overflow-y-scroll rounded-md pr-2">
         {messages.map((msg, index) => (
           <div className="flex flex-col" key={index}>
             <Message role={msg.role} content={msg.content} />
           </div>
         ))}
-        {isLoading && <div className="ai-message assistant">Loading....</div>}
+        {isLoading && <SendingLoader />}
         <div ref={lastMessageRef}></div>
       </div>
-
-      <AiChatInput
-        messageInput={messageInput}
-        setMessageInput={setMessageInput}
-        handleSendMessage={handleSendMessage}
-        isLoading={isLoading}
-      />
+      <div className="h-16">
+        <AiChatInput
+          messageInput={messageInput}
+          setMessageInput={setMessageInput}
+          handleSendMessage={handleSendMessage}
+          isLoading={isLoading}
+        />
+      </div>
     </div>
   );
 };
