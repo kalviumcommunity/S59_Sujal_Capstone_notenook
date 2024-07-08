@@ -11,6 +11,7 @@ import FriendNotification from "./FriendNotification";
 import NoteNotification from "./NoteNotification";
 
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import ActionLoader from "../Loaders/ActionLoader";
 
 function Notifications() {
   const { user, setUser } = useContext(UserContext);
@@ -21,14 +22,16 @@ function Notifications() {
 
   const fetchNotifications = async () => {
     setLoading(true);
+    setError(null); 
+    
     try {
       const token = extractTokenFromCookie();
       const response = await axios.get(
-        import.meta.env.VITE_REACT_APP_GET_NOTIFICATIONS_ULR,
+        import.meta.env.VITE_REACT_APP_GET_NOTIFICATIONS_URL,
         {
           withCredentials: true,
           headers: {
-            Authorization: `bearer ${token || null}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -62,7 +65,7 @@ function Notifications() {
       setFriendNotifications(user.notifications.userNotifications);
       setPostNotifications(user.notifications.postNotifications);
     }
-  }, [user, setUser]);
+  }, [user?.notifications]);
 
   const handleRefresh = () => {
     fetchNotifications();
@@ -89,7 +92,9 @@ function Notifications() {
         </div>
       </div>
 
-      <div className="h-[calc(100%-40px)] overflow-y-scroll w-full pr-2">
+      <div className="h-[calc(100%-40px)] relative overflow-y-scroll w-full pr-2">
+        {loading && <ActionLoader action={"Getting Notifications.."} />}
+        {error && <div className="text-center font-bold text-red-500 absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y/2">{error}</div>}
         <TabsContent value="friends">
           {friendNotifications.map((notification, index) => (
             <FriendNotification key={index} notification={notification} />
