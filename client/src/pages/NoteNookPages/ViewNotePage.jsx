@@ -5,8 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "../../components/ui/button";
 import { FaExternalLinkAlt } from "react-icons/fa";
 
-import WrappedCommentsWindow from "../../components/ViewNoteComponent/WrappedCommentWindow";
-import ViewWindow from "../../components/ViewNoteComponent/ViewWindow";
+import WrappedCommentsWindow from "../../components/ViewNotePageComponents/WrappedCommentWindow";
+import ViewWindow from "../../components/ViewNotePageComponents/ViewWindow";
 import SendingLoader from "../../components/Loaders/SendingLoader";
 import ActionLoader from "../../components/Loaders/ActionLoader";
 

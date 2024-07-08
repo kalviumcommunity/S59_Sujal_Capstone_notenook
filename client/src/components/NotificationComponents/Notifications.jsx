@@ -1,16 +1,19 @@
-import RefreshIcon from "@mui/icons-material/Refresh";
-import CircularProgress from "@mui/material/CircularProgress";
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
+import axios from "axios";
 
-import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+
+import { IoRefreshCircleOutline } from "react-icons/io5";
 import { UserContext } from "../../context/userContext";
+
+import SendingLoader from "../Loaders/SendingLoader";
 import FriendNotification from "./FriendNotification";
 import NoteNotification from "./NoteNotification";
 
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+
 function Notifications() {
   const { user, setUser } = useContext(UserContext);
-  const [activeTab, setActiveTab] = useState("friends");
   const [friendNotifications, setFriendNotifications] = useState([]);
   const [postNotifications, setPostNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -65,47 +68,40 @@ function Notifications() {
     fetchNotifications();
   };
 
-  const renderContent = () => {
-    if (loading) {
-      return <CircularProgress />;
-    }
-
-    if (error) {
-      return <div>Error: {error}</div>;
-    }
-
-    return activeTab === "friends"
-      ? friendNotifications.map((notification, index) => (
-          <FriendNotification key={index} notification={notification} />
-        ))
-      : postNotifications.map((notification, index) => (
-          <NoteNotification key={index} notification={notification} />
-        ));
-  };
-
   return (
-    <div className="notifications-container">
-      <button className="button block ml-auto mt-4" onClick={handleRefresh}>
-        {loading ? <CircularProgress size={16} /> : <RefreshIcon fontSize="small"/>}
-      </button>
-
-      <div className="tabs">
-        <div
-          className={`tab ${activeTab === "friends" ? "active" : ""}`}
-          onClick={() => setActiveTab("friends")}
-        >
-          Friends
-        </div>
-        <div
-          className={`tab ${activeTab === "notes" ? "active" : ""}`}
-          onClick={() => setActiveTab("notes")}
-        >
-          Notes
+    <Tabs
+      defaultValue="friends"
+      className="w-full mt-4 h-[calc(100%-3rem)] flex flex-col scrollHidden"
+    >
+      <div className="flex justify-between items-center h-[40px] mb-4">
+        <TabsList>
+          <TabsTrigger value="friends">Friends</TabsTrigger>
+          <TabsTrigger value="post">Post</TabsTrigger>
+        </TabsList>
+        <div>
+          {loading ? (
+            <SendingLoader />
+          ) : (
+            <button onClick={handleRefresh}>
+              <IoRefreshCircleOutline className="text-3xl" />
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="notifications">{renderContent()}</div>
-    </div>
+      <div className="h-[calc(100%-40px)] overflow-y-scroll w-full pr-2">
+        <TabsContent value="friends">
+          {friendNotifications.map((notification, index) => (
+            <FriendNotification key={index} notification={notification} />
+          ))}
+        </TabsContent>
+        <TabsContent value="post">
+          {postNotifications.map((notification, index) => (
+            <NoteNotification key={index} notification={notification} />
+          ))}
+        </TabsContent>
+      </div>
+    </Tabs>
   );
 }
 

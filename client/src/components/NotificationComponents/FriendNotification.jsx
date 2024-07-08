@@ -1,30 +1,47 @@
-import pic from "../../assets/pic.png";
-import formatDate from "../../Functions/FormatDate";
 import { Link } from "react-router-dom";
+
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Card, CardDescription } from "../ui/card";
+import { Button } from "../ui/button";
+
+import formatDate from "../../Functions/FormatDate";
+import pic from "../../assets/pic.png";
 
 const FriendNotification = ({ notification }) => {
   return (
-    <div className="notification">
+    <Card className="p-4 mb-3 bg-[#09090c] text-white border-[0.1px] border-neutral-900">
       <Link to={`/notenook/viewUser/${notification.relatedUser?._id}`}>
-        <div className="info">
-          <img src={pic} alt="User avatar" className="avatar" />
+        <div className="flex gap-3">
+          <Avatar className="w-12 h-12">
+            <AvatarImage
+              src={pic}
+              alt={`${notification.relatedUser?.username}'s avatar`}
+            />
+            <AvatarFallback>
+              {notification.relatedUser?.username.substring(0, 2)}
+            </AvatarFallback>
+          </Avatar>
           <div>
-            <p className="username">{notification.relatedUser?.username}</p>
-            <p className="updatedDate">{formatDate(notification.createdAt)}</p>
+            <p className="font-bold">{notification.relatedUser?.username}</p>
+            <p className="text-xs">{formatDate(notification.createdAt)}</p>
           </div>
         </div>
       </Link>
 
-      <div className="notificationMessage">{notification.message}</div>
-      <div className="buttons">
-        <Link
-          to={`/notenook/viewUser/${notification.relatedUser?._id}`}
-          className="addFriend"
-        >
-          <button className="addFriend button">View Profile</button>
-        </Link>
-      </div>
-    </div>
+      <CardDescription className="mt-2 flex flex-col">
+        <div className="text-white">{notification.message}</div>
+        <div className="self-end mt-2">
+          <Link to={`/notenook/viewUser/${notification.relatedUser?._id}`}>
+            <Button
+              className="text-xs h-fit font-bold text-yellow-600"
+              variant="ghost"
+            >
+              View Profile
+            </Button>
+          </Link>
+        </div>
+      </CardDescription>
+    </Card>
   );
 };
 

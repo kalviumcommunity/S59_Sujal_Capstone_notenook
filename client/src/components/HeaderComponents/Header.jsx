@@ -14,7 +14,7 @@ function Header() {
         </Link>
       </div>
 
-      <div className="flex gap-8 relative">
+      <div className="flex gap-4 relative items-center">
         <HeaderNotifications />
         <HeaderProfile />
       </div>

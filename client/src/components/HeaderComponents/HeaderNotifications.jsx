@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
+import { Button } from "../ui/button";
+
 import { IoNotificationsCircleOutline } from "react-icons/io5";
+
 import Notifications from "../NotificationComponents/Notifications";
 
 const HeaderNotifications = () => {
@@ -44,29 +48,32 @@ const HeaderNotifications = () => {
   }, [location]);
 
   return (
-    <div className="flex flex-col items-center absolute -left-12 top-[50%] -translate-y-[50%]">
+    <div className="flex flex-col items-center">
       <div className="relative">
         <IoNotificationsCircleOutline
           className="text-3xl"
           onClick={handleIconClick}
         />
       </div>
-      {showNotifications && (
-        <div
-          className={`absolute top-[100%] notificationsContainer ${
-            showNotifications ? "visible" : "invisible"
-          }`}
-          ref={notificationsRef}
-        >
-          <div className="flex w-full justify-between">
-            <h2 className="heading">Notifications</h2>
-            <button className="button" onClick={handleSeeAllClick}>
-              See All
-            </button>
-          </div>
-          <Notifications />
+
+      <div
+        className={`fixed top-[5rem] w-[400px] max-w-[85vw] right-4 bg-gray-950 p-4 rounded-md h-[70vh] shadow-2xl ${
+          showNotifications ? "block" : "hidden"
+        }`}
+        ref={notificationsRef}
+      >
+        <div className="flex w-full h-8 justify-between items-center">
+          <h2 className="font-bold text-lg">Notifications</h2>
+          <Button
+            variant="secondary"
+            className="text-xs h-fit"
+            onClick={handleSeeAllClick}
+          >
+            See All
+          </Button>
         </div>
-      )}
+        <Notifications />
+      </div>
     </div>
   );
 };

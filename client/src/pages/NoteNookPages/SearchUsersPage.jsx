@@ -10,7 +10,7 @@ import { IoIosSearch } from "react-icons/io";
 import { DeviceWidthContext } from "../../context/deviceWidthContext";
 
 import Connections from "../../components/Connections";
-import UserResult from "../../components/SearchUsersComponents/UserResult";
+import UserResult from "../../components/SearchUsersPageComponents/UserResult";
 import Loader from "../../components/Loaders/Loader";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 

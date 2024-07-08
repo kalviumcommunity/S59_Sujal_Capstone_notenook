@@ -14,7 +14,7 @@ import MyNotesPage from "./NoteNookPages/MyNotesPage";
 import ViewNotePage from "./NoteNookPages/ViewNotePage";
 import UserProfilePage from "./NoteNookPages/UserProfilePage";
 import EditUserDetailsPage from "./NoteNookPages/EditUserDetailsPage";
-import NotificationPage from "./NoteNookPages/NotificationPage";
+import NotificationsPage from "./NoteNookPages/NotificationsPage";
 import ViewUserPage from "./NoteNookPages/ViewUserPage";
 import ChatPage from "./NoteNookPages/ChatPage";
 import Loader from "../components/Loaders/Loader";
@@ -86,7 +86,7 @@ function NoteNook() {
               <Route path="/profile/edit" element={<EditUserDetailsPage />} />
               <Route path="/viewUser/:userId" element={<ViewUserPage />} />
               <Route path="/viewNote/:documentId" element={<ViewNotePage />} />
-              <Route path="/notifications" element={<NotificationPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
             </Routes>
           </div>
         </NotesProvider>
