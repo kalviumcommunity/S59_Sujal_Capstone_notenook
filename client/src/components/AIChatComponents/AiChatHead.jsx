@@ -7,16 +7,17 @@ const AiChatHead = ({ setIsAiChatVisible, isAiChatVisible }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleStartDrag = () => {
-    console.log("start");
     setIsDragging(true);
   };
 
   const handleStopDrag = () => {
-    console.log("end");
     setIsDragging(false);
   };
 
-  const handleClick = () => {
+  const handleClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (!isDragging) {
       setIsAiChatVisible(!isAiChatVisible);
     }
@@ -36,8 +37,10 @@ const AiChatHead = ({ setIsAiChatVisible, isAiChatVisible }) => {
           backgroundImage: `url(${aiChatHead})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          touchAction: "none",
         }}
         onClick={handleClick}
+        onTouchStart={handleClick}
       ></div>
     </Draggable>
   );
