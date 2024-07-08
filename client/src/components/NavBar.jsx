@@ -5,6 +5,7 @@ import { FaNoteSticky } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
 import { IoChatbubbles } from "react-icons/io5";
+import aiChatHead from "../assets/AiChatHead.png";
 
 import {
   Tooltip,
@@ -17,10 +18,10 @@ const getClassNames = (isActive, baseClasses, activeClasses, hoverClasses) => {
   return `${baseClasses} ${hoverClasses} ${isActive ? activeClasses : ""}`;
 };
 
-const NavBar = () => {
+const NavBar = ({ isAiChatVisible, setIsAiChatVisible }) => {
   return (
     <TooltipProvider>
-      <div className="navBar flex bg-[#09090b] css absolute bottom-0 w-screen justify-center items-center p-2 z-10 h-14 md:h-auto">
+      <div className="navBar flex bg-[#09090b] css absolute bottom-0 w-screen justify-center items-center p-2 z-10 md:h-auto">
         <div className="navButtons css flex w-full flex-row justify-evenly items-center">
           <Tooltip>
             <TooltipTrigger>
@@ -115,6 +116,22 @@ const NavBar = () => {
               </NavLink>
             </TooltipTrigger>
             <TooltipContent>Chat</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <div
+                className="h-12 w-12 z-[100] rounded-[50%] cursor-pointer"
+                style={{
+                  backgroundImage: `url(${aiChatHead})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+                onClick={() => {
+                  setIsAiChatVisible(!isAiChatVisible);
+                }}
+              />
+            </TooltipTrigger>
+            <TooltipContent>Ai Assistant</TooltipContent>
           </Tooltip>
         </div>
       </div>

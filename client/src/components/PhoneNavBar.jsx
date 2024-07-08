@@ -6,15 +6,13 @@ import { FaSearch } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
 import { IoChatbubbles } from "react-icons/io5";
 
-const style = {
-  color: "white",
-};
+import aiChatHead from "../assets/AiChatHead.png";
 
 const getClassNames = (isActive, baseClasses, activeClasses, hoverClasses) => {
   return `${baseClasses} ${hoverClasses} ${isActive ? activeClasses : ""}`;
 };
 
-function PhoneNavBar() {
+function PhoneNavBar({ isAiChatVisible, setIsAiChatVisible }) {
   const [expand, setExpand] = useState(false);
 
   return (
@@ -102,6 +100,17 @@ function PhoneNavBar() {
           >
             <IoChatbubbles className="text-xl" />
           </NavLink>
+          <div
+            className="h-12 w-12 z-[100] rounded-[50%] cursor-pointer"
+            style={{
+              backgroundImage: `url(${aiChatHead})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+            onClick={() => {
+              setIsAiChatVisible(!isAiChatVisible);
+            }}
+          />
         </div>
       </div>
     </div>

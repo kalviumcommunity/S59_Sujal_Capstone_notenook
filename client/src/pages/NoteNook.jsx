@@ -19,7 +19,6 @@ import ViewUserPage from "./NoteNookPages/ViewUserPage";
 import ChatPage from "./NoteNookPages/ChatPage";
 import Loader from "../components/Loaders/Loader";
 import PhoneNavBar from "../components/PhoneNavBar";
-import AiChatHead from "../components/AIChatComponents/AiChatHead";
 import AiChat from "../components/AIChatComponents/AiChat";
 import { UserContext } from "../context/userContext";
 
@@ -76,18 +75,20 @@ function NoteNook() {
           <Loader action={"Loading Data..."} />
         </div>
       )}
-      <NavBar />
-      <PhoneNavBar />
+      <NavBar
+        setIsAiChatVisible={setIsAiChatVisible}
+        isAiChatVisible={isAiChatVisible}
+      />
+      <PhoneNavBar
+        setIsAiChatVisible={setIsAiChatVisible}
+        isAiChatVisible={isAiChatVisible}
+      />
       <Header />
       <DeviceWidthProvider>
         <NotesProvider>
           <div className="noteNook css fixed top-24 overflow-y-scroll left-24 rounded-tl-md bg-muted/5 p-4">
-            <AiChatHead
-              setIsAiChatVisible={setIsAiChatVisible}
-              isAiChatVisible={isAiChatVisible}
-            />
             <div
-              className={`absolute z-[100] top-24 right-4 h-[calc(100%-7rem)] transition-transform duration-300 ${
+              className={`absolute z-[100] top-8 left-4 h-[calc(100%-4rem)] transition-transform duration-300 ${
                 isAiChatVisible ? "scale-100" : "scale-0"
               }`}
             >
