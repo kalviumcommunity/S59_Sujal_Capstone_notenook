@@ -3,9 +3,8 @@ export const savedNotesReducers = {
     state.savedNotes.unshift(action.payload);
   },
   removeUnsavedNote: (state, action) => {
-    console.log(action.payload);
     state.savedNotes = state.savedNotes.filter(
-      (note) => note.savedNote._id !== action.payload
+      (note) => note.savedNote._id !== action.payload.savedNoteId
     );
   },
   updateMarkedSavedNote: (state, action) => {

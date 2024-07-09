@@ -1,11 +1,17 @@
 import axios from "axios";
-
 import extractTokenFromCookie from "./ExtractTokenFromCookie";
 
-const token = extractTokenFromCookie();
+const getToken = () => {
+  const token = extractTokenFromCookie();
+  if (!token) {
+    throw new Error("Authentication token not found.");
+  }
+  return token;
+};
 
 export const markNoteForReview = async (noteId) => {
   try {
+    const token = getToken();
     await axios.patch(
       `${import.meta.env.VITE_REACT_APP_MARK_REVIEW_NOTE_ENDPOINT}/${noteId}`,
       {},
@@ -24,6 +30,7 @@ export const markNoteForReview = async (noteId) => {
 
 export const unmarkNoteForReview = async (noteId) => {
   try {
+    const token = getToken();
     await axios.patch(
       `${import.meta.env.VITE_REACT_APP_UNMARK_REVIEW_NOTE_ENDPOINT}/${noteId}`,
       {},
@@ -36,7 +43,7 @@ export const unmarkNoteForReview = async (noteId) => {
     );
     return noteId;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw error.response ? error.response.data.error : error.message;
   }
 };

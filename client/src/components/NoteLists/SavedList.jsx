@@ -57,7 +57,7 @@ function SavedList() {
   const handleDelete = async () => {
     try {
       await deleteSavedNote(deleteNoteId);
-      dispatch(removeUnsavedNote(deleteNoteId));
+      dispatch(removeUnsavedNote({ savedNoteId: deleteNoteId }));
     } catch (err) {
       setError(err);
       setShowError(true);

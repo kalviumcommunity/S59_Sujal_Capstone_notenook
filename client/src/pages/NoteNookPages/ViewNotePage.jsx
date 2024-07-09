@@ -105,7 +105,7 @@ function ViewNotePage() {
 
       if (response.status === 200) {
         setIsSaved(false);
-        dispatch(removeUnsavedNote(response.data.savedNoteId));
+        dispatch(removeUnsavedNote({ savedNoteId: response.data.savedNoteId }));
       }
     } catch (error) {
       console.error("Error unsaving note:", error);
