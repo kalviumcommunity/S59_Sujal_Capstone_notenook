@@ -8,7 +8,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-function ErrorAlert({ error, showError, setError, setShowError }) {
+import { useDispatch } from "react-redux";
+import { resetError } from "../../redux/notes/notesSlice";
+
+function ErrorAlert({ error, showError, setShowError }) {
+  const dispatch = useDispatch();
+
+  const handleClose = () => {
+    setShowError(false);
+    dispatch(resetError());
+  };
+
   return (
     <AlertDialog open={showError} onOpenChange={setShowError}>
       <AlertDialogContent className="w-[500px] max-w-[90vw] rounded-md bg-[#0C0A09] border-none">
@@ -18,10 +28,7 @@ function ErrorAlert({ error, showError, setError, setShowError }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogAction
-            onClick={() => {
-              setShowError(false);
-              setError(null);
-            }}
+            onClick={handleClose}
             className="bg-primary text-primary-foreground hover:bg-primary-hover text-xs h-fit"
           >
             OK

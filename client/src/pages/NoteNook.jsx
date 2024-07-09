@@ -1,9 +1,12 @@
-import React, { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { DeviceWidthProvider } from "../context/deviceWidthContext";
 import { NotesProvider } from "../context/notesContext";
 import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { fetchNotes } from "../redux/notes/notesSlice";
+import { UserContext } from "../context/userContext";
 
 import Header from "../components/HeaderComponents/Header";
 import NavBar from "../components/NavBar";
@@ -20,13 +23,13 @@ import ChatPage from "./NoteNookPages/ChatPage";
 import Loader from "../components/Loaders/Loader";
 import PhoneNavBar from "../components/PhoneNavBar";
 import AiChat from "../components/AIChatComponents/AiChat";
-import { UserContext } from "../context/userContext";
 
 function NoteNook() {
   const [isFetchingUserData, setIsFetchingUserData] = useState(true);
   const { setUser } = useContext(UserContext);
   const [isAiChatVisible, setIsAiChatVisible] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async (token) => {
@@ -63,10 +66,11 @@ function NoteNook() {
     const token = extractTokenFromCookie();
     if (token) {
       fetchData(token);
+      dispatch(fetchNotes());
     } else {
       navigate("/");
     }
-  }, [navigate, setUser]);
+  }, []);
 
   return (
     <div className="h-screen w-screen">

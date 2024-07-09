@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,10 +20,9 @@ import { CardContent, CardHeader, CardDescription } from "@/components/ui/card";
 
 import ActionLoader from "../Loaders/ActionLoader";
 
-import { NotesContext } from "../../context/notesContext";
-
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-
+import { useDispatch } from "react-redux";
+import { addNote } from "../../redux/notes/notesSlice";
 const formSchema = z.object({
   title: z.string().min(1, { message: "Enter note title" }),
   subject: z.string().min(1, { message: "Enter note subject" }),
@@ -33,7 +32,7 @@ function CreateNoteForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { updateNotes } = useContext(NotesContext);
+  const dispatch = useDispatch();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -62,7 +61,7 @@ function CreateNoteForm() {
         );
 
         const newNote = response.data.note;
-        updateNotes(newNote);
+        dispatch(addNote(newNote));
         navigate(`/notenook/myNotes/writeNote/${response.data.note._id}`);
       } else {
         setErrorMessage("Token cookie not found.");

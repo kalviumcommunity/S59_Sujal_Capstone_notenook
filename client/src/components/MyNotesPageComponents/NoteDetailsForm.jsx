@@ -24,6 +24,9 @@ import PDFUploader from "./PDFUploader";
 import ErrorAlert from "./ErrorAlert";
 import ActionLoader from "../Loaders/ActionLoader";
 
+import { useDispatch } from "react-redux";
+import { updateUpdatedNote } from "../../redux/notes/notesSlice";
+
 const formSchema = z.object({
   title: z.string().min(3, { message: "Enter title." }),
   subject: z.string().min(3, { message: "Enter subject" }),
@@ -38,6 +41,7 @@ function NoteDetailsForm({ note, setNote }) {
   const [error, setError] = useState(null);
   const [showError, setShowError] = useState(false);
   const { documentId } = useParams();
+  const dispatch = useDispatch();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -74,11 +78,11 @@ function NoteDetailsForm({ note, setNote }) {
             },
           }
         );
-        setNote({
-          ...note,
-          title: data.title,
-          subject: data.subject,
-        });
+        dispatch(
+          updateUpdatedNote({
+            ...formData
+          })
+        );
       }
     } catch (error) {
       setError("Error submitting note details");
