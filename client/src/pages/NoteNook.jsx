@@ -9,7 +9,6 @@ import { fetchSavedNotes } from "../redux/notes/savedNotesSlice";
 
 import { UserContext } from "../context/userContext";
 import { DeviceWidthProvider } from "../context/deviceWidthContext";
-import { NotesProvider } from "../context/notesContext";
 
 import Header from "../components/HeaderComponents/Header";
 import NavBar from "../components/NavBar";
@@ -98,30 +97,28 @@ function NoteNook() {
       />
       <Header />
       <DeviceWidthProvider>
-        <NotesProvider>
-          <div className="noteNook css fixed top-24 overflow-y-scroll left-24 rounded-tl-md bg-muted/5 p-4">
-            <div
-              className={`absolute z-[100] top-8 left-4 h-[calc(100%-4rem)] transition-transform duration-300 ${
-                isAiChatVisible ? "scale-100" : "scale-0"
-              }`}
-            >
-              <AiChat setIsAiChatVisible={setIsAiChatVisible} />
-            </div>
-
-            <Routes>
-              <Route path="/dashboard" element={<DashBoard />} />
-              <Route path="/notes" element={<SearchNotesPage />} />
-              <Route path="/myNotes/*" element={<MyNotesPage />} />
-              <Route path="/friends" element={<SearchUsersPage />} />
-              <Route path="/chatPage/*" element={<ChatPage />} />
-              <Route path="/profile/*" element={<UserProfilePage />} />
-              <Route path="/profile/edit" element={<EditUserDetailsPage />} />
-              <Route path="/viewUser/:userId" element={<ViewUserPage />} />
-              <Route path="/viewNote/:documentId" element={<ViewNotePage />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
-            </Routes>
+        <div className="noteNook css fixed top-24 overflow-y-scroll left-24 rounded-tl-md bg-muted/5 p-4">
+          <div
+            className={`absolute z-[100] top-8 left-4 h-[calc(100%-4rem)] transition-transform duration-300 ${
+              isAiChatVisible ? "scale-100" : "scale-0"
+            }`}
+          >
+            <AiChat setIsAiChatVisible={setIsAiChatVisible} />
           </div>
-        </NotesProvider>
+
+          <Routes>
+            <Route path="/dashboard" element={<DashBoard />} />
+            <Route path="/notes" element={<SearchNotesPage />} />
+            <Route path="/myNotes/*" element={<MyNotesPage />} />
+            <Route path="/friends" element={<SearchUsersPage />} />
+            <Route path="/chatPage/*" element={<ChatPage />} />
+            <Route path="/profile/*" element={<UserProfilePage />} />
+            <Route path="/profile/edit" element={<EditUserDetailsPage />} />
+            <Route path="/viewUser/:userId" element={<ViewUserPage />} />
+            <Route path="/viewNote/:documentId" element={<ViewNotePage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+          </Routes>
+        </div>
       </DeviceWidthProvider>
     </div>
   );

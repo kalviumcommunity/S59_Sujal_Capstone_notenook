@@ -6,18 +6,11 @@ import { Button } from "../ui/button";
 
 import formatDate from "../../Functions/FormatDate";
 
-import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CircularProgress from "@mui/material/CircularProgress";
 
-function MyReviewNote({ note, handleMarkForReview, handleUnmarkForReview }) {
+function MyReviewNote({ note, handleUnmarkForReview }) {
   const [loading, setLoading] = useState(false);
-
-  const handleMark = async () => {
-    setLoading(true);
-    await handleMarkForReview(note._id);
-    setLoading(false);
-  };
 
   const handleUnmark = async () => {
     setLoading(true);
@@ -40,10 +33,8 @@ function MyReviewNote({ note, handleMarkForReview, handleUnmarkForReview }) {
       <CardContent className="p-4 flex justify-end gap-5 items-center">
         {loading ? (
           <CircularProgress size={24} />
-        ) : note.markedForReview ? (
-          <BookmarkIcon className="text-yellow-500" onClick={handleUnmark} />
         ) : (
-          <BookmarkAddIcon className="text-neutral-500" onClick={handleMark} />
+          <BookmarkIcon className="text-yellow-500" onClick={handleUnmark} />
         )}
 
         <Link to={`/notenook/myNotes/writeNote/${note._id}`}>

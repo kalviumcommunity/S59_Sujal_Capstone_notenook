@@ -1,22 +1,44 @@
-import React, { useContext } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { NotesContext } from "../../context/notesContext";
 import MyReviewNote from "../NoteCards/MyReviewNote";
 import MySavedReviewNote from "../NoteCards/MySavedReviewNote";
+import ErrorAlert from "../MyNotesPageComponents/ErrorAlert";
+
+import { updateUnmarkedSavedNote } from "../../redux/notes/savedNotesSlice";
+import { updateUnmarkedNote } from "../../redux/notes/notesSlice";
+
+import { unmarkNoteForReview } from "../../Functions/reviewNoteActions";
 
 function ReviewList() {
-  const {
-    notes,
-    savedNotes,
-    handleMarkForReview,
-    handleUnmarkForReview,
-    handleMarkSavedNoteForReview,
-    handleUnmarkSavedNoteForReview,
-  } = useContext(NotesContext);
+  const notes = useSelector((state) => state.notes.notes);
+  const savedNotes = useSelector((state) => state.savedNotes.savedNotes);
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
+  const dispatch = useDispatch();
+
+  const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
+
+  const handleUnmarkForReview = async (noteId) => {
+    try {
+      await unmarkNoteForReview(noteId);
+      dispatch(updateUnmarkedNote({ noteId }));
+    } catch (err) {
+      setError(err);
+      setShowError(true);
+    }
+  };
+
+  const handleUnmarkSavedNoteForReview = async (noteId) => {
+    try {
+      await unmarkNoteForReview(noteId);
+      dispatch(updateUnmarkedSavedNote({ noteId }));
+    } catch (err) {
+      setError(err);
+      setShowError(true);
+    }
   };
 
   const filteredNotes = notes.filter((note) => note.markedForReview);
@@ -26,13 +48,15 @@ function ReviewList() {
 
   return (
     <Tabs defaultValue="Normal" className="w-full flex flex-col">
+      <ErrorAlert
+        error={error}
+        setError={setError}
+        showError={showError}
+        setShowError={setShowError}
+      />
       <TabsList className="self-end mb-4">
-        <TabsTrigger value="Normal" onClick={() => handleTabClick("Normal")}>
-          My Notes
-        </TabsTrigger>
-        <TabsTrigger value="Saved" onClick={() => handleTabClick("Saved")}>
-          Saved Notes
-        </TabsTrigger>
+        <TabsTrigger value="Normal">My Notes</TabsTrigger>
+        <TabsTrigger value="Saved">Saved Notes</TabsTrigger>
       </TabsList>
       <TabsContent value="Normal">
         <div className="grid reviewList min-h-20 grid-cols-1 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-rows-min gap-2">
@@ -45,7 +69,6 @@ function ReviewList() {
             <MyReviewNote
               key={note._id}
               note={note}
-              handleMarkForReview={handleMarkForReview}
               handleUnmarkForReview={handleUnmarkForReview}
             />
           ))}
@@ -63,7 +86,6 @@ function ReviewList() {
               key={savedNote.savedNote._id}
               savedNote={savedNote.savedNote}
               originalNoteId={savedNote.originalNote}
-              handleMarkForReview={handleMarkSavedNoteForReview}
               handleUnmarkForReview={handleUnmarkSavedNoteForReview}
             />
           ))}
