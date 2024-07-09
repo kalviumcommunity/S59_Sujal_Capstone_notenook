@@ -79,7 +79,9 @@ function NoteDetailsForm({ note, setNote }) {
           }
         );
         dispatch(
-          updateUpdatedNote({ ...note, ...formData})
+          updateUpdatedNote({
+            ...formData
+          })
         );
       }
     } catch (error) {

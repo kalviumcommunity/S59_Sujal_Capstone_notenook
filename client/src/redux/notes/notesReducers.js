@@ -5,7 +5,7 @@ export const notesReducers = {
   updateUpdatedNote: (state, action) => {
     console.log(action.payload);
     state.notes = state.notes.map((note) =>
-      note._id === action.payload.noteId ? action.payload : note
+      note._id === action.payload.noteId ? { ...note, ...action.payload } : note
     );
   },
   removeDeletedNote: (state, action) => {
