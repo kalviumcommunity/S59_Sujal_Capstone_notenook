@@ -1,27 +1,53 @@
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+
 import MyPostedNote from "../NoteCards/MyPostedNote";
-import { NotesContext } from "../../context/notesContext";
 import DeleteAlert from "../MyNotesPageComponents/DeleteAlert";
 import ErrorAlert from "../MyNotesPageComponents/ErrorAlert";
+import { removeUnpostedNote } from "../../redux/notes/postedNotesSlice";
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+const deletePostedNote = async (noteId) => {
+  try {
+    const token = extractTokenFromCookie();
+    if (!token) return;
+
+    const res = await axios.delete(
+      `${import.meta.env.VITE_REACT_APP_DELETE_POSTEDNOTE_ENDPOINT}/${noteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return res.data._id;
+  } catch (error) {
+    console.error("Error deleting saved note:", error);
+    throw error.response ? error.response.data.error : error.message;
+  }
+};
 
 function MyPostedNotesList() {
-  const { postedNotes, error, setError, handleDeletePostedNote } =
-    useContext(NotesContext);
-
+  const postedNotes = useSelector((state) => state.postedNotes.postedNotes);
+  const dispatch = useDispatch();
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [deleteNoteId, setDeleteNoteId] = useState(null);
+  const [error, setError] = useState(null);
   const [showError, setShowError] = useState(false);
 
   const confirmDelete = (noteId) => {
-    console.log(noteId);
     setDeleteNoteId(noteId);
     setDeleteConfirmation(true);
   };
 
   const handleDelete = async () => {
     try {
-      await handleDeletePostedNote(deleteNoteId);
+      await deletePostedNote(deleteNoteId);
+      dispatch(removeUnpostedNote(deleteNoteId));
     } catch (err) {
+      console.log(err);
+      setError(err);
       setShowError(true);
     }
     setDeleteConfirmation(false);

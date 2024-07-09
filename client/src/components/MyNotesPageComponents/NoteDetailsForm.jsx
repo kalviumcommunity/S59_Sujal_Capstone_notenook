@@ -26,7 +26,11 @@ import ActionLoader from "../Loaders/ActionLoader";
 
 import { useDispatch } from "react-redux";
 import { updateUpdatedNote } from "../../redux/notes/notesSlice";
-
+import {
+  addPostedNote,
+  removeUnpostedNote,
+  updateUpdatedPostedNote,
+} from "../../redux/notes/postedNotesSlice";
 const formSchema = z.object({
   title: z.string().min(3, { message: "Enter title." }),
   subject: z.string().min(3, { message: "Enter subject" }),
@@ -80,7 +84,12 @@ function NoteDetailsForm({ note, setNote }) {
         );
         dispatch(
           updateUpdatedNote({
-            ...formData
+            ...formData,
+          })
+        );
+        dispatch(
+          updateUpdatedPostedNote({
+            ...formData,
           })
         );
       }
@@ -117,6 +126,7 @@ function NoteDetailsForm({ note, setNote }) {
       );
       if (response.status === 201) {
         setNote({ ...note, postedNote: true });
+        dispatch(addPostedNote(response.data.postedNote));
       }
     } catch (error) {
       setError("Error posting note");
@@ -146,6 +156,7 @@ function NoteDetailsForm({ note, setNote }) {
       );
       if (response.status === 204) {
         setNote({ ...note, postedNote: false });
+        dispatch(removeUnpostedNote(note._id));
       }
     } catch (error) {
       setError("Error deleting posted note");

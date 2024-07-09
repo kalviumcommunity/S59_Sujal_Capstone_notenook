@@ -6,6 +6,7 @@ import extractTokenFromCookie from "../Functions/ExtractTokenFromCookie";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { fetchNotes } from "../redux/notes/notesSlice";
+import { fetchPostedNotes } from "../redux/notes/postedNotesSlice";
 import { UserContext } from "../context/userContext";
 
 import Header from "../components/HeaderComponents/Header";
@@ -67,6 +68,7 @@ function NoteNook() {
     if (token) {
       fetchData(token);
       dispatch(fetchNotes());
+      dispatch(fetchPostedNotes());
     } else {
       navigate("/");
     }

@@ -10,7 +10,7 @@ import {
   updateUnmarkedNote,
   removeDeletedNote,
 } from "../../redux/notes/notesSlice";
-
+import { removeDeletedPostedNote } from "../../redux/notes/postedNotesSlice";
 const token = extractTokenFromCookie();
 
 const deleteNote = async (noteId) => {
@@ -83,6 +83,7 @@ function MyNoteList() {
     try {
       await deleteNote(deleteNoteId);
       dispatch(removeDeletedNote(deleteNoteId));
+      dispatch(removeDeletedPostedNote(deleteNoteId));
     } catch (err) {
       setError(err);
       setShowError(true);
