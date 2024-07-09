@@ -82,13 +82,13 @@ const addPostedNote = async (req, res) => {
     existingNote.postedNote = postedNote._id;
     await existingNote.save();
 
-    await UserModel.findByIdAndUpdate(
-      _id,
-      { $addToSet: { postedNotes: postedNote._id } },
-      { new: true }
-    );
+    await UserModel.findByIdAndUpdate(_id, {
+      $addToSet: { postedNotes: postedNote._id },
+    });
 
-    return res.status(201).json({ message: "Posted note added successfully" });
+    return res
+      .status(201)
+      .json({ message: "Posted note added successfully", postedNote });
   } catch (error) {
     console.error("Error adding posted note:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -134,7 +134,9 @@ const deletePostedNote = async (req, res) => {
     }
     await user.save();
 
-    res.status(204).json({ message: "Posted note deleted successfully" });
+    res
+      .status(204)
+      .json({ message: "Posted note deleted successfully", _id: postedNoteId });
   } catch (error) {
     console.error("Error deleting posted note:", error);
     res.status(500).json({ message: "Internal server error" });

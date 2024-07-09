@@ -8,7 +8,6 @@ import TextEditor from "./TextEditor";
 import NoteDetailsForm from "./NoteDetailsForm";
 
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-import { set } from "react-hook-form";
 
 const WriteNote = () => {
   const [note, setNote] = useState(null);
