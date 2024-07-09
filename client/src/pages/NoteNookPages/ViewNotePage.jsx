@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "../../components/ui/button";
+
 import { FaExternalLinkAlt } from "react-icons/fa";
 
 import WrappedCommentsWindow from "../../components/ViewNotePageComponents/WrappedCommentWindow";
@@ -10,11 +13,17 @@ import ViewWindow from "../../components/ViewNotePageComponents/ViewWindow";
 import SendingLoader from "../../components/Loaders/SendingLoader";
 import ActionLoader from "../../components/Loaders/ActionLoader";
 
+import {
+  addSavedNote,
+  removeUnsavedNote,
+} from "../../redux/notes/savedNotesSlice";
+
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import formatDate from "../../Functions/FormatDate";
 
 function ViewNotePage() {
   const { documentId } = useParams();
+
   const [note, setNote] = useState({});
   const [isOwner, setIsOwner] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -22,6 +31,8 @@ function ViewNotePage() {
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState(null);
   const [tab, setTab] = useState("post");
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchDefaultValues = async () => {
@@ -68,6 +79,7 @@ function ViewNotePage() {
 
       if (response.status === 201) {
         setIsSaved(true);
+        dispatch(addSavedNote(response.data));
       }
     } catch (error) {
       console.error("Error saving note:", error);
@@ -93,6 +105,7 @@ function ViewNotePage() {
 
       if (response.status === 200) {
         setIsSaved(false);
+        dispatch(removeUnsavedNote(response.data.savedNoteId));
       }
     } catch (error) {
       console.error("Error unsaving note:", error);

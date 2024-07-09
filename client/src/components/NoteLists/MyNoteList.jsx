@@ -1,58 +1,31 @@
 import { useState } from "react";
-import MyNote from "../NoteCards/MyNote";
-import DeleteAlert from "../MyNotesPageComponents/DeleteAlert";
-import ErrorAlert from "../MyNotesPageComponents/ErrorAlert";
 import axios from "axios";
-import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import { useSelector, useDispatch } from "react-redux";
+
 import {
   updateMarkedNote,
   updateUnmarkedNote,
   removeDeletedNote,
 } from "../../redux/notes/notesSlice";
 import { removeDeletedPostedNote } from "../../redux/notes/postedNotesSlice";
+
+import MyNote from "../NoteCards/MyNote";
+import DeleteAlert from "../MyNotesPageComponents/DeleteAlert";
+import ErrorAlert from "../MyNotesPageComponents/ErrorAlert";
+
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+
 const token = extractTokenFromCookie();
+
+import {
+  markNoteForReview,
+  unmarkNoteForReview,
+} from "../../Functions/reviewNoteActions";
 
 const deleteNote = async (noteId) => {
   try {
     await axios.delete(
       `${import.meta.env.VITE_REACT_APP_DELETE_NOTE_ENDPOINT}/${noteId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return noteId;
-  } catch (error) {
-    throw error.response ? error.response.data.error : error.message;
-  }
-};
-
-const markNoteForReview = async (noteId) => {
-  try {
-    await axios.patch(
-      `${import.meta.env.VITE_REACT_APP_MARK_REVIEW_NOTE_ENDPOINT}/${noteId}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return noteId;
-  } catch (error) {
-    throw error.response ? error.response.data.error : error.message;
-  }
-};
-
-const unmarkNoteForReview = async (noteId) => {
-  try {
-    await axios.patch(
-      `${import.meta.env.VITE_REACT_APP_UNMARK_REVIEW_NOTE_ENDPOINT}/${noteId}`,
-      {},
       {
         headers: {
           Authorization: `Bearer ${token}`,

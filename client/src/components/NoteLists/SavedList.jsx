@@ -1,19 +1,50 @@
-import { useContext, useState, useEffect } from "react";
-import { NotesContext } from "../../context/notesContext";
+import { useState, useEffect } from "react";
+
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  updateMarkedSavedNote,
+  updateUnmarkedSavedNote,
+  removeUnsavedNote,
+} from "../../redux/notes/savedNotesSlice";
+
 import SavedNote from "../NoteCards/SavedNote";
 import DeleteAlert from "../MyNotesPageComponents/DeleteAlert";
 import ErrorAlert from "../MyNotesPageComponents/ErrorAlert";
 
-function SavedList() {
-  const {
-    savedNotes,
-    error,
-    setError,
-    handleDeleteSavedNote,
-    handleMarkSavedNoteForReview,
-    handleUnmarkSavedNoteForReview,
-  } = useContext(NotesContext);
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
+import {
+  markNoteForReview,
+  unmarkNoteForReview,
+} from "../../Functions/reviewNoteActions";
+
+const deleteSavedNote = async (noteId) => {
+  try {
+    const token = extractTokenFromCookie();
+    if (!token) return;
+
+    await axios.delete(
+      `${import.meta.env.VITE_REACT_APP_DELETE_SAVED_NOTE_ENDPOINT}/${noteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error deleting saved note:", error);
+    throw error.response ? error.response.data.error : error.message;
+  }
+};
+
+function SavedList() {
+  const savedNotes = useSelector((state) => state.savedNotes.savedNotes);
+
+  const dispatch = useDispatch();
+  const [error, setError] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [deleteNoteId, setDeleteNoteId] = useState(null);
   const [showError, setShowError] = useState(false);
@@ -25,12 +56,34 @@ function SavedList() {
 
   const handleDelete = async () => {
     try {
-      await handleDeleteSavedNote(deleteNoteId);
+      await deleteSavedNote(deleteNoteId);
+      dispatch(removeUnsavedNote(deleteNoteId));
     } catch (err) {
+      setError(err);
       setShowError(true);
     }
     setDeleteConfirmation(false);
     setDeleteNoteId(null);
+  };
+
+  const handleMarkForReview = async (noteId) => {
+    try {
+      await markNoteForReview(noteId);
+      dispatch(updateMarkedSavedNote({ noteId }));
+    } catch (err) {
+      setError(err);
+      setShowError(true);
+    }
+  };
+
+  const handleUnmarkForReview = async (noteId) => {
+    try {
+      await unmarkNoteForReview(noteId);
+      dispatch(updateUnmarkedSavedNote({ noteId }));
+    } catch (err) {
+      setError(err);
+      setShowError(true);
+    }
   };
 
   useEffect(() => {
@@ -58,8 +111,8 @@ function SavedList() {
           savedNote={note.savedNote}
           originalNoteId={note.originalNote}
           confirmDelete={confirmDelete}
-          handleMarkForReview={handleMarkSavedNoteForReview}
-          handleUnmarkForReview={handleUnmarkSavedNoteForReview}
+          handleMarkForReview={handleMarkForReview}
+          handleUnmarkForReview={handleUnmarkForReview}
         />
       ))}
     </div>

@@ -427,7 +427,7 @@ const saveNote = async (req, res) => {
       { new: true, useFindAndModify: false }
     );
 
-    res.status(201).json(savedNewNote);
+    res.status(201).json({ originalNote: noteId, savedNote: savedNewNote });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
@@ -476,7 +476,10 @@ const deleteSavedNote = async (req, res) => {
 
     await UserModel.findByIdAndUpdate(userId, update);
 
-    res.status(200).json({ message: "Saved note deleted successfully" });
+    res.status(200).json({
+      message: "Saved note deleted successfully",
+      savedNoteId: savedNoteEntry.savedNote,
+    });
   } catch (error) {
     console.error("Error deleting saved note:", error);
     res.status(500).json({ error: "Internal server error" });
