@@ -5,7 +5,7 @@ import axios from "axios";
 import MyPostedNote from "../NoteCards/MyPostedNote";
 import DeleteAlert from "../MyNotesPageComponents/DeleteAlert";
 import ErrorAlert from "../MyNotesPageComponents/ErrorAlert";
-import { removeUnpostedNote } from "../../redux/notes/postedNotesSlice";
+import { removeDeletedPostedNote } from "../../redux/notes/postedNotesSlice";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 const deletePostedNote = async (noteId) => {
   try {
@@ -44,7 +44,7 @@ function MyPostedNotesList() {
   const handleDelete = async () => {
     try {
       await deletePostedNote(deleteNoteId);
-      dispatch(removeUnpostedNote(deleteNoteId));
+      dispatch(removeDeletedPostedNote(deleteNoteId));
     } catch (err) {
       console.log(err);
       setError(err);

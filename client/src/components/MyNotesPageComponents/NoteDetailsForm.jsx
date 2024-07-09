@@ -28,7 +28,7 @@ import { useDispatch } from "react-redux";
 import { updateUpdatedNote } from "../../redux/notes/notesSlice";
 import {
   addPostedNote,
-  removeUnpostedNote,
+  removeDeletedPostedNote,
   updateUpdatedPostedNote,
 } from "../../redux/notes/postedNotesSlice";
 const formSchema = z.object({
@@ -156,7 +156,7 @@ function NoteDetailsForm({ note, setNote }) {
       );
       if (response.status === 204) {
         setNote({ ...note, postedNote: false });
-        dispatch(removeUnpostedNote(note._id));
+        dispatch(removeDeletedPostedNote(note._id));
       }
     } catch (error) {
       setError("Error deleting posted note");

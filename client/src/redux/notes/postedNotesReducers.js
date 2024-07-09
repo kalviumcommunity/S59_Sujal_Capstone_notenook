@@ -9,12 +9,6 @@ export const postedNotesReducers = {
         : note
     );
   },
-  removeUnpostedNote: (state, action) => {
-    console.log(action.payload);
-    state.postedNotes = state.postedNotes.filter(
-      (note) => note.note !== action.payload
-    );
-  },
   removeDeletedPostedNote: (state, action) => {
     state.postedNotes = state.postedNotes.filter(
       (note) => note.note !== action.payload

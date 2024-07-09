@@ -49,7 +49,6 @@ const postedNotesSlice = createSlice({
 export const {
   addPostedNote,
   updateUpdatedPostedNote,
-  removeUnpostedNote,
   removeDeletedPostedNote,
   resetError,
 } = postedNotesSlice.actions;
