@@ -339,9 +339,11 @@ const getNote = async (req, res) => {
       return res.status(404).json({ message: "Note not found" });
     }
     const noteData = {
+      _id: note._id,
       title: note.title,
       subject: note.subject,
       fileReference: note.fileReference,
+      updatedAt: note.updatedAt,
       postedNote: note.postedNote || null,
     };
 
@@ -391,7 +393,6 @@ const viewNote = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 const saveNote = async (req, res) => {
   const userId = req.user._id;

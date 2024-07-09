@@ -7,17 +7,21 @@ import Forms from "./pages/Forms";
 import HomePage from "./pages/HomePage";
 import NoteNook from "./pages/NoteNook";
 
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 import "./App.css";
 
 function App() {
   return (
-    <UserProvider>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/forms/*" element={<Forms />} />
-        <Route path="/notenook/*" element={<NoteNook />} />
-      </Routes>
-    </UserProvider>
+    <Provider store={store}>
+      <UserProvider>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/forms/*" element={<Forms />} />
+          <Route path="/notenook/*" element={<NoteNook />} />
+        </Routes>
+      </UserProvider>
+    </Provider>
   );
 }
 

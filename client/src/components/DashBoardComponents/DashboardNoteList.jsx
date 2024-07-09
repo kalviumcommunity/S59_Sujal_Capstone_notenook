@@ -1,11 +1,8 @@
-import { useContext } from "react";
-
+import { useSelector } from "react-redux";
 import Note from "../NoteCards/Note";
 
-import { NotesContext } from "../../context/notesContext";
-
 function DashboardNoteList() {
-  const { notes } = useContext(NotesContext);
+  const notes = useSelector((state) => state.notes.notes);
 
   return (
     <div className="noteList h-full overflow-y-hidden p-4 rounded-lg bg-[#09090B] relative row-span-4">

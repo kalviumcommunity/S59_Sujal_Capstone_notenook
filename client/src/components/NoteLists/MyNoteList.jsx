@@ -1,19 +1,75 @@
-import { useContext, useState, useEffect } from "react";
-import { NotesContext } from "../../context/notesContext";
+import { useState } from "react";
 import MyNote from "../NoteCards/MyNote";
 import DeleteAlert from "../MyNotesPageComponents/DeleteAlert";
 import ErrorAlert from "../MyNotesPageComponents/ErrorAlert";
+import axios from "axios";
+import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  updateMarkedNote,
+  updateUnmarkedNote,
+  removeDeletedNote,
+} from "../../redux/notes/notesSlice";
+
+const token = extractTokenFromCookie();
+
+const deleteNote = async (noteId) => {
+  try {
+    await axios.delete(
+      `${import.meta.env.VITE_REACT_APP_DELETE_NOTE_ENDPOINT}/${noteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return noteId;
+  } catch (error) {
+    throw error.response ? error.response.data.error : error.message;
+  }
+};
+
+const markNoteForReview = async (noteId) => {
+  try {
+    await axios.patch(
+      `${import.meta.env.VITE_REACT_APP_MARK_REVIEW_NOTE_ENDPOINT}/${noteId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return noteId;
+  } catch (error) {
+    throw error.response ? error.response.data.error : error.message;
+  }
+};
+
+const unmarkNoteForReview = async (noteId) => {
+  try {
+    await axios.patch(
+      `${import.meta.env.VITE_REACT_APP_UNMARK_REVIEW_NOTE_ENDPOINT}/${noteId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return noteId;
+  } catch (error) {
+    throw error.response ? error.response.data.error : error.message;
+  }
+};
 
 function MyNoteList() {
-  const {
-    notes,
-    error,
-    setError,
-    handleDeleteNote,
-    handleMarkForReview,
-    handleUnmarkForReview,
-  } = useContext(NotesContext);
-
+  const notes = useSelector((state) => state.notes.notes);
+  const dispatch = useDispatch();
+  const [error, setError] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [deleteNoteId, setDeleteNoteId] = useState(null);
   const [showError, setShowError] = useState(false);
@@ -25,19 +81,33 @@ function MyNoteList() {
 
   const handleDelete = async () => {
     try {
-      await handleDeleteNote(deleteNoteId);
+      await deleteNote(deleteNoteId);
+      dispatch(removeDeletedNote(deleteNoteId));
     } catch (err) {
+      setError(err);
       setShowError(true);
     }
-    setDeleteConfirmation(false);
-    setDeleteNoteId(null);
   };
 
-  useEffect(() => {
-    if (error) {
+  const handleMarkForReview = async (noteId) => {
+    try {
+      await markNoteForReview(noteId);
+      dispatch(updateMarkedNote({ noteId }));
+    } catch (err) {
+      setError(err);
       setShowError(true);
     }
-  }, [error]);
+  };
+
+  const handleUnmarkForReview = async (noteId) => {
+    try {
+      await unmarkNoteForReview(noteId);
+      dispatch(updateUnmarkedNote({ noteId }));
+    } catch (err) {
+      setError(err);
+      setShowError(true);
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 justify-center pr-2">
@@ -57,8 +127,8 @@ function MyNoteList() {
           key={note._id}
           note={note}
           confirmDelete={confirmDelete}
-          handleMarkForReview={handleMarkForReview}
-          handleUnmarkForReview={handleUnmarkForReview}
+          handleMarkForReview={() => handleMarkForReview(note._id)}
+          handleUnmarkForReview={() => handleUnmarkForReview(note._id)}
         />
       ))}
     </div>

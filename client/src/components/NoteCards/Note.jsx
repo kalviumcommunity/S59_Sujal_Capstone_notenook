@@ -18,7 +18,7 @@ function Note({ note }) {
         <p className="text-xs">Posted {formatDate(note.updatedAt)}</p>
       </CardHeader>
       <CardContent className="p-4 flex justify-end gap-5">
-        <Link to={`/notenook/postNotes/writeNote/${note._id}`}>
+        <Link to={`/notenook/myNotes/writeNote/${note._id}`}>
           <Button variants="primary" className="text-xs h-fit">
             Update
           </Button>
