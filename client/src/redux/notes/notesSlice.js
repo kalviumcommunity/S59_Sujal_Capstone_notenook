@@ -3,26 +3,25 @@ import axios from "axios";
 
 import { notesReducers } from "./notesReducers";
 
-import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
-
-const token = extractTokenFromCookie();
-
-export const fetchNotes = createAsyncThunk("notes/fetchNotes", async () => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_REACT_APP_GET_NOTE_ENDPOINT}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data.notes;
-  } catch (error) {
-    throw error.response ? error.response.data.error : error.message;
+export const fetchNotes = createAsyncThunk(
+  "notes/fetchNotes",
+  async (token) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_REACT_APP_GET_NOTE_ENDPOINT}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data.notes;
+    } catch (error) {
+      throw error.response ? error.response.data.error : error.message;
+    }
   }
-});
+);
 
 const notesSlice = createSlice({
   name: "notes",

@@ -54,7 +54,15 @@ function aiChatSocket(ioNamespace) {
         });
       } catch (error) {
         console.error("Error handling sendMessage event:", error);
-        socket.emit("errorMessage", "Failed to send message.");
+
+        if (error.message.includes("RECITATION")) {
+          socket.emit(
+            "errorMessage",
+            "The AI response was blocked due to content policy. Please try asking differently."
+          );
+        } else {
+          socket.emit("errorMessage", "Failed to send message.");
+        }
       }
     });
   });

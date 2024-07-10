@@ -1,59 +1,28 @@
 import { useContext, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
-import axios from "axios";
 
 import { DeviceWidthContext } from "../../context/deviceWidthContext";
+import { useChatContext } from "../../context/chatContext";
 
 import ActionLoader from "../../components/Loaders/ActionLoader";
 import ChatPageForDesktop from "../../components/ChatPageCompontents/ChatPageForDesktop";
 import ChatPageForPhones from "../../components/ChatPageCompontents/ChatPageForPhones";
+
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 const ChatPage = () => {
   const width = useContext(DeviceWidthContext);
-  const [users, setUsers] = useState([]);
-  const [friends, setFriends] = useState([]);
+  const { users, friends, error, loading, setUsers } = useChatContext();
   const [selectedUser, setSelectedUser] = useState(null);
   const [topUser, setTopUser] = useState(null);
   const [chatSocket, setChatSocket] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
     const token = extractTokenFromCookie();
     if (!token) {
-      setError("No token found.");
-      return;
-    }
-
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          import.meta.env.VITE_REACT_APP_GETCHATS_ENDPOINT,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setUsers(response.data.users);
-        setFriends(response.data.friends);
-        setLoading(false);
-      } catch (error) {
-        setError("Error fetching users for chat.");
-        console.error("Error fetching users for chat:", error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  useEffect(() => {
-    const token = extractTokenFromCookie();
-    if (!token) {
-      setError("No token found.");
+      console.error("No token found.");
       return;
     }
 
@@ -129,7 +98,7 @@ const ChatPage = () => {
 
   return (
     <div className="page">
-      {loading && <ActionLoader action={"Loading Chats..."}/>}
+      {loading && <ActionLoader action={"Loading Chats..."} />}
       {width > 900 ? (
         <ChatPageForDesktop
           users={users}

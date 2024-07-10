@@ -62,8 +62,8 @@ function SearchNotesPage() {
   };
 
   return (
-    <div className="searchNotesPage page css scrollHidden grid grid-cols-1 lg:grid-cols-[1fr_325px] gap-4">
-      <div className="searchNote page css flex flex-col items-center gap-6">
+    <div className="page css scrollHidden grid grid-cols-1 xl:grid-cols-[1fr_325px] gap-4">
+      <div className="page css flex flex-col items-center gap-6">
         <div className="flex w-full max-w-sm items-center space-x-2 min-h-fit h-[5%]">
           <Input
             type="text"
