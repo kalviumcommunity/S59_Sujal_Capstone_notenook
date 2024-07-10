@@ -1,13 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 import { postedNotesReducers } from "./postedNotesReducers";
-const token = extractTokenFromCookie();
 
 export const fetchPostedNotes = createAsyncThunk(
   "postedNotes/fetchPostedNotes",
-  async () => {
+  async (token) => {
     const response = await axios.get(
       `${import.meta.env.VITE_REACT_APP_GET_POSTED_NOTES_ENDPOINT}`,
       {
