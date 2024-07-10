@@ -14,7 +14,6 @@ import UpdatePasswordForm from "../../components/Forms/UpdatePasswordForm";
 
 import { UserContext } from "../../context/userContext";
 
-import pic from "../../assets/pic.png";
 function EditUserDetailsPage() {
   const { user } = useContext(UserContext);
   return (
@@ -22,7 +21,7 @@ function EditUserDetailsPage() {
       <Link to="/notenook/profile">
         <div className="flex items-center px-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={pic} />
+            <AvatarImage src={user?.avatar} />
             <AvatarFallback>P</AvatarFallback>
           </Avatar>
           <div>
@@ -36,7 +35,11 @@ function EditUserDetailsPage() {
 
       <Tabs defaultValue="Details" className="w-full flex flex-col">
         <TabsList
-          style={{ backgroundColor: "#09090b", alignSelf: "flex-start", marginLeft:"1rem" }}
+          style={{
+            backgroundColor: "#09090b",
+            alignSelf: "flex-start",
+            marginLeft: "1rem",
+          }}
         >
           <TabsTrigger value="Details">Details</TabsTrigger>
           <TabsTrigger value="Password">Password</TabsTrigger>

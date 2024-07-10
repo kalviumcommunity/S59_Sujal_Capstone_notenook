@@ -60,6 +60,7 @@ const getUserData = (user) => ({
   friends: user.friends,
   notes: user.notes,
   postedNotes: user.postedNotes,
+  avatar: user.avatar,
 });
 
 // Utility function to check friendship status
@@ -286,7 +287,7 @@ const searchUsers = async (req, res) => {
       ],
     };
 
-    const users = await UserModel.find(query).select("fullname username");
+    const users = await UserModel.find(query).select("fullname username avatar");
     return res.status(200).json({ users });
   } catch (error) {
     console.error("Error searching users:", error);

@@ -40,6 +40,12 @@ const UserSchema = new Schema({
   friendRequests: [{ type: Schema.Types.ObjectId, ref: "FriendRequest" }],
 
   notificationList: { type: Schema.Types.ObjectId, ref: "NotificationList" },
+
+  avatar: {
+    type: String,
+    default:
+      "https://firebasestorage.googleapis.com/v0/b/notenook-4be2a.appspot.com/o/avatars%2Fpic.png?alt=media&token=c5468bc8-5556-4269-9d48-5b7cf1e82b3b",
+  },
 });
 
 UserSchema.index({ username: 1, email: 1 });

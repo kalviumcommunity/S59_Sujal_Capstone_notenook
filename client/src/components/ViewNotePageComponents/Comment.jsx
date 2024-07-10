@@ -4,13 +4,12 @@ import { Card, CardHeader, CardContent } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 import formatDate from "../../Functions/FormatDate";
-import pic from "../../assets/pic.png";
 
 function Comment({ comment }) {
   return (
     <div className="flex gap-4 items-center w-full mb-4">
       <Avatar>
-        <AvatarImage src={pic} alt="User Avatar" />
+        <AvatarImage src={comment.postedBy.avatar} alt="User Avatar" />
         <AvatarFallback>{comment.postedBy.username[0]}</AvatarFallback>
       </Avatar>
       <Card className="bg-[#0C0A09] text-white w-full border-neutral-600 border-[0.25px]">

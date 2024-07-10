@@ -301,7 +301,7 @@ const searchNotes = async (req, res) => {
 
     const notes = await PostedNoteModel.find(query).populate({
       path: "postedBy",
-      select: "username",
+      select: "username avatar",
     });
 
     return res.status(200).json({ notes });
@@ -366,7 +366,7 @@ const viewNote = async (req, res) => {
 
     const note = await NoteModel.findById(documentId).populate({
       path: "postedBy",
-      select: "username",
+      select: "username avatar",
     });
 
     if (!note) {

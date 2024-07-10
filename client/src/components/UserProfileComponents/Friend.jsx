@@ -3,8 +3,6 @@ import { Card, CardHeader, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import pic from "../../assets/pic.png";
-
 function Friend({ user }) {
   return (
     <Card className="mb-4 bg-[#0C0A09] flex justify-between items-center text-white border-neutral-600 border-[0.25px] rounded-lg overflow-hidden shadow-lg">
@@ -14,7 +12,7 @@ function Friend({ user }) {
           className="flex items-center space-x-4"
         >
           <Avatar className="w-12 h-12">
-            <AvatarImage src={pic} alt={`${user.username}'s avatar`} />
+            <AvatarImage src={user.avatar} alt={`${user.username}'s avatar`} />
             <AvatarFallback>{user.username.substring(0, 2)}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">

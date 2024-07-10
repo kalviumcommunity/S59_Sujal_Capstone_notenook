@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -7,14 +7,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import MessageInput from "./MessageInput";
 import Message from "./Message";
 
+import { UserContext } from "../../context/userContext";
+
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
-import pic from "../../assets/pic.png";
 const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
   const [messages, setMessages] = useState([]);
   const lastMessageRef = useRef(null);
   const { userToChatId } = useParams();
-
+  const { user } = useContext(UserContext);
+  console.log(selectedUser);
   useEffect(() => {
     const token = extractTokenFromCookie();
 
@@ -72,8 +74,10 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
           <div className="flex items-center gap-4">
             {" "}
             <Avatar>
-              <AvatarImage src={pic} />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={selectedUser?.avatar} />
+              <AvatarFallback>
+                {selectedUser?.username.substring(0, 2)}
+              </AvatarFallback>
             </Avatar>
             <p className="font-semibold">{selectedUser?.username}</p>
           </div>
@@ -88,6 +92,7 @@ const Chat = ({ selectedUser, setSelectedUser, setTopUser, chatSocket }) => {
               createdAt={msg.createdAt}
               senderId={msg.senderId}
               selectedUser={selectedUser}
+              userAvatar={user?.avatar}
             />
           </div>
         ))}

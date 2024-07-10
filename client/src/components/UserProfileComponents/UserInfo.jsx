@@ -15,8 +15,6 @@ import { UserContext } from "../../context/userContext";
 
 import ActionLoader from "../Loaders/ActionLoader";
 
-import pic from "../../assets/pic.png";
-
 function UserInfo() {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -44,7 +42,7 @@ function UserInfo() {
       {isLoggingOut && <ActionLoader action={"Logging out..."} />}
       <div className="flex items-center mb-4">
         <Avatar className="h-16 w-16 mr-4">
-          <AvatarImage src={pic} alt="User avatar" />
+          <AvatarImage src={user?.avatar} alt="User avatar" />
           <AvatarFallback>P</AvatarFallback>
         </Avatar>
         <div>

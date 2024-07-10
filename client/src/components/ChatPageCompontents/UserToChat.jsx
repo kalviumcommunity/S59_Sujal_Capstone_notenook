@@ -1,5 +1,3 @@
-import pic from "../../assets/pic.png";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const UserToChat = ({ user, isSelected, onUserClick }) => {
@@ -16,8 +14,8 @@ const UserToChat = ({ user, isSelected, onUserClick }) => {
     >
       <div className="connectionInfo w-[80%] flex items-center gap-4">
         <Avatar>
-          <AvatarImage src={pic} />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={user.avatar} />
+          <AvatarFallback>{user.username.substring(0, 2)}</AvatarFallback>
         </Avatar>
         <p className="connectionUsername">{user.username}</p>
       </div>

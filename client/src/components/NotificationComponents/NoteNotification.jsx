@@ -5,7 +5,6 @@ import { Card, CardDescription } from "../ui/card";
 import { Button } from "../ui/button";
 
 import formatDate from "../../Functions/FormatDate";
-import pic from "../../assets/pic.png";
 
 const NoteNotification = ({ notification }) => {
   return (
@@ -14,7 +13,7 @@ const NoteNotification = ({ notification }) => {
         <div className="flex gap-3">
           <Avatar className="w-12 h-12">
             <AvatarImage
-              src={pic}
+              src={notification.relatedUser?.avatar}
               alt={`${notification.relatedUser?.username}'s avatar`}
             />
             <AvatarFallback>
