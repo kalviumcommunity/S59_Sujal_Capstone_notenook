@@ -1,6 +1,12 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+
+import {
+  setSearchNotesPrompt,
+  setSearchNotesResults,
+} from "../../redux/searchResults/searchResultsSlice";
 
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
@@ -15,18 +21,29 @@ import Loader from "../../components/Loaders/Loader";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 function SearchNotesPage() {
-  const [searchResults, setSearchResults] = useState(null);
+  const dispatch = useDispatch();
+  const searchNotesPrompt = useSelector(
+    (state) => state.searchResults.searchNotesPrompt
+  );
+  const searchNotesResults = useSelector(
+    (state) => state.searchResults.searchNotesResults
+  );
+
   const [error, setError] = useState(null);
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState(searchNotesPrompt);
   const [searchingNotes, setSearchingNotes] = useState(false);
 
   const width = useContext(DeviceWidthContext);
+
+  useEffect(() => {
+    setSearchInput(searchNotesPrompt);
+  }, [searchNotesPrompt]);
 
   const handleSearch = async () => {
     if (searchInput === "") {
       return;
     }
-    setSearchResults(null);
+    dispatch(setSearchNotesResults(null));
     setSearchingNotes(true);
     try {
       const token = extractTokenFromCookie();
@@ -43,7 +60,7 @@ function SearchNotesPage() {
           }
         );
 
-        setSearchResults(response.data.notes);
+        dispatch(setSearchNotesResults(response.data.notes));
         setError(null);
       }
     } catch (error) {
@@ -70,7 +87,10 @@ function SearchNotesPage() {
             placeholder="Search for notes..."
             className="text-black"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => {
+              setSearchInput(e.target.value);
+              dispatch(setSearchNotesPrompt(e.target.value));
+            }}
             onKeyDown={handleKeyDown}
           />
           <Button type="button" onClick={handleSearch}>
@@ -81,22 +101,22 @@ function SearchNotesPage() {
         <div className="p-4 relative w-full max-w-[90vw] h-[95%] overflow-y-scroll grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(260px,400px))] justify-center gap-10 gap-y-0 auto-rows-min">
           {searchingNotes && <Loader action={"Searching For Notes..."} />}
           {error && !searchingNotes && (
-            <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-base text-red-500 font-bold text-centeror">
+            <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-base text-red-500 font-bold text-center">
               {error}
             </p>
           )}
-          {searchResults && searchResults.length === 0 && (
+          {searchNotesResults && searchNotesResults.length === 0 && (
             <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-sm text-neutral-300 text-center">
               No results found
             </p>
           )}
-          {!searchResults && !error && !searchingNotes && (
+          {!searchNotesResults && !error && !searchingNotes && (
             <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-sm text-neutral-300 text-center z-0">
               Search notes based on Title or Subject
             </p>
           )}
-          {searchResults &&
-            searchResults.map((result) => {
+          {searchNotesResults &&
+            searchNotesResults.map((result) => {
               return <NoteResult key={uuidv4()} result={result} />;
             })}
         </div>
