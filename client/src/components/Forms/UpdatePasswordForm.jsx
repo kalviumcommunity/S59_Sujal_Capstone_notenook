@@ -92,7 +92,7 @@ function UpdatePasswordForm() {
   };
 
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col bg-[#09090B] py-8 px-4 rounded-md">
       {success && <SuccessAlert success={success} path="Profile" />}
       {isLoading && <ActionLoader action="Updating..." />}
 

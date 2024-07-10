@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import UpdateUserForm from "../../components/Forms/UpdateUserInfoForm";
 import UpdatePasswordForm from "../../components/Forms/UpdatePasswordForm";
+import AvatarUpdateForm from "../../components/Forms/AvatarUpdateForm";
 
 import { UserContext } from "../../context/userContext";
 
@@ -38,14 +39,18 @@ function EditUserDetailsPage() {
           style={{
             backgroundColor: "#09090b",
             alignSelf: "flex-start",
-            marginLeft: "1rem",
+            marginBottom: "1rem",
           }}
         >
           <TabsTrigger value="Details">Details</TabsTrigger>
+          <TabsTrigger value="Avatar">Avatar</TabsTrigger>
           <TabsTrigger value="Password">Password</TabsTrigger>
         </TabsList>
         <TabsContent value="Details">
           <UpdateUserForm username={user?.username} fullname={user?.fullname} />
+        </TabsContent>
+        <TabsContent value="Avatar">
+          <AvatarUpdateForm />
         </TabsContent>
         <TabsContent value="Password">
           <UpdatePasswordForm />

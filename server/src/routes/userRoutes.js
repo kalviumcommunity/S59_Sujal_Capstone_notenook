@@ -8,6 +8,7 @@ const {
   viewUserDetails,
   updateUser,
   updatePassword,
+  updateAvatar,
   searchUsers,
 } = require("../controllers/userControllers");
 
@@ -22,6 +23,8 @@ router.get("/viewUserDetails/:userId", viewUserDetails);
 router.patch("/update", updateUser);
 
 router.patch("/update/password", updatePassword);
+
+router.patch("/update/avatar", updateAvatar);
 
 router.get("/searchUsers", searchUsers);
 
