@@ -271,8 +271,17 @@ const updateAvatar = async (req, res) => {
 
     const { avatar } = req.body;
 
-    if (!avatar) {
-      return res.status(400).json({ message: "Avatar URL is required" });
+    function isValidUrl(url) {
+      try {
+        new URL(url);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+    
+    if (!avatar || !isValidUrl(avatar)) {
+      return res.status(400).json({ message: "Invalid avatar URL" });
     }
 
     user.avatar = avatar;

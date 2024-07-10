@@ -52,19 +52,13 @@ function AvatarUpdateForm() {
         setLoading(true);
         const token = extractTokenFromCookie();
         try {
-          if (
-            user.avatar &&
-            user.avatar !== import.meta.env.VITE_REACT_APP_DEFAULT_URL
-          ) {
-            await deleteFileFromStorage(user.avatar);
-          }
           const avatarUrl = await uploadFileToStorage(avatarBlob);
           await updateAvatarInDatabase(avatarUrl, token);
           setPreview(avatarUrl);
           setError("");
           setShowError(false);
         } catch (err) {
-          setError("Failed to upload avatar. Please try again.");
+          setError(`Failed to upload avatar: ${err.message}`);
           setShowError(true);
         } finally {
           setLoading(false);
