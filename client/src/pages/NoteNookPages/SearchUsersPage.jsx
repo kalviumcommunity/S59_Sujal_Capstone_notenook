@@ -1,6 +1,12 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+
+import {
+  setSearchUsersPrompt,
+  setSearchUsersResults,
+} from "../../redux/searchResults/searchResultsSlice";
 
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
@@ -15,18 +21,29 @@ import Loader from "../../components/Loaders/Loader";
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 
 function SearchUsersPage() {
-  const [searchResults, setSearchResults] = useState(null);
+  const dispatch = useDispatch();
+  const searchUsersPrompt = useSelector(
+    (state) => state.searchResults.searchUsersPrompt
+  );
+  const searchUsersResults = useSelector(
+    (state) => state.searchResults.searchUsersResults
+  );
+
   const [error, setError] = useState(null);
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState(searchUsersPrompt);
   const [searchingUsers, setSearchingUsers] = useState(false);
 
   const width = useContext(DeviceWidthContext);
+
+  useEffect(() => {
+    setSearchInput(searchUsersPrompt);
+  }, [searchUsersPrompt]);
 
   const handleSearch = async () => {
     if (searchInput === "") {
       return;
     }
-    setSearchResults(null);
+    dispatch(setSearchUsersResults(null));
     setSearchingUsers(true);
     try {
       const token = extractTokenFromCookie();
@@ -43,12 +60,12 @@ function SearchUsersPage() {
           }
         );
 
-        setSearchResults(response.data.users);
+        dispatch(setSearchUsersResults(response.data.users));
         setError(null);
       }
     } catch (error) {
-      console.error("Error searching notes:", error);
-      setError("An error occurred while searching notes. Please try again.");
+      console.error("Error searching users:", error);
+      setError("An error occurred while searching users. Please try again.");
     } finally {
       setSearchingUsers(false);
     }
@@ -70,7 +87,10 @@ function SearchUsersPage() {
             placeholder="Search for users..."
             className="text-black"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => {
+              setSearchInput(e.target.value);
+              dispatch(setSearchUsersPrompt(e.target.value));
+            }}
             onKeyDown={handleKeyDown}
           />
           <Button type="button" onClick={handleSearch}>
@@ -81,22 +101,22 @@ function SearchUsersPage() {
         <div className="p-4 relative w-full max-w-[90vw] h-[95%] overflow-y-scroll grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,400px))] justify-center gap-10 gap-y-0 auto-rows-min">
           {searchingUsers && <Loader action={"Searching For Users..."} />}
           {error && !searchingUsers && (
-            <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-base text-red-500 font-bold text-centeror">
+            <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-base text-red-500 font-bold text-center">
               {error}
             </p>
           )}
-          {searchResults && searchResults.length === 0 && (
+          {searchUsersResults && searchUsersResults.length === 0 && (
             <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-sm text-neutral-300 text-center">
               No Users found
             </p>
           )}
-          {!searchResults && !error && !searchingUsers && (
+          {!searchUsersResults && !error && !searchingUsers && (
             <p className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[40%] text-sm text-neutral-300 text-center z-0">
               Search Users to form Connections
             </p>
           )}
-          {searchResults &&
-            searchResults.map((result) => {
+          {searchUsersResults &&
+            searchUsersResults.map((result) => {
               return <UserResult key={uuidv4()} user={result} />;
             })}
         </div>
