@@ -11,13 +11,13 @@ const getUsersForChat = async (req, res) => {
         path: "chats",
         populate: {
           path: "participants",
-          select: "username",
+          select: "username avatar",
         },
         options: { sort: { updatedAt: -1 } },
       })
       .populate({
         path: "friends",
-        select: "username",
+        select: "username avatar",
       });
 
     if (!user) {
@@ -32,6 +32,7 @@ const getUsersForChat = async (req, res) => {
             JSON.stringify({
               _id: participant._id.toString(),
               username: participant.username,
+              avatar: participant.avatar,
             })
           );
         }
@@ -140,6 +141,7 @@ const getMessages = async (req, res) => {
     const userToChat = await UserModel.findById(userToChatId).select({
       username: 1,
       _id: 1,
+      avatar: 1,
     });
 
     if (!chat)
@@ -154,7 +156,11 @@ const getMessages = async (req, res) => {
 
     res.status(200).json({
       messages,
-      userToChat: { username: userToChat.username, _id: userToChat._id },
+      userToChat: {
+        username: userToChat.username,
+        _id: userToChat._id,
+        avatar: userToChat.avatar,
+      },
     });
   } catch (err) {
     console.error(err);

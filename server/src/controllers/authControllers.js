@@ -195,6 +195,7 @@ const getSessionHandler = async (req, res) => {
       email: user.email,
       numberOfNotes: user.notes.length,
       numberOfConnections: user.friends.length,
+      avatar: user.avatar,
     };
 
     if (newToken) {

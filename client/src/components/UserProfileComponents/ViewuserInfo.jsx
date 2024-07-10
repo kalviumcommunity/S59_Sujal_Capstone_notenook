@@ -1,5 +1,5 @@
-import {  useState } from "react";
-import {  Link, useParams } from "react-router-dom";
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 import { Button } from "../ui/button";
@@ -13,7 +13,6 @@ import {
 
 import extractTokenFromCookie from "../../Functions/ExtractTokenFromCookie";
 import SendingLoader from "../Loaders/SendingLoader";
-import pic from "../../assets/pic.png";
 
 function ViewUserInfo({ userInfo, setUserInfo }) {
   const { userId } = useParams();
@@ -95,20 +94,18 @@ function ViewUserInfo({ userInfo, setUserInfo }) {
     <div className="relative flex flex-col mx-auto py-2">
       <div className="flex items-center mb-4">
         <Avatar className="h-16 w-16 mr-4">
-          <AvatarImage src={pic} alt="User avatar" />
-          <AvatarFallback>P</AvatarFallback>
+          <AvatarImage src={userInfo.avatar} alt="User avatar" />
+          <AvatarFallback>{userInfo.username.substring(0, 2)}</AvatarFallback>
         </Avatar>
         <div>
-          <Link to="/notenook/profile">
-            <CardHeader className="pb-0">
-              <CardTitle className="text-lg font-semibold">
-                {userInfo?.username}
-              </CardTitle>
-              <CardDescription className="text-sm text-gray-300">
-                {userInfo?.fullname}
-              </CardDescription>
-            </CardHeader>
-          </Link>
+          <CardHeader className="pb-0">
+            <CardTitle className="text-lg font-semibold">
+              {userInfo?.username}
+            </CardTitle>
+            <CardDescription className="text-sm text-gray-300">
+              {userInfo?.fullname}
+            </CardDescription>
+          </CardHeader>
           <CardContent className="mt-2 flex gap-10 text-xs">
             <p>
               Notes:{" "}

@@ -3,7 +3,6 @@ import { IoChatbubbleOutline } from "react-icons/io5";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { useChatContext } from "../context/chatContext";
-import pic from "../assets/pic.png";
 
 function Connections() {
   const { users } = useChatContext();
@@ -31,7 +30,7 @@ function Connection({ user }) {
       <Link to={`/notenook/viewUser/${user._id}`}>
         <div className="connectionInfo w-[80%] flex items-center gap-4">
           <Avatar>
-            <AvatarImage src={pic} />
+            <AvatarImage src={user.avatar} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <p className="connectionUsername">{user.username}</p>

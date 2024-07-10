@@ -3,7 +3,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import formatDate from "../../Functions/FormatDate";
-import pic from "../../assets/pic.png";
 
 function NoteResult({ result }) {
   return (
@@ -14,7 +13,7 @@ function NoteResult({ result }) {
           className="flex items-center space-x-2"
         >
           <Avatar>
-            <AvatarImage src={pic} />
+            <AvatarImage src={result.postedBy.avatar} />
             <AvatarFallback>
               {result.postedBy.username.substring(0, 2)}
             </AvatarFallback>
@@ -30,7 +29,9 @@ function NoteResult({ result }) {
         <p className="text-sm">
           <span className="text-yellow-500">Subject:</span> {result.subject}
         </p>
-        <p className="text-xs text-neutral-400">Posted {formatDate(result.updatedAt)}</p>
+        <p className="text-xs text-neutral-400">
+          Posted {formatDate(result.updatedAt)}
+        </p>
         <div className="flex justify-end gap-5">
           <Link to={`/notenook/viewNote/${result.note}`}>
             <Button variant="secondary" className="text-xs">

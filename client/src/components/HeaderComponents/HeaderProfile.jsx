@@ -5,11 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { UserContext } from "../../context/userContext";
 
-import pic from "../../assets/pic.png";
-
 function HeaderProfile() {
   const { user } = useContext(UserContext);
-
+  console.log(user?.avatar);
   return (
     <div className="py-2 px-4 rounded-md">
       <Link
@@ -17,8 +15,8 @@ function HeaderProfile() {
         className="flex gap-3 justify-between items-center"
       >
         <Avatar>
-          <AvatarImage src={pic} />
-          <AvatarFallback>P</AvatarFallback>
+          <AvatarImage src={user?.avatar} />
+          <AvatarFallback>Nn</AvatarFallback>
         </Avatar>
         <p className="text-sm md:text-base w-[70px] overflow-hidden whitespace-nowrap text-ellipsis">
           {user?.username}

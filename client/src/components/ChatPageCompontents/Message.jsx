@@ -1,9 +1,14 @@
 import { format, getYear } from "date-fns";
-import pic from "../../assets/pic.png";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const Message = ({ message, createdAt, senderId, selectedUser }) => {
+const Message = ({
+  message,
+  createdAt,
+  senderId,
+  selectedUser,
+  userAvatar,
+}) => {
   const date = new Date(createdAt);
   const currentYear = new Date().getFullYear();
   const isReceived = senderId === selectedUser._id;
@@ -19,8 +24,8 @@ const Message = ({ message, createdAt, senderId, selectedUser }) => {
     >
       {isReceived && (
         <Avatar className="h-[30px] w-[30px] mr-2">
-          <AvatarImage src={pic} />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={selectedUser.avatar} />
+          <AvatarFallback>Nn</AvatarFallback>
         </Avatar>
       )}
 
@@ -36,8 +41,8 @@ const Message = ({ message, createdAt, senderId, selectedUser }) => {
       </div>
       {isReceived ? null : (
         <Avatar className="h-[30px] w-[30px] ml-2">
-          <AvatarImage src={pic} />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={userAvatar} />
+          <AvatarFallback>Nn</AvatarFallback>
         </Avatar>
       )}
     </div>
