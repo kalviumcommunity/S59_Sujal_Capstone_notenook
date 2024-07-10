@@ -93,7 +93,7 @@ function UpdateUserForm({ username, fullname }) {
   };
 
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col bg-[#09090B] px-4 py-8 rounded-md">
       {success && <SuccessAlert success={success} path={"Profile"} />}
       {isLoading && <ActionLoader action={"Updating..."} />}
 
